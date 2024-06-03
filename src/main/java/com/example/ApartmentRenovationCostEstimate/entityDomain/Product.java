@@ -1,6 +1,18 @@
-package com.example.ApartmentRenovationCostEstimate;
+package com.example.ApartmentRenovationCostEstimate.entityDomain;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Getter @Setter @ToString
+@Table(name = "products")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String name;
     private String brand;
     private String category;
