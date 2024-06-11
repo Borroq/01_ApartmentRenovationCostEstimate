@@ -2,11 +2,13 @@ package com.example.ApartmentRenovationCostEstimate.entityDomain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString
+@NoArgsConstructor
 @Table(name = "rooms")
 public class Room {
     @Id
@@ -17,8 +19,6 @@ public class Room {
     private double floorArea;
     private double wallArea;
 
-    public Room() {
-    }
     public Room(String name, double floorArea, double wallArea) {
         this.name = name;
         this.floorArea = floorArea;
