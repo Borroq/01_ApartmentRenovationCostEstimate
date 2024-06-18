@@ -1,5 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate;
+package com.example.ApartmentRenovationCostEstimate.Services;
 
+import com.example.ApartmentRenovationCostEstimate.Services.ProductService;
 import com.example.ApartmentRenovationCostEstimate.entityDomain.Product;
 import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class ProductServiceImplement implements ProductService{
+public class ProductServiceImplement implements ProductService {
     private ProductRepository productRepository;
 
     @Autowired

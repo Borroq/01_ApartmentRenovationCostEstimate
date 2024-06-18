@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate;
+package com.example.ApartmentRenovationCostEstimate.Services;
 
 import com.example.ApartmentRenovationCostEstimate.entityDomain.User;
 
