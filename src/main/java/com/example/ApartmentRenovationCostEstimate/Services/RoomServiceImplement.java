@@ -1,15 +1,16 @@
 package com.example.ApartmentRenovationCostEstimate.Services;
 
-import com.example.ApartmentRenovationCostEstimate.entityDomain.Product;
 import com.example.ApartmentRenovationCostEstimate.entityDomain.Room;
 import com.example.ApartmentRenovationCostEstimate.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Service
 public class RoomServiceImplement implements RoomService{
     private RoomRepository roomRepository;
 

@@ -32,14 +32,14 @@ public class ProductController {
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
-    //Get all Users - REST API
+    //Get all Products - REST API
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product> products = productService.getAllProduct();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    //Update User by Id - REST API
+    //Update Product by Id - REST API
     @PutMapping("{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer productId, @RequestBody Product product) {
         product.setId(productId);
@@ -47,7 +47,7 @@ public class ProductController {
         return new ResponseEntity<>(updateProduct, HttpStatus.OK);
     }
 
-    //Delete User by Id
+    //Delete Product by Id
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer productId) {
         productService.deleteProduct(productId);
