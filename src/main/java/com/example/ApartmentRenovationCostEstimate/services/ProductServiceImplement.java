@@ -1,7 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.Services;
+package com.example.ApartmentRenovationCostEstimate.services;
 
-import com.example.ApartmentRenovationCostEstimate.Services.ProductService;
-import com.example.ApartmentRenovationCostEstimate.entityDomain.Product;
+import com.example.ApartmentRenovationCostEstimate.entity.Product;
 import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

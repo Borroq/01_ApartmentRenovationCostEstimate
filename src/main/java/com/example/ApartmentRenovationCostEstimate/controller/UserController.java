@@ -1,7 +1,7 @@
-package com.example.ApartmentRenovationCostEstimate.Controller;
+package com.example.ApartmentRenovationCostEstimate.controller;
 
-import com.example.ApartmentRenovationCostEstimate.Services.UserService;
-import com.example.ApartmentRenovationCostEstimate.entityDomain.User;
+import com.example.ApartmentRenovationCostEstimate.services.UserService;
+import com.example.ApartmentRenovationCostEstimate.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.Services;
+package com.example.ApartmentRenovationCostEstimate.services;
 
-import com.example.ApartmentRenovationCostEstimate.entityDomain.Product;
-import com.example.ApartmentRenovationCostEstimate.entityDomain.Room;
+import com.example.ApartmentRenovationCostEstimate.entity.Room;
 
 import java.util.List;
 

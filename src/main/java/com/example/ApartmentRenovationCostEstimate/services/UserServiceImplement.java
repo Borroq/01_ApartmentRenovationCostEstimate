@@ -1,7 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.Services;
+package com.example.ApartmentRenovationCostEstimate.services;
 
-import com.example.ApartmentRenovationCostEstimate.Services.UserService;
-import com.example.ApartmentRenovationCostEstimate.entityDomain.User;
+import com.example.ApartmentRenovationCostEstimate.entity.User;
 import com.example.ApartmentRenovationCostEstimate.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

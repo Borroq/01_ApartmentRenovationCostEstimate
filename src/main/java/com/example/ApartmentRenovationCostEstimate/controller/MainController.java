@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.Controller;
+package com.example.ApartmentRenovationCostEstimate.controller;
 
 import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
 import com.example.ApartmentRenovationCostEstimate.repositories.RoomRepository;

@@ -1,6 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.repositories;
 
-import com.example.ApartmentRenovationCostEstimate.entityDomain.Product;
+import com.example.ApartmentRenovationCostEstimate.entity.Product;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ProductRepository extends CrudRepository<Product, Integer> {
