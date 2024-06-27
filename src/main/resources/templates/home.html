@@ -1,12 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!--/*/ <link rel="stylesheet" href="styles.css" type="text/css"/> ----dodane gdy utworzę plik styles.css z globalną konfiguracją stylu/*/-->
-    <title th:text="${title}">Title</title>
-    <tytle th:text="${title}"></tytle>
+     <!-- <title th:text="${title}">Title</title> -->
+    <title th:text="${title}">Default Title</title>
+    <link rel="stylesheet" href="../static/styles.css" type="text/css"/> <!-- ----dodane gdy utworzę plik styles.css z globalną konfiguracją stylu -->
+
+    <style>
+
+    </style>
+
 </head>
 <body>
-
+    <div class="header">
+        <h1 th:text="${title}"></h1>
+    </div>
+    <div class="container">
+        <p>This is a paragraph of text styled with CSS.</p>
+        <a href="#">This is a link</a>
+    </div>
 </body>
 </html>
