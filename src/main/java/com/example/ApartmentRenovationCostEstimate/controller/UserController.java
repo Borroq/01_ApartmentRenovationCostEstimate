@@ -5,6 +5,7 @@ import com.example.ApartmentRenovationCostEstimate.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserController{
     }
 
     //Get all Users - REST API
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users,HttpStatus.OK);
