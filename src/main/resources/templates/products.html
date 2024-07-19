@@ -18,13 +18,13 @@
         <h2>Browse:</h2>
         <a th:href="@{/}" class="btn btn-primary btn-sm mb-3" >Home</a>
         <a th:href="@{/users}" class="btn btn-primary btn-sm mb-3" >Users</a>
-        <a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a>
+        <!--<a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a> -->
         <a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a>
     </div>
 
     <div class="container">
         <table style="width:80%" border="2"
-               class="table rable-striped table-bordered border-primary mx-auto">
+               class="table table-striped table-bordered border-primary mx-auto">
             <thead class="table-dark">
             <tr>
                 <th scope="col">Id</th>
@@ -50,6 +50,72 @@
             </tbody>
         </table>
     </div>
+
+    <!-- FORMULARZ SLUZACY DO DODANIA NOWEJ ENCJI-->
+    <div class="container">
+        <h2>Add new Product</h2>
+        <form id="productForm">
+            <div class="mb-3 row">
+                <label for="name" class="col-sm-1 col-form-label">Name</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="name" name="name">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="brand" class="col-sm-1 col-form-label">Brand</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="brand" name="brand">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="category" class="col-sm-1 col-form-label">Category</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="category" name="category">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="price" class="col-sm-1 col-form-label">Price</label>
+                <div class="col-sm-3">
+                    <input type="number" step="0.01" class="form-control" id="price" name="price">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm mb-3">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('productForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
+
+            const formData = new FormData(this);
+            const jsonData = {};
+
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Product successfully created');
+                    this.reset(); // resetuje formularz
+                    location.reload();
+                } else {
+                    alert('Failed to create product');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while creating the user');
+            });
+        });
+    </script>
 
     <!-- Wysyłanie zapytania restowego do API -> wykorzystując skrypt JavaScript-->
     <script src="/js/scripts.js"></script> <!-- Dodanie linku do pliku JavaScript -->
