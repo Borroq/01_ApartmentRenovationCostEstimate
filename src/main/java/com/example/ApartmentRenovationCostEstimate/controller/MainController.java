@@ -20,12 +20,10 @@ public class MainController {
         this.roomService = roomService;
     }
 
-
-
     @GetMapping("/")
     public String home (Model model) {
         model.addAttribute("title", title);
-        model.addAttribute("users", userService.getAllUsers());
+        //model.addAttribute("users", userService.getAllUsers());
         return "home";
     }
 
@@ -49,8 +47,4 @@ public class MainController {
         model.addAttribute("rooms", roomService.getAllRoom());
         return "rooms";
     }
-
-
-
-
 }
