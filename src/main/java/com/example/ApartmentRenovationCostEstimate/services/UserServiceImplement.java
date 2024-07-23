@@ -43,6 +43,8 @@ public class UserServiceImplement implements UserService {
         existingUser.setSurname(user.getSurname());
         existingUser.setNick(user.getNick());
         existingUser.setEmail(user.getEmail());
+        existingUser.setRoles(user.getRoles());
+        existingUser.setPassword(user.getPassword());
         User updateUser = userRepository.save(existingUser);
         return updateUser;
     }

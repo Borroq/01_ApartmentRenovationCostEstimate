@@ -18,12 +18,18 @@ public class User {
     private String name;
     private String surname;
     private String nick;
+    private String password;
+    private String roles; // ROLES_USER,ROLES_ADMIN
     private String email;
 
-    public User(String name, String surname, String nick, String email) {
+    public User(Integer id, String name, String surname, String nick, String password, String roles, String email) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.nick = nick;
+        this.password = password;
+        this.roles = roles;
         this.email = email;
     }
+
 }
