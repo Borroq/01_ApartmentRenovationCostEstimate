@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter @Setter @ToString
 @NoArgsConstructor
@@ -18,9 +20,9 @@ public class Product {
     private String name;
     private String brand;
     private String category;
-    private double price;
+    private BigDecimal price;
 
-    public Product(String name, String brand, String category, double price) {
+    public Product(String name, String brand, String category, BigDecimal price) {
         this.name = name;
         this.brand = brand;
         this.category = category;

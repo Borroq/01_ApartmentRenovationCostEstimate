@@ -3,6 +3,7 @@ package com.example.ApartmentRenovationCostEstimate.services;
 import com.example.ApartmentRenovationCostEstimate.entity.User;
 import com.example.ApartmentRenovationCostEstimate.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +26,14 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public User getUserById(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+/*    @Override
+    public User getUserById(Integer userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         return optionalUser.get();
-    }
+    }*/
 
     @Override
     public List<User> getAllUsers() {

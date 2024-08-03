@@ -3,6 +3,7 @@ package com.example.ApartmentRenovationCostEstimate.services;
 import com.example.ApartmentRenovationCostEstimate.entity.Room;
 import com.example.ApartmentRenovationCostEstimate.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,9 +27,14 @@ public class RoomServiceImplement implements RoomService{
 
     @Override
     public Room getRoomById(Integer roomId) {
+        return roomRepository.findById(roomId).orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+    }
+
+/*    @Override
+    public Room getRoomById(Integer roomId) {
         Optional<Room> optionalRoom = roomRepository.findById(roomId);
         return optionalRoom.get();
-    }
+    }*/
 
     @Override
     public List<Room> getAllRoom() {

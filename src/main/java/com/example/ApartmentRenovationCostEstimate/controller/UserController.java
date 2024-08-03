@@ -42,7 +42,7 @@ public class UserController{
     }
 
     //Update User by Id - REST API
-    @PutMapping({"{id}"})
+    @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") Integer userId, @RequestBody User user){
         user.setId(userId);
         User uptadeUser = userService.updateUser(user);

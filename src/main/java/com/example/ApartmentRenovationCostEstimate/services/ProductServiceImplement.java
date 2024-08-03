@@ -3,6 +3,7 @@ package com.example.ApartmentRenovationCostEstimate.services;
 import com.example.ApartmentRenovationCostEstimate.entity.Product;
 import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,9 +27,14 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public Product getProductById(Integer productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
+
+/*    @Override
+    public Product getProductById(Integer productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         return optionalProduct.get();
-    }
+    }*/
 
     @Override
     public List<Product> getAllProduct() {

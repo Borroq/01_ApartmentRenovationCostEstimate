@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title th:text="${title}"></title>
+
+    <link rel="stylesheet" href="styles.css" type="text/css"/> <!-- ----dodane gdy utworzę plik styles.css z globalną konfiguracją stylu -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="header">
+    <h1>List of products in the cart</h1>
+</div>
+
+<!--Przełączanie miedzy sekcjami-->
+<div class="container">
+    <h2>Browse:</h2>
+    <a th:href="@{/}" class="btn btn-primary btn-sm mb-3" >Home</a>
+    <a th:href="@{/users}" class="btn btn-primary btn-sm mb-3" >Users</a>
+    <a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a>
+    <a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a>
+</div>
+
+<!--Lista produktów w koszyku-->
+<div class="container">
+    <table style="width:80%" border="2"
+           class="table table-striped table-bordered border-primary mx-auto">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Cart ID</th>
+                <th scope="col">product ID</th>
+                <th scope="col">Quantity</th>
+            </tr>
+        </thead>
+        <tbody class="colorText">
+            <tr th:each="cart : ${carts}">
+                <td th:text="${cart.id}"></td>
+                <td th:text="${cart.product.id}"></td>
+                <td th:text="${cart.quantity}"></td>
+                <td>
+                    <a th:href="@{/api/carts/{cartId}(id=${cart.id})}" class="btn btn-info btn-sm">view details</a>
+                    <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cart.id} + '\',\'' + 'carts/{cartId}/products' + '\')'" >delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    function deleteElement(elementId, name) {
+        if (confirm('Are you sure you want to delete this element?')) {
+            fetch('/api/' + name + '/' + elementId, {method: 'DELETE'})
+                .then(response => {
+                if (response.ok) {
+                    alert('Element successfully deleted');
+                    location.reload();
+                }else {
+                    alert('Failed to delete element');
+                }
+            });
+        }
+    }
+</script>
+
+<!-- FORMULARZ SLUZACY DO TWORZENIA NOWEGO KOSZYKA-->
+<div class="container">
+    <h2>Create new cart.</h2>
+    <form id="createCartForm">
+        <div class="mb-3 row">
+            <label for="userId" class="col-sm-1 col-form-lable">User ID</label>
+            <input type="number" class="form-control" id="userId" name="userId" required>
+        </div>
+        <div class="mb-3 row">
+            <label for="name" class="col-sm-1 col-form-lable">Cart name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mb-3">Create Cart</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('createCartForm').addEventListener('submit, function(event) {
+    event.preventDefault();
+
+    const userId = document.getElementById('userId').value;
+    const name = document.getElementById('name').value;
+
+    feach('/api/carts/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({id: userId})
+    })
+    .then( ///// <------- TU SKONCZYLEM
+</script>
+
+<!-- FORMULARZ SLUZACY DO DODANIA NOWEJ ENCJI-->
+<div class="container">
+    <h2>Add new product to cart.</h2>
+    <form id="addProductForm">
+        <div class="mb-3 row">
+            <label for="cartId" class="col-sm-1 col-form-label">Cart ID</label>
+            <div class="col-sm-3">
+                <input type="hidden" class="form-control" id="cartId" name="cartId" value="1">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="productId" class="col-sm-1 col-form-label">Product ID</label>
+            <div class="col-sm-3">
+                <input type="hidden" class="form-control" id="productId" name="productId" value="2">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="quantity" class="col-sm-1 col-form-label">Quantity</label>
+            <div class="col-sm-3">
+                <input type="number" class="form-control" id="quantity" name="quantity" value="1">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mb-3">Submit</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('addProductForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
+
+        const form = this;
+        const cartId = document.getElementById('cartId').value;
+        const productId = document.getElementById('productId').value;
+        const quantity = document.getElementById('quantity').value;
+
+        fetch(`/api/carts/${cartId}/products?quantity=${quantity}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: productId })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Product added to cart');
+                form.reset(); // resetuje formularz
+                location.reload();
+            } else {
+                alert('Failed add product to cart');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the product to the cart');
+        });
+    });
+</script>
+
+<!-- Wysyłanie zapytania restowego do API -> wykorzystując skrypt JavaScript-->
+<script src="/js/scripts.js"></script> <!-- Dodanie linku do pliku JavaScript -->
+
+</body>
+</html>

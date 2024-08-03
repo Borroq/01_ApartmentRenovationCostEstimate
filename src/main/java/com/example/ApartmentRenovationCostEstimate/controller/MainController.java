@@ -1,5 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.controller;
 
+import com.example.ApartmentRenovationCostEstimate.services.CartService;
 import com.example.ApartmentRenovationCostEstimate.services.ProductService;
 import com.example.ApartmentRenovationCostEstimate.services.RoomService;
 import com.example.ApartmentRenovationCostEstimate.services.UserService;
@@ -13,11 +14,13 @@ public class MainController {
     private final UserService userService;
     private final ProductService productService;
     private final RoomService roomService;
+    private final CartService cartService;
 
-    public MainController(UserService userService, ProductService productService, RoomService roomService) {
+    public MainController(UserService userService, ProductService productService, RoomService roomService, CartService cartService) {
         this.userService = userService;
         this.productService = productService;
         this.roomService = roomService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/")
@@ -46,5 +49,11 @@ public class MainController {
         model.addAttribute("title", title);
         model.addAttribute("rooms", roomService.getAllRoom());
         return "rooms";
+    }
+    @GetMapping("/cart")
+    public String cart (Model model) {
+        model.addAttribute("title", title);
+        model.addAttribute("carts", cartService.getAllCarts());
+        return "carts";
     }
 }
