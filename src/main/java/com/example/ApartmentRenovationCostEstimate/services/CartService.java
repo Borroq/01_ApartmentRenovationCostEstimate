@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface CartService {
-    Cart createCart(User user);
-    Cart addProductToCart(Long cartId, Integer productId, int quantity);
+    Cart createCart(User user, String name);
+    Cart addProductToCart(Long cartId, Long productId, int quantity);
     Cart getCartById(Long cartId);
     List<Cart> getAllCarts();
     void removeProductFromCart(Long cartId, Long productId);

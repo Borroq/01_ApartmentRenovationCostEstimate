@@ -27,7 +27,7 @@ public class ProductController {
 
     //Get Product by ID - REST API
     @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Integer productId){
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long productId){
         Product product = productService.getProductById(productId);
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
@@ -41,7 +41,7 @@ public class ProductController {
 
     //Update Product by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Integer productId, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
         product.setId(productId);
         Product updateProduct = productService.updateProduct(product);
         return new ResponseEntity<>(updateProduct, HttpStatus.OK);
@@ -49,7 +49,7 @@ public class ProductController {
 
     //Delete Product by Id
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer productId) {
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) {
         productService.deleteProduct(productId);
         return new ResponseEntity<>("Product succesfully deleted", HttpStatus.OK);
     }

@@ -29,7 +29,7 @@ public class UserController{
 
     //Get User by ID - REST API
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer userId){
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId){
         User user = userService.getUserById(userId);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
@@ -43,7 +43,7 @@ public class UserController{
 
     //Update User by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Integer userId, @RequestBody User user){
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long userId, @RequestBody User user){
         user.setId(userId);
         User uptadeUser = userService.updateUser(user);
         return new ResponseEntity<>(uptadeUser,HttpStatus.OK);
@@ -51,7 +51,7 @@ public class UserController{
 
     //Delete User by Id
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") Integer userId){
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId){
         userService.deleteUser(userId);
         return new ResponseEntity<>("User succesfully deleted", HttpStatus.OK);
     }

@@ -26,7 +26,7 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public Product getProductById(Integer productId) {
+    public Product getProductById(Long productId) {
         return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
@@ -55,7 +55,7 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
+    public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
     }
 }

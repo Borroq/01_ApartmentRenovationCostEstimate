@@ -9,5 +9,4 @@ public class ApartmentRenovationCostEstimateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApartmentRenovationCostEstimateApplication.class, args);
 	}
-
 }

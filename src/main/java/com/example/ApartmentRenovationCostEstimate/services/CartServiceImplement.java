@@ -32,23 +32,25 @@ public class CartServiceImplement implements CartService{
 
 
     @Override
-    public Cart createCart(User user) {
+    public Cart createCart(User user, String name) {
         Cart cart = new Cart();
         cart.setUser(user);
+        cart.setName(name);
         return cartRepository.save(cart);
     }
 
     @Override
-    public Cart addProductToCart(Long cartId, Integer productId, int quantity) {
+    public Cart addProductToCart(Long cartId, Long productId, int quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId).orElse(new CartItem());
 
-        CartItem cartItem = new CartItem();
         cartItem.setCart(cart);
         cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
+
         cartItemRepository.save(cartItem);
         return cart;
     }

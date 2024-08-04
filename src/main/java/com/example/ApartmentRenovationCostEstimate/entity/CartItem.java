@@ -1,5 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.ToString;
 @Entity
 @Getter @Setter @ToString
 @NoArgsConstructor
+@Table(name = "cartItem")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +18,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "card_id", nullable = false)
+    @JsonBackReference
     private Cart cart;
 
     @ManyToOne
