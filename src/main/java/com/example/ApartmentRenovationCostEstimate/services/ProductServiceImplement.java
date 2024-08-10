@@ -1,5 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.services;
 
+import com.example.ApartmentRenovationCostEstimate.entity.Cart;
 import com.example.ApartmentRenovationCostEstimate.entity.Product;
 import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +59,25 @@ public class ProductServiceImplement implements ProductService {
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
     }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) {
+        List<Product> productByCategory = productRepository.findByCategory(category);
+
+        if(productByCategory.isEmpty()) {
+            throw new ResourceNotFoundException("No products found in the category: " + category);
+        }
+
+        return productByCategory;
+    }
+
+    @Override
+    public List<String> getAllCategories() {
+        List<Product> products = (List<Product>) productRepository.findAll();
+        return products.stream()
+                .map(Product::getCategory)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
 }

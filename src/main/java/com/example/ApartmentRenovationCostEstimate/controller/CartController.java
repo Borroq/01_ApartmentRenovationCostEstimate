@@ -62,25 +62,25 @@ public class CartController {
 
     @PostMapping("{cartId}/products")
     public ResponseEntity<?> addProductToCart(@PathVariable Long cartId, @RequestBody AddProductRequest request) {
-        Cart cart = cartService.getCartById(cartId);
 
         /*Sprawdzanie czy koszyk instnieje*/
+        Cart cart = cartService.getCartById(cartId);
         if(cart == null) {
-            return  new ResponseEntity<>("Cart not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Map.of("message", "Cart not found"), HttpStatus.NOT_FOUND);
         }
 
         /*Sprawdzanie czy produkt instnieje*/
         Product product = productService.getProductById(request.getProductId());
         if(product == null) {
-            return  new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Map.of("message", "Product not found"), HttpStatus.NOT_FOUND);
         }
 
         /*Dodanie produktu do koszyka*/
         try {
             cartService.addProductToCart(cartId, request.getProductId(), request.getQuantity());
-            return new ResponseEntity<>("Product added to cart", HttpStatus.OK);
+            return new ResponseEntity<>(Map.of("message", "Product added to cart"), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to add product to cart", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Map.of("message", "Failed to add product to cart"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,10 +102,17 @@ public class CartController {
         return new ResponseEntity<>("Product sucessfully removed", HttpStatus.OK);
     }
 
+    @DeleteMapping("{cartId}")
+    public ResponseEntity<String> deleteCart(@PathVariable("cartId") Long cartId) {
+        cartService.deleteCart(cartId);
+        return new ResponseEntity<>("Cart successfully deleted", HttpStatus.OK);
+    }
+
+    //!!!!! Nieużywane -> zmiana koncepcji. !!!!!!!!
     @GetMapping("{cartId}/cart-total-cost")
     public ResponseEntity<BigDecimal> calculateTotalCost(@PathVariable Long cartId) {
         BigDecimal totalCostCart = cartService.calculateTotalCost(cartId);
-        if (totalCostCart == null) {
+        if (totalCostCart == null || totalCostCart.compareTo(BigDecimal.ZERO) == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(totalCostCart, HttpStatus.OK);

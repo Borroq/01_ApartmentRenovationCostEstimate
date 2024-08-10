@@ -24,38 +24,47 @@
 
 <!--Lista produktów w koszyku-->
 <div class="container">
-    <table style="width:80%" border="2"
+    <table style="width:90%" border="2"
            class="table table-striped table-bordered border-primary mx-auto">
         <thead class="table-dark">
             <tr>
                 <th scope="col">User name</th>
                 <th scope="col">Cart ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Product ID</th>
-                <th scope="col">Product name</th>
-                <th scope="col">Quantity</th>
+                <th style="width: 8%;" scope="col">Product ID</th>
+                <th style="width: 30%;" scope="col">Product Name</th>
+                <th style="width: 8%;" scope="col">Quantity</th>
+                <th style="width: 8%;" scope="col">Element Total Price</th>
+                <th scope="col">Total Cost</th>
                 <th scope="col">Views</th>
             </tr>
         </thead>
         <tbody class="colorText">
             <tr th:each="cart : ${carts}">
-                <td th:text="${cart.user.name}"></td>
+                <div class="d-grid gap-2">
+                    <td th:text="${cart.user.name}"></td>
+                    <!--<a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a>-->
+                </div>
                 <td th:text="${cart.id}"></td>
                 <td th:text="${cart.name}"></td>
-                <td colspan="3">
-                    <table>
+                <td colspan="4">
+                    <table class="table mb-0">
                         <tbody>
                             <tr th:each="cartItem : ${cart.cartItems}">
-                                <td th:text="${cartItem.product.id}"></td>
-                                <td th:text="${cartItem.product.name}"></td>
-                                <td th:text="${cartItem.quantity}"></td>
+                                <td style="width: 7%;" th:text="${cartItem.product.id}"></td>
+                                <td style="width: 28%;" th:text="${cartItem.product.name}"></td>
+                                <td style="width: 8%;" th:text="${cartItem.quantity}"></td>
+                                <td style="width: 5%;" th:text="${cartItem.totalPrice != null ? cartItem.totalPrice : '###'}" th:classapend="${cartItem.totalPrice == null ? 'emptyCell' : ''}"></td>
                             </tr>
                         </tbody>
                     </table>
                 </td>
+                <td th:text="${cart.totalCost}"></td>
                 <td>
-                    <a th:href="@{/api/carts/{cartId}(id=${cart.id})}" class="btn btn-info btn-sm">view details</a>
-                    <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cart.id} + '\',\'' + 'carts/{cartId}/products' + '\')'" >delete</button>
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/api/carts}" class="btn btn-info btn-sm">view details</a>
+                        <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cart.id} + '\',\'' + 'carts' + '\')'" >delete</button>
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -169,6 +178,10 @@
         const productId = document.getElementById('productId').value;
         const quantity = document.getElementById('quantity').value;
 
+        <!--DODATKOWE LOGI, ABY UPEWNIC SIE, CZY FETCH JEST POPRAWNIE KONFIGUROWANY-->
+        console.log(`Sending request to: /api/carts/${cartId}/products`);
+        console.log(`Data: { productId: ${productId}, quantity: ${quantity} }`);
+
         fetch(`/api/carts/${cartId}/products?quantity=${quantity}`, {
             method: 'POST',
             headers: {
@@ -178,16 +191,19 @@
         })
         .then(response => {
             console.log('Response Status:', response.status);
-            if (response.ok) {
-                return response.json();
-            } else {
-                alert('Failed add product to cart');
-            }
+            return response.text().then(text => {
+                console.log('Response Text:', text);
+                if (response.ok) {
+                    return JSON.parse(text);
+                } else {
+                    alert('Failed add product to cart');
+                }
+            });
         })
         .then(data => {
             console.log('Response Data: ', data);
             alert('Product added to cart');
-            form.reset(); // resetuje formularz
+            <!--form.reset(); // resetuje formularz-->
             location.reload();
         })
         .catch(error => {

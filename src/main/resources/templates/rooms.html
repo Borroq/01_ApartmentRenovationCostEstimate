@@ -20,7 +20,7 @@
         <a th:href="@{/users}" class="btn btn-primary btn-sm mb-3" >Users</a>
         <a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a>
         <!--<a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a> -->
-        <a th:href="@{/cart}" class="btn btn-primary btn-sm mb-3" >Cart</a>
+        <a th:href="@{/carts}" class="btn btn-primary btn-sm mb-3" >Carts</a>
     </div>
 
     <div class="container">
@@ -42,8 +42,10 @@
                     <td th:text="${room.floorArea}"></td>
                     <td th:text="${room.wallArea}"></td>
                     <td>
-                        <a th:href="@{/api/rooms/{id}(id=${room.id})}" class="btn btn-info btn-sm">view details</a>
-                        <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${room.id} + '\',\'' + 'rooms' + '\')'" >delete</button>
+                        <div>
+                            <a th:href="@{/api/rooms/{id}(id=${room.id})}" class="btn btn-info btn-sm">view details</a>
+                            <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${room.id} + '\',\'' + 'rooms' + '\')'" >delete</button>
+                        </div>
                     </td>
                 </tr>
             </tbody>

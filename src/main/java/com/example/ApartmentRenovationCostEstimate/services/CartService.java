@@ -1,6 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.services;
 
 import com.example.ApartmentRenovationCostEstimate.entity.Cart;
+import com.example.ApartmentRenovationCostEstimate.entity.CartItem;
 import com.example.ApartmentRenovationCostEstimate.entity.User;
 
 import java.math.BigDecimal;
@@ -12,5 +13,7 @@ public interface CartService {
     Cart getCartById(Long cartId);
     List<Cart> getAllCarts();
     void removeProductFromCart(Long cartId, Long productId);
+    void deleteCart(Long cartId);
     BigDecimal calculateTotalCost(Long cardId);
+    void updateTotalPrice(CartItem cartItem);
 }

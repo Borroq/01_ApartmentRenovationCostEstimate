@@ -51,6 +51,18 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) {
         productService.deleteProduct(productId);
-        return new ResponseEntity<>("Product succesfully deleted", HttpStatus.OK);
+        return new ResponseEntity<>("Product successfully deleted", HttpStatus.OK);
+    }
+
+    @GetMapping("category/{category}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String category) {
+        List<Product> productsByCategory = productService.getProductsByCategory(category);
+        return new ResponseEntity<>(productsByCategory, HttpStatus.OK);
+    }
+
+    @GetMapping("categories")
+    public ResponseEntity<List<String>> getProductCategories() {
+        List<String> categories = productService.getAllCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

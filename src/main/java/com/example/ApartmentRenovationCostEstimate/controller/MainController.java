@@ -50,10 +50,11 @@ public class MainController {
         model.addAttribute("rooms", roomService.getAllRoom());
         return "rooms";
     }
-    @GetMapping("/cart")
+    @GetMapping("/carts")    //docelowo zmienic na podstrone "carts". Tak samo poprawić w html
     public String cart (Model model) {
         model.addAttribute("title", title);
         model.addAttribute("carts", cartService.getAllCarts());
         return "carts";
     }
+
 }

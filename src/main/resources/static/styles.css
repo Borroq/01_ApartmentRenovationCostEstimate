@@ -32,6 +32,12 @@ h1, h2, h3 {
     font-weight: normal;
 }
 
+/*Klasa empty-cell ->  ustawia kolor pola na szary i czcionke na czerwono, gdy wartosc pola == null*/
+.emptyCell{
+    background-color: white;
+    color: red;
+}
+
 /* Definicja stylu dla wszystkich elementów <p> */
 p {
     font-size: 16px;

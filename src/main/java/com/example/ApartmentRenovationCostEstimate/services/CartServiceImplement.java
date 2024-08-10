@@ -36,6 +36,7 @@ public class CartServiceImplement implements CartService{
         Cart cart = new Cart();
         cart.setUser(user);
         cart.setName(name);
+        cart.setTotalCost(BigDecimal.ZERO);
         return cartRepository.save(cart);
     }
 
@@ -51,7 +52,16 @@ public class CartServiceImplement implements CartService{
         cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
 
+        //Update total price for this cart item
+        updateTotalPrice(cartItem);
         cartItemRepository.save(cartItem);
+
+        //Calculating the TOTAL COST of Cart
+        BigDecimal newTotalCost = calculateTotalCost(cartId);
+        cart.setTotalCost(newTotalCost);
+
+        cartRepository.save(cart);
+
         return cart;
     }
 
@@ -74,14 +84,30 @@ public class CartServiceImplement implements CartService{
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem not found"));
 
+        BigDecimal newTotalCost = calculateTotalCost(cartId);
+        cart.setTotalCost(newTotalCost);
+
         cartItemRepository.delete(cartItem);
     }
 
+    @Override
+    public void deleteCart(Long cartId) {
+        cartRepository.deleteById(cartId);
+    }
+
+    //Całkowity koszt zawartości koszyka
     @Override
     public BigDecimal calculateTotalCost(Long cardId) {
         List<CartItem> cartItems = cartItemRepository.findByCartId(cardId);
         return cartItems.stream()
                 .map(item -> item.getProduct().getPrice().multiply(new BigDecimal(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    //Aktualizacja ceny za dany element w koszyku, np. 5 wiaderek farby
+    @Override
+    public void updateTotalPrice(CartItem cartItem) {
+        BigDecimal totalPrice = cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
+        cartItem.setTotalPrice(totalPrice);
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -29,5 +30,6 @@ public class Cart {
 
 
     private String name; //Nazwa koszyka
+    private BigDecimal totalCost;
 
 }
