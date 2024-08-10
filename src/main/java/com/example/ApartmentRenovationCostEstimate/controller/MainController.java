@@ -1,12 +1,15 @@
 package com.example.ApartmentRenovationCostEstimate.controller;
 
+import com.example.ApartmentRenovationCostEstimate.entity.Cart;
 import com.example.ApartmentRenovationCostEstimate.services.CartService;
 import com.example.ApartmentRenovationCostEstimate.services.ProductService;
 import com.example.ApartmentRenovationCostEstimate.services.RoomService;
 import com.example.ApartmentRenovationCostEstimate.services.UserService;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class MainController {
@@ -50,11 +53,21 @@ public class MainController {
         model.addAttribute("rooms", roomService.getAllRoom());
         return "rooms";
     }
-    @GetMapping("/carts")    //docelowo zmienic na podstrone "carts". Tak samo poprawić w html
+    @GetMapping("/carts")
     public String cart (Model model) {
         model.addAttribute("title", title);
         model.addAttribute("carts", cartService.getAllCarts());
         return "carts";
+    }
+    @GetMapping("/carts/cart-details/{cartId}")
+    public String cartDetails (@PathVariable("cartId") Long cartId, Model model) {
+        model.addAttribute("title", title);
+        try {
+            model.addAttribute("singleCart", cartService.getCartById(cartId));
+            return "cartDetails";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/carts";
+        }
     }
 
 }
