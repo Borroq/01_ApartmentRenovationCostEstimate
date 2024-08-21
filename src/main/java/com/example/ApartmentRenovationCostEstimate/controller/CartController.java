@@ -2,6 +2,7 @@ package com.example.ApartmentRenovationCostEstimate.controller;
 
 import com.example.ApartmentRenovationCostEstimate.dto.AddProductRequest;
 import com.example.ApartmentRenovationCostEstimate.entity.Cart;
+import com.example.ApartmentRenovationCostEstimate.entity.CartItem;
 import com.example.ApartmentRenovationCostEstimate.entity.Product;
 import com.example.ApartmentRenovationCostEstimate.entity.User;
 import com.example.ApartmentRenovationCostEstimate.services.CartService;
@@ -108,13 +109,28 @@ public class CartController {
         return new ResponseEntity<>("Cart successfully deleted", HttpStatus.OK);
     }
 
-    //!!!!! Nieużywane -> zmiana koncepcji. !!!!!!!!
+    @GetMapping("{cartId}/products/categories")
+    public ResponseEntity<List<String>> getProductCategoriesFromCart(@PathVariable("cartId") Long cartId) {
+        List<String> categories = cartService.getAllProductCategoriesFromCart(cartId);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    @GetMapping("{cartId}/products/category/{category}")
+    public ResponseEntity<List<CartItem>> getProductByCategoryFromCart(@PathVariable("cartId") Long cartId, @PathVariable("category") String category) {
+        List<CartItem> productByCategory = cartService.getProductByCategoryFromCart(cartId, category);
+        return new ResponseEntity<>(productByCategory, HttpStatus.OK);
+    }
+
+    //!!!!! Nieużywane -> zmiana koncepcji.
+    // Wartosc koszyka jest aktualizowana automatycznie w trakcjie dodawania lub usuwania elementu w koszyku!!!!!!!!
     @GetMapping("{cartId}/cart-total-cost")
     public ResponseEntity<BigDecimal> calculateTotalCost(@PathVariable Long cartId) {
-        BigDecimal totalCostCart = cartService.calculateTotalCost(cartId);
+        BigDecimal totalCostCart = cartService.calculateCartTotalCost(cartId);
         if (totalCostCart == null || totalCostCart.compareTo(BigDecimal.ZERO) == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(totalCostCart, HttpStatus.OK);
     }
+
+
 }

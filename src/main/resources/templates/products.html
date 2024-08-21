@@ -24,13 +24,14 @@
     </div>
 
     <div class="container">
-        <table style="width:80%" border="2"
+        <table style="width:95%" border="2"
                class="table table-striped table-bordered border-primary mx-auto">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Brand</th>
+                    <th style="width: 30%;" scope="col">Link</th>
                     <th scope="col">Category</th>
                     <th scope="col">Price</th>
                     <th scope="col">Views</th>
@@ -41,6 +42,9 @@
                     <td th:text="${product.id}"></td>
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.brand}"></td>
+                    <td>
+                        <a th:if="${product.link != null}" th:href="${product.link}" th:text="${product.name}"></a>
+                    </td>
                     <td th:text="${product.category}"></td>
                     <td th:text="${product.price}"></td>
                     <td>
@@ -53,6 +57,8 @@
             </tbody>
         </table>
     </div>
+
+    <!--==================================DELETE ELEMENT========================================-->
 
     <script>
         function deleteElement(elementId, name) {
@@ -70,39 +76,124 @@
         }
     </script>
 
+    <!--=============================FLEXBOX WITH FORM=============================================-->
 
-    <!-- FORMULARZ SLUZACY DO DODANIA NOWEJ ENCJI-->
+    <!--FLEXBOX-->
     <div class="container">
-        <h2>Add new Product</h2>
-        <form id="productForm">
-            <div class="mb-3 row">
-                <label for="name" class="col-sm-1 col-form-label">Name</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="name" name="name">
-                </div>
+        <div class="d-flex justify-content-around">
+
+            <!-- FORMULARZ SLUZACY DO DODANIA NOWEJ ENCJI-->
+            <div class="container">
+                <h2>Add new Product</h2>
+                <form id="productForm">
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="name" class="col-sm-1 col-form-label">Name</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="brand" class="col-sm-1 col-form-label">Brand</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="brand" name="brand">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="link" class="col-sm-1 col-form-label">Link</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="link" name="link">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="category" class="col-sm-1 col-form-label">Category</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="category" name="category">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="price" class="col-sm-1 col-form-label">Price</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="number" step="0.01" class="form-control" id="price" name="price">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mb-3">Confirm</button>
+                </form>
             </div>
-            <div class="mb-3 row">
-                <label for="brand" class="col-sm-1 col-form-label">Brand</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="brand" name="brand">
-                </div>
+
+
+            <!--FORMULARZ SLUZACY DO AKTUALIZOWANIA ENCJI PRODUCT-->
+            <div class="container">
+                <h2>Product Update</h2>
+                <form id="updateProductForm">
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="productId" class="col-sm-1 col-form-label">Id</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="productId" name="productId">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="updateProductName" class="col-sm-1 col-form-label">Name</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="updateProductName" name="updateProductName">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="updateProductBrand" class="col-sm-1 col-form-label">Brand</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="updateProductBrand" name="updateProductBrand">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="updateProductLink" class="col-sm-1 col-form-label">Link</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="updateProductLink" name="updateProductLink">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="updateProductCategory" class="col-sm-1 col-form-label">Category</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="updateProductCategory" name="updateProductCategory">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-2">
+                            <label for="updateProductPrice" class="col-sm-1 col-form-label">Price</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="number" step="0.01" class="form-control" id="updateProductPrice" name="updateProductPrice">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mb-3">Confirm</button>
+                </form>
             </div>
-            <div class="mb-3 row">
-                <label for="category" class="col-sm-1 col-form-label">Category</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="category" name="category">
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="price" class="col-sm-1 col-form-label">Price</label>
-                <div class="col-sm-3">
-                    <input type="number" step="0.01" class="form-control" id="price" name="price">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Submit</button>
-        </form>
+
+        </div>
     </div>
 
+    <!--==============================ADD NEW ELEMENT============================================-->
+
+    <!--SKRYPT SLUZACY DO DODANIA NOWEJ ENCJI-->
+    <!--SKRYPT pobiera dane z formularz i na ich podstawie tworzy nowa encje Product-->
     <script>
         document.getElementById('productForm').addEventListener('submit', function(event) {
             event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
@@ -137,6 +228,55 @@
         });
     </script>
 
+    <!--===============================UPDATE ELEMENT===========================================-->
+
+    <!--SKRYPT SLUZACY DO AKTUALIZOWANIA ENCJI PRODUCT-->
+    <script>
+        document.getElementById('updateProductForm').addEventListener('submit', function(event){
+            event.preventDefault();
+
+            const form = this;
+            const productId = document.getElementById('productId').value;
+            const productName = document.getElementById('updateProductName').value;
+            const productBrand = document.getElementById('updateProductBrand').value;
+            const productLink = document.getElementById('updateProductLink').value;
+            const productCategory = document.getElementById('updateProductCategory').value;
+            const productPrice = document.getElementById('updateProductPrice').value;
+
+            fetch(`/api/products/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: productName,
+                    brand: productBrand,
+                    link: productLink,
+                    category: productCategory,
+                    price: productPrice})
+            })
+            .then(response => {
+                console.log('Response Status: ', response.status);
+                return response.json().then(data => {
+                    if(response.ok) {
+                        this.reset();
+                        alert('Product successfully updated');
+                        location.reload();
+                    } else {
+                        alert('Failed to upload product');
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the product');
+            });
+        });
+    </script>
+
+    <!--==================================FILTER BY CATEGORY========================================-->
+
+    <!--Wyświetlanie formularza SELECT z kategoriami do wyboru-->
     <div class="container">
         <h2>Filter Products by Category</h2>
         <form id="filterProductsForm">
@@ -148,9 +288,11 @@
         </form>
     </div>
 
+    <!--SKRYPT URUCHAMIA SIĘ W TRAKCIE ŁAOWANA HTML-a, dzięku użyciu "DOMContentLoaded".-->
+    <!--Skrypt odpowiada za pobranie wszystkich istniejących kategorii w bazie Produktów i aktualizacje formularza z kategoriami-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-           fetch('api/products/categories')
+           fetch('/api/products/categories')
            .then(response => {
                if(!response.ok) {
                    throw new Error('Failed to fetch categories')
@@ -172,6 +314,7 @@
         })
     </script>
 
+    <!--SKTYPT filtruje baze produktow na podstawie kategrii, a nastepnie wyswietla wynik filtracji bazy-->
     <script>
         document.getElementById('filterProductsForm').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -226,6 +369,7 @@
             }
         });
     </script>
+
 
 
     <!-- Wysyłanie zapytania restowego do API -> wykorzystując skrypt JavaScript-->

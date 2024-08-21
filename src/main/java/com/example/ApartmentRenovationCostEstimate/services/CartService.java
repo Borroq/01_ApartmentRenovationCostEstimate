@@ -14,6 +14,8 @@ public interface CartService {
     List<Cart> getAllCarts();
     void removeProductFromCart(Long cartId, Long productId);
     void deleteCart(Long cartId);
-    BigDecimal calculateTotalCost(Long cardId);
+    BigDecimal calculateCartTotalCost(Long cardId);
     void updateTotalPrice(CartItem cartItem);
+    List<String> getAllProductCategoriesFromCart(Long cartId);
+    List<CartItem> getProductByCategoryFromCart(Long cartId, String category);
 }

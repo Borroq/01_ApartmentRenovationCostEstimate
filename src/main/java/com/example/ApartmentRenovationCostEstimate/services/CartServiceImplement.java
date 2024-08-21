@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -57,7 +56,7 @@ public class CartServiceImplement implements CartService{
         cartItemRepository.save(cartItem);
 
         //Calculating the TOTAL COST of Cart
-        BigDecimal newTotalCost = calculateTotalCost(cartId);
+        BigDecimal newTotalCost = calculateCartTotalCost(cartId);
         cart.setTotalCost(newTotalCost);
 
         cartRepository.save(cart);
@@ -84,7 +83,7 @@ public class CartServiceImplement implements CartService{
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem not found"));
 
-        BigDecimal newTotalCost = calculateTotalCost(cartId);
+        BigDecimal newTotalCost = calculateCartTotalCost(cartId);
         cart.setTotalCost(newTotalCost);
 
         cartItemRepository.delete(cartItem);
@@ -97,7 +96,7 @@ public class CartServiceImplement implements CartService{
 
     //Całkowity koszt zawartości koszyka
     @Override
-    public BigDecimal calculateTotalCost(Long cardId) {
+    public BigDecimal calculateCartTotalCost(Long cardId) {
         List<CartItem> cartItems = cartItemRepository.findByCartId(cardId);
         return cartItems.stream()
                 .map(item -> item.getProduct().getPrice().multiply(new BigDecimal(item.getQuantity())))
@@ -109,5 +108,28 @@ public class CartServiceImplement implements CartService{
     public void updateTotalPrice(CartItem cartItem) {
         BigDecimal totalPrice = cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
         cartItem.setTotalPrice(totalPrice);
+    }
+
+    @Override
+    public List<String> getAllProductCategoriesFromCart(Long cartId) {
+        List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
+        return cartItems.stream()
+                .map(cartItem -> cartItem.getProduct().getCategory())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CartItem> getProductByCategoryFromCart(Long cartId, String category) {
+        List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
+        List<CartItem> filteredItemsByCart = cartItems.stream()
+                .filter(cartItem -> cartItem.getProduct().getCategory().equals(category))
+                .collect(Collectors.toList());
+
+        if(filteredItemsByCart.isEmpty()) {
+            throw new ResourceNotFoundException("No products found in the category: " + category);
+        }
+
+        return filteredItemsByCart;
     }
 }

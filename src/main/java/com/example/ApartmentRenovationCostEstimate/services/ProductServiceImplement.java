@@ -49,6 +49,7 @@ public class ProductServiceImplement implements ProductService {
         Product existingProduct = productRepository.findById(product.getId()).get();
         existingProduct.setName(product.getName());
         existingProduct.setBrand(product.getBrand());
+        existingProduct.setBrand(product.getLink());
         existingProduct.setCategory(product.getCategory());
         existingProduct.setPrice(product.getPrice());
         Product updateProduct = productRepository.save(existingProduct);
@@ -76,7 +77,7 @@ public class ProductServiceImplement implements ProductService {
         List<Product> products = (List<Product>) productRepository.findAll();
         return products.stream()
                 .map(Product::getCategory)
-                .distinct()
+                .distinct() //usówanie duplikatów
                 .collect(Collectors.toList());
     }
 

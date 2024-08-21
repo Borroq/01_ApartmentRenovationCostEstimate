@@ -19,12 +19,14 @@ public class Product {
 
     private String name;
     private String brand;
+    private String link;
     private String category;
     private BigDecimal price;
 
-    public Product(String name, String brand, String category, BigDecimal price) {
+    public Product(String name, String brand, String link, String category, BigDecimal price) {
         this.name = name;
         this.brand = brand;
+        this.link = link;
         this.category = category;
         this.price = price;
     }
