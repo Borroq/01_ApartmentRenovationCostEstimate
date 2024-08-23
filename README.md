@@ -21,5 +21,4 @@ Aby uruchomić projekt lokalnie, wykonaj następujące kroki:
 2. Zainstaluj wymagane zależności opisane w `pom.xml`.
 3. Ustaw lokalne połączenie z bazą danych MySQL, korzystając z `application.properties`.
 4. Uruchom aplikację poprzez Spring Boot.
-5. Przetestuj API za pomocą Postman.
 
