@@ -5,7 +5,7 @@
     <!-- <title th:text="${title}">Title</title> -->
     <title th:text="${title}"></title>
 
-    <link rel="stylesheet" href="styles.css" type="text/css"/> <!-- ----dodane gdy utworzę plik styles.css z globalną konfiguracją stylu -->
+    <link rel="stylesheet" href="styles.css" type="text/css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </head>
@@ -193,7 +193,7 @@
     <!--==============================ADD NEW ELEMENT============================================-->
 
     <!--SKRYPT SLUZACY DO DODANIA NOWEJ ENCJI-->
-    <!--SKRYPT pobiera dane z formularz i na ich podstawie tworzy nowa encje Product-->
+    <!--SKRYPT pobiera dane z formularza i na ich podstawie tworzy nowa encje Product-->
     <script>
         document.getElementById('productForm').addEventListener('submit', function(event) {
             event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
@@ -342,13 +342,21 @@
                         alert('No products found in this category');
                         return;
                     }
-                    //Dodać kod do wyświetlania produktu w interfejsie
+                    //Kod do wyświetlania produktu w interfejsie po filtacji
                     data.forEach(product => {
                         const row = document.createElement('tr');
+                        let linkHTML = '';
+
+                        if (product.link) {
+                            linkHTML = `<a href="${product.link}">${product.name}</a>`;
+                        } else {
+                            linkHTML = '';
+                        }
                         row.innerHTML = `
                             <td>${product.id}</td>
                             <td>${product.name}</td>
                             <td>${product.brand}</td>
+                            <td>${linkHTML}</td>
                             <td>${product.category}</td>
                             <td>${product.price}</td>
                             <td>

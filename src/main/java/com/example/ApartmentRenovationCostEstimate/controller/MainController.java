@@ -1,10 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.controller;
 
 import com.example.ApartmentRenovationCostEstimate.entity.Cart;
-import com.example.ApartmentRenovationCostEstimate.services.CartService;
-import com.example.ApartmentRenovationCostEstimate.services.ProductService;
-import com.example.ApartmentRenovationCostEstimate.services.RoomService;
-import com.example.ApartmentRenovationCostEstimate.services.UserService;
+import com.example.ApartmentRenovationCostEstimate.services.*;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,18 +15,19 @@ public class MainController {
     private final ProductService productService;
     private final RoomService roomService;
     private final CartService cartService;
+    private final DatabaseService databaseService;
 
-    public MainController(UserService userService, ProductService productService, RoomService roomService, CartService cartService) {
+    public MainController(UserService userService, ProductService productService, RoomService roomService, CartService cartService, DatabaseService databaseService) {
         this.userService = userService;
         this.productService = productService;
         this.roomService = roomService;
         this.cartService = cartService;
+        this.databaseService = databaseService;
     }
 
     @GetMapping("/")
     public String home (Model model) {
         model.addAttribute("title", title);
-        //model.addAttribute("users", userService.getAllUsers());
         return "home";
     }
 

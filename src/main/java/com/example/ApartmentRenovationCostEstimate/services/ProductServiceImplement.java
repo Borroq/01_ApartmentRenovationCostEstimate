@@ -49,7 +49,7 @@ public class ProductServiceImplement implements ProductService {
         Product existingProduct = productRepository.findById(product.getId()).get();
         existingProduct.setName(product.getName());
         existingProduct.setBrand(product.getBrand());
-        existingProduct.setBrand(product.getLink());
+        existingProduct.setLink(product.getLink());
         existingProduct.setCategory(product.getCategory());
         existingProduct.setPrice(product.getPrice());
         Product updateProduct = productRepository.save(existingProduct);
