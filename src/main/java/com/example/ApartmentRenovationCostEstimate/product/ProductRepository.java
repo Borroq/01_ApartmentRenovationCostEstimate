@@ -1,6 +1,5 @@
-package com.example.ApartmentRenovationCostEstimate.repositories;
+package com.example.ApartmentRenovationCostEstimate.product;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Product;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

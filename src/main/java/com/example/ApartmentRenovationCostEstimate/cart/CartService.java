@@ -1,8 +1,8 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.cart;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Cart;
-import com.example.ApartmentRenovationCostEstimate.entity.CartItem;
-import com.example.ApartmentRenovationCostEstimate.entity.User;
+import com.example.ApartmentRenovationCostEstimate.cart.Cart;
+import com.example.ApartmentRenovationCostEstimate.cart.CartItem;
+import com.example.ApartmentRenovationCostEstimate.user.User;
 
 import java.math.BigDecimal;
 import java.util.List;

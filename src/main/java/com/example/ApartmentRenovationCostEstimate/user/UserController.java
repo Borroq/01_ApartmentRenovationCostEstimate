@@ -1,11 +1,10 @@
-package com.example.ApartmentRenovationCostEstimate.controller;
+package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.services.UserService;
-import com.example.ApartmentRenovationCostEstimate.entity.User;
+import com.example.ApartmentRenovationCostEstimate.user.UserService;
+import com.example.ApartmentRenovationCostEstimate.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

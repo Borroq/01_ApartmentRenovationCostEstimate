@@ -1,5 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.entity;
+package com.example.ApartmentRenovationCostEstimate.cart;
 
+import com.example.ApartmentRenovationCostEstimate.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

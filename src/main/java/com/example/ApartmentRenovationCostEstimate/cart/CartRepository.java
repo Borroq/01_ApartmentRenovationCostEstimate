@@ -1,6 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.repositories;
+package com.example.ApartmentRenovationCostEstimate.cart;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Cart;
+import com.example.ApartmentRenovationCostEstimate.cart.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

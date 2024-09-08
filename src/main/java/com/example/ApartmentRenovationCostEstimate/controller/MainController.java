@@ -1,7 +1,10 @@
 package com.example.ApartmentRenovationCostEstimate.controller;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Cart;
-import com.example.ApartmentRenovationCostEstimate.services.*;
+import com.example.ApartmentRenovationCostEstimate.cart.CartService;
+import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
+import com.example.ApartmentRenovationCostEstimate.product.ProductService;
+import com.example.ApartmentRenovationCostEstimate.room.RoomService;
+import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

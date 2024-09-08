@@ -1,7 +1,8 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.entity.User;
-import com.example.ApartmentRenovationCostEstimate.repositories.UserRepository;
+import com.example.ApartmentRenovationCostEstimate.user.User;
+import com.example.ApartmentRenovationCostEstimate.user.UserRepository;
+import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;

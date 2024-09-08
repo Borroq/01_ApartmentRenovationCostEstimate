@@ -22,9 +22,9 @@
         <a th:href="@{/carts}" class="btn btn-primary btn-sm mb-3" >Carts</a>
     </div>
 
-    <!--PROBA STWORZENIA OPCJI BACKUP/RESTORE DATABASE ->  NIE DZIAŁĄ. -->
+    <!--PROBA STWORZENIA OPCJI BACKUP/RESTORE DATABASE ->  BACKUP DZIAŁĄ. -->
 
-<!--    <div class="container">
+    <div class="container">
         <h2>Backup and Restore Database</h2>
         <div class="d-flex justify-content-around">
             <div class="container">
@@ -32,35 +32,91 @@
                 <button class="btn btn-success btn-sm" onclick="createBackup()">Create Backup</button>
             </div>
 
-&lt;!&ndash;            <div class="container">
+            <div class="container">
                 <h3>Choose backup file to restore Database</h3>
                 <form id="backupFileForm">
-                    <select id="backupFiles" name="backupName">
+                    <select id="backupFile" name="backupName">
                         <option value="none">None</option>
                     </select>
-                    <button type="submit" class="btn btn-success btn-sm mb-3" th:attr="onclick=restoreBackup()">Restore Backup</button>
+                    <button type="submit" class="btn btn-success btn-sm mb-3">Restore Backup</button>
                 </form>
-            </div>&ndash;&gt;
+            </div>
         </div>
     </div>
 
 
-
-        <script>
-            function createBackup() {
-                if (confirm('Are you sure you want to create backup database?')) {
-                    fetch('/api/database/backup', {method: 'POST'})
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Backup created successfully!');
-                            location.reload();
-                        } else {
-                            alert('Failed create the backup');
-                        }
-                    })
-                }
+<!-- ==================== BACKUP DATABASE ==================== -->
+    <script>
+        function createBackup() {
+            if (confirm('Are you sure you want to create backup database?')) {
+                fetch('/api/database/backup', {method: 'POST'})
+                .then(response => {
+                    if (response.ok) {
+                        alert('Backup created successfully!');
+                        location.reload();
+                    } else {
+                        alert('Failed create the backup');
+                    }
+                })
             }
-        </script>-->
+        }
+    </script>
+
+<!-- ==================== READ BACKUP LIST ==================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/database/backups')
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error('Failed to fetch backups')
+                }
+                return response.json();
+            })
+            .then(backupFileNames => {
+                const selectElement = document.getElementById('backupFile');
+                backupFileNames.forEach(backupFileName => {
+                    const option = document.createElement('option');
+                    option.value = backupFileName;
+                    option.text = backupFileName;
+                    selectElement.appendChild(option);
+                })
+            })
+            .catch(error => {
+                console.error('Error loading backups:', error);
+            })
+        })
+    </script>
+
+    <!-- ==================== RESTORE BACKUP ==================== -->
+    <script>
+        document.getElementById('backupFileForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const backupFileName = document.getElementById('backupFile').value;
+
+            if (backupFileName === "none")  {
+                location.reload();
+                return; // Zatrzymaj funkcję, jeśli nie wybrano poprawnego pliku
+            } else {
+                fetch(`/api/database/restore/${backupFileName}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    console.log('Raw response:', response);
+                    if(!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message); // Przykład wyświetlania wiadomości zwrotnej
+                })
+                .catch(error => {
+                    console.error('Error loading backups:', error);
+                })
+            }
+        })
+    </script>
 
  </body>
  </html>

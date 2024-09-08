@@ -1,7 +1,5 @@
-package com.example.ApartmentRenovationCostEstimate.controller;
+package com.example.ApartmentRenovationCostEstimate.database;
 
-import com.example.ApartmentRenovationCostEstimate.services.DatabaseResponse;
-import com.example.ApartmentRenovationCostEstimate.services.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +36,7 @@ public class DatabaseController {
 
     @PostMapping("/restore/{fileName}")
     public ResponseEntity<DatabaseResponse> restoreBackup(@PathVariable("fileName") String fileName) {
+        System.out.println("Start przywracania backupu33");
         try {
             int result = databaseService.performRestore(fileName);
             if (result == 0) {
@@ -55,8 +54,9 @@ public class DatabaseController {
         List<String> backupFileNames = databaseService.getAllBackupsName();
         if (backupFileNames.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(backupFileNames, HttpStatus.OK);
         }
-        return new ResponseEntity<>(backupFileNames, HttpStatus.OK);
     }
 
 }

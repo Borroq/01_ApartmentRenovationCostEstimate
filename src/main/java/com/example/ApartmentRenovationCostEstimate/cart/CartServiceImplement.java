@@ -1,12 +1,9 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.cart;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Cart;
-import com.example.ApartmentRenovationCostEstimate.entity.CartItem;
-import com.example.ApartmentRenovationCostEstimate.entity.Product;
-import com.example.ApartmentRenovationCostEstimate.entity.User;
-import com.example.ApartmentRenovationCostEstimate.repositories.CartItemRepository;
-import com.example.ApartmentRenovationCostEstimate.repositories.CartRepository;
-import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
+import com.example.ApartmentRenovationCostEstimate.cart.*;
+import com.example.ApartmentRenovationCostEstimate.product.Product;
+import com.example.ApartmentRenovationCostEstimate.user.User;
+import com.example.ApartmentRenovationCostEstimate.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class CartServiceImplement implements CartService{
+public class CartServiceImplement implements CartService {
     private CartRepository cartRepository;
     private CartItemRepository cartItemRepository;
     private ProductRepository productRepository;

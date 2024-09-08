@@ -1,14 +1,10 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.product;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Cart;
-import com.example.ApartmentRenovationCostEstimate.entity.Product;
-import com.example.ApartmentRenovationCostEstimate.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

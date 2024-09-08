@@ -1,18 +1,18 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.room;
 
-import com.example.ApartmentRenovationCostEstimate.entity.Room;
-import com.example.ApartmentRenovationCostEstimate.repositories.RoomRepository;
+import com.example.ApartmentRenovationCostEstimate.room.Room;
+import com.example.ApartmentRenovationCostEstimate.room.RoomRepository;
+import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class RoomServiceImplement implements RoomService{
+public class RoomServiceImplement implements RoomService {
     private RoomRepository roomRepository;
 
     @Autowired

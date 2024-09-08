@@ -1,6 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.entity.User;
+import com.example.ApartmentRenovationCostEstimate.user.User;
 
 import java.util.List;
 import java.util.Optional;

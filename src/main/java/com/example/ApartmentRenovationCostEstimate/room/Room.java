@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.entity;
+package com.example.ApartmentRenovationCostEstimate.room;
 
 import jakarta.persistence.*;
 import lombok.Getter;

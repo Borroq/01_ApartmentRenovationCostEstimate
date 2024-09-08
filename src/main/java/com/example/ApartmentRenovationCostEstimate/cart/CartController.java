@@ -1,13 +1,9 @@
-package com.example.ApartmentRenovationCostEstimate.controller;
+package com.example.ApartmentRenovationCostEstimate.cart;
 
-import com.example.ApartmentRenovationCostEstimate.dto.AddProductRequest;
-import com.example.ApartmentRenovationCostEstimate.entity.Cart;
-import com.example.ApartmentRenovationCostEstimate.entity.CartItem;
-import com.example.ApartmentRenovationCostEstimate.entity.Product;
-import com.example.ApartmentRenovationCostEstimate.entity.User;
-import com.example.ApartmentRenovationCostEstimate.services.CartService;
-import com.example.ApartmentRenovationCostEstimate.services.ProductService;
-import com.example.ApartmentRenovationCostEstimate.services.UserService;
+import com.example.ApartmentRenovationCostEstimate.product.Product;
+import com.example.ApartmentRenovationCostEstimate.user.User;
+import com.example.ApartmentRenovationCostEstimate.product.ProductService;
+import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

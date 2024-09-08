@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.database;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

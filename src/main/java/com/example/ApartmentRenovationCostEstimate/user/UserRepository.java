@@ -1,6 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.repositories;
+package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.entity.User;
+import com.example.ApartmentRenovationCostEstimate.user.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository<User, Long> {

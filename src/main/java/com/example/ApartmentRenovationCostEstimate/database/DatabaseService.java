@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.services;
+package com.example.ApartmentRenovationCostEstimate.database;
 
 import java.io.File;
 import java.io.IOException;

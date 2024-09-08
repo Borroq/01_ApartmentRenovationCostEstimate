@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.dto;
+package com.example.ApartmentRenovationCostEstimate.cart;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
