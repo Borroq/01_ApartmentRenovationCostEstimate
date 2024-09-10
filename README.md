@@ -8,7 +8,7 @@
 - **Zarządzanie pomieszczeniami**: możliwość dodawania i modyfikowania pomieszczeń takich jak salon, sypialnia, kuchnia czy łazienka.
 - **Zarządzanie produktami**: tworzenie listy produktów, dodawanie nowych, modyfikacja istniejących, możliwość dodania linku do strony dostawcy, określenie ceny produktu, filtrowanie produktów po kategorii.
 - **Zarządzanie koszykami**: tworzenie koszyka zakupowego przypisanego do użytkownika, dodawanie produktów do koszyka, filtrowanie produktów w koszyku po kategorii, usuwanie koszyków oraz ich zawartości.
-- **Backup/Restore**: tworzenie backupu oraz przywracanie bazy danych z poziom alikacji. TODO: ograniczenie dostępu do poziomu Administratora.
+- **Backup/Restore**: tworzenie backupu oraz przywracanie bazy danych z poziomu aplikacji. TODO: ograniczenie dostępu do poziomu Administratora.
 
 ## Technologie i narzędzia
 - **Backend**: Java, Spring Boot, Spring Data JPA, Hibernate
