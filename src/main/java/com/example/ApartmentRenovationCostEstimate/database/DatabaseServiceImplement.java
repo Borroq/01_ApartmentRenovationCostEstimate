@@ -1,9 +1,10 @@
 package com.example.ApartmentRenovationCostEstimate.database;
 
-import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,79 +19,71 @@ import static java.lang.System.out;
 @Service
 public class DatabaseServiceImplement implements DatabaseService {
 
+
+    /** Application exit code for Directory creation error */
+    private static final int EXIT_CODE_DIRECTORY_CREATION_ERROR = 1;
+
+    /** Application exit code for Directory creation success */
+    private static final int EXIT_CODE_SUCCESS = 0;
+
+    /** Application exit code for database dump process error */
+    private static final int EXIT_CODE_BACKUP_DUMP_PROCESS_ERROR = 2;
+
+    private static final int EXIT_CODE_RESTORE_BACKUP_PROCESS_ERROR = 3;
+
+    /** Timestamp format for database file name */
     private static String DATE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
+
+    /** Database dump path */
     private static String BACKUP_DIRECTORY = "C:\\Users\\Damian\\Java\\Projects\\DATABASE\\backups";
+
+    /** Database dump application */
     private static String MYSQLDUMP = "C:\\xampp\\mysql\\bin\\mysqldump ";
+
+    /** Database restore application */
     private static String MYSQL_RESTORE = "C:\\xampp\\mysql\\bin\\mysql ";
+
+    /** Database dump application parameters */
     private static String MYSQLDUMP_PARAMETERS = "-u root -p --add-drop-database -B apartment_renovation > ";
+
+    /** Database restore application parameters */
     private static String MYSQLRESTORE_PARAMETERS = "-u root -p --database=apartment_renovation < ";
-    private static final int EXIT_ERROR_CODE = 1; // Directory creation error code
-    private static final int EXIT_SUCCESS_CODE = 0; // Directory creation success code
+
 
     @Override
-    public int performBackup(){
-        String date = new SimpleDateFormat(DATE_FORMAT).format(new Date());
-        String filePath = BACKUP_DIRECTORY + "\\" + date + "_arcea.sql";
-
-        //===================================================
-        StringBuilder sb = new StringBuilder();
-        sb.append("cmd /c start cmd /c \"");
-        sb.append(MYSQLDUMP);
-        sb.append(MYSQLDUMP_PARAMETERS);
-        sb.append(filePath);
-        sb.append("\"");
-
-        String dumpCommand = sb.toString();
-        //===================================================
-
+    public int performBackup() {
         if (createDirectory() == false) {
-            err.println("Not possible to create [ " + filePath + " ], backup progress was terminated.");
-            return EXIT_ERROR_CODE;
+            return EXIT_CODE_DIRECTORY_CREATION_ERROR;
         }
 
-        try {
-            executeDataBaseDump(dumpCommand);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace(); // todo To use Logger instead
-            out.println("\nBackup process terminated.");
+        if (executeDataBaseDump() == 0 ) {
+            return EXIT_CODE_SUCCESS;
+        } else {
+            return EXIT_CODE_BACKUP_DUMP_PROCESS_ERROR;
         }
-        return EXIT_SUCCESS_CODE;
     }
 
     @Override
     public int performRestore(String fileName) {
-        String filePath = BACKUP_DIRECTORY + "/" + fileName;
-
-        //===================================================
-        StringBuilder sb = new StringBuilder();
-        sb.append("cmd /c start cmd /c \"");
-        sb.append(MYSQL_RESTORE);
-        sb.append(MYSQLRESTORE_PARAMETERS);
-        sb.append(filePath);
-        sb.append("\"");
-
-        String restoreCommand = sb.toString();
-        //===================================================
-
-        try {
-            executeDatabaseRestore(restoreCommand);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            out.println("\nRestore process terminated.");
+        if (executeDatabaseRestore(fileName) == 0) {
+            return EXIT_CODE_SUCCESS;
+        } else {
+            return EXIT_CODE_RESTORE_BACKUP_PROCESS_ERROR;
         }
-        return EXIT_SUCCESS_CODE;
     }
 
+    /** Creates a directory in the appropriate path */
     private boolean createDirectory() {
         File directory = new File(BACKUP_DIRECTORY);
 
-        if(!directory.exists()) {
+        if (!directory.exists()) {
             boolean resultOfCreatingDirectory = directory.mkdirs();
             if (resultOfCreatingDirectory) {
                 out.println("Folder was created successfully.");
                 return true;
             } else {
-                err.println("Failed to create folder.");
+                err.println("Not possible to create directory:\n [ " + BACKUP_DIRECTORY + " ]\n, backup process was terminated."
+                );
                 return false;
             }
         } else {
@@ -98,38 +91,100 @@ public class DatabaseServiceImplement implements DatabaseService {
         }
     }
 
-    private int executeDataBaseDump(String dumpCommand) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", dumpCommand);
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
+    /** Invokes a command in the cmd.exe console to dump the database */
+    private int executeDataBaseDump() {
+        int resultStatus = -1;
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", this.getDumpCommand());
+            processBuilder.redirectErrorStream(true);
+            Process process = processBuilder.start();
+            resultStatus = process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace(); //fixme Use logger instead
+            err.println("Backup process failed!");
+        }
 
-        int resultStatus = process.waitFor();
-
-        if(resultStatus == 0){
-            System.out.println("Backup created successfully.");
+        if(resultStatus == 0) {
+            out.println("Backup created successfully.");
             return resultStatus;
         } else {
-            System.out.println("Backup creation failed!");
+            err.println("Backup creation failed!");
             return resultStatus;
         }
     }
 
-    private int executeDatabaseRestore(String restoreCommand) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", restoreCommand);
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
+    /** Invokes a command in the cmd.exe console to restore the database */
+    private int executeDatabaseRestore(String restoreCommand) {
+        int resultStatus = -1;
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", this.getRestoreCommand(restoreCommand));
+            processBuilder.redirectErrorStream(true);
+            Process process = processBuilder.start();
+            resultStatus = process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace(); //fixme Use logger instead
+            err.println("Restore process failed!");
+        }
 
-        int resultStatus = process.waitFor();
-
-        if(resultStatus == 0){
-            System.out.println("Successfully restored database.");
+        if (resultStatus == 0) {
+            out.println("Successfully restored database.");
             return resultStatus;
         } else {
-            System.out.println("Restore database failed!");
+            err.println("Restore database failed!");
             return resultStatus;
         }
     }
 
+    /**
+     * The method returns a full command containing:<br />
+     * <ul>
+     * <li>the application performing the database backup</li>
+     * <li>the parameters to execute</li>
+     * <li>the full path to the backup file</li>
+     * <li>the name of the backup file.</li>
+     * </ul>
+     * The file name contains a prefix that is the date and time the backup was created.
+     *
+     * @return full command for database dump
+     */
+    private static String getDumpCommand() {
+        StringBuilder dumpCommand = new StringBuilder();
+        dumpCommand.append("cmd /c start cmd /c \"");
+        dumpCommand.append(MYSQLDUMP);
+        dumpCommand.append(MYSQLDUMP_PARAMETERS);
+        dumpCommand.append(BACKUP_DIRECTORY).append("\\");
+        String date = new SimpleDateFormat(DATE_FORMAT).format(new Date());
+        dumpCommand.append(date).append("_arcea.sql");
+        dumpCommand.append("\"");
+
+        return dumpCommand.toString();
+    }
+
+    /**
+     * The method returns a full command containing:<br />
+     * <ul>
+     * <li>the application performing the database restore</li>
+     * <li>the parameters to execute</li>
+     * <li>the full path to the backup file</li>
+     * <li>Read the name of the backup file.</li>
+     * </ul>
+     * The file name contains a prefix that is the date and time the backup was created.
+     *
+     * @return full command for database restore
+     */
+    private static String getRestoreCommand(String fileName) {
+        StringBuilder restoreCommand = new StringBuilder();
+        restoreCommand.append("cmd /c start cmd /c \"");
+        restoreCommand.append(MYSQL_RESTORE);
+        restoreCommand.append(MYSQLRESTORE_PARAMETERS);
+        restoreCommand.append(BACKUP_DIRECTORY).append("\\");
+        restoreCommand.append(fileName);
+        restoreCommand.append("\"");
+
+        return restoreCommand.toString();
+    }
+
+    /** The method returns a complete list of backup files existing in the backup directory */
     @Override
     public List<String> getAllBackupsName() {
         File folder = new File(BACKUP_DIRECTORY);

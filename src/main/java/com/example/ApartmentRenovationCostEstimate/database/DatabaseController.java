@@ -3,7 +3,11 @@ package com.example.ApartmentRenovationCostEstimate.database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -36,7 +40,6 @@ public class DatabaseController {
 
     @PostMapping("/restore/{fileName}")
     public ResponseEntity<DatabaseResponse> restoreBackup(@PathVariable("fileName") String fileName) {
-        System.out.println("Start przywracania backupu33");
         try {
             int result = databaseService.performRestore(fileName);
             if (result == 0) {
