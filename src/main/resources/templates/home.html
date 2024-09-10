@@ -22,8 +22,7 @@
         <a th:href="@{/carts}" class="btn btn-primary btn-sm mb-3" >Carts</a>
     </div>
 
-    <!--PROBA STWORZENIA OPCJI BACKUP/RESTORE DATABASE ->  BACKUP DZIAŁĄ. -->
-
+    <!-- Sekcja tworzenia backupu oraz przywracania bazy danych -->
     <div class="container">
         <h2>Backup and Restore Database</h2>
         <div class="d-flex justify-content-around">
@@ -45,7 +44,8 @@
     </div>
 
 
-<!-- ==================== BACKUP DATABASE ==================== -->
+
+ <!--==================== BACKUP DATABASE ====================-->
     <script>
         function createBackup() {
             if (confirm('Are you sure you want to create backup database?')) {

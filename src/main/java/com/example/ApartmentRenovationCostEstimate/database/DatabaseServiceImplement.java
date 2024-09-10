@@ -56,7 +56,7 @@ public class DatabaseServiceImplement implements DatabaseService {
             return EXIT_CODE_DIRECTORY_CREATION_ERROR;
         }
 
-        if (executeDataBaseDump() == 0 ) {
+        if (executeDataBaseDump() == 0) {
             return EXIT_CODE_SUCCESS;
         } else {
             return EXIT_CODE_BACKUP_DUMP_PROCESS_ERROR;
@@ -82,8 +82,7 @@ public class DatabaseServiceImplement implements DatabaseService {
                 out.println("Folder was created successfully.");
                 return true;
             } else {
-                err.println("Not possible to create directory:\n [ " + BACKUP_DIRECTORY + " ]\n, backup process was terminated."
-                );
+                err.println("Not possible to create directory:\n [ " + BACKUP_DIRECTORY + " ]\n, backup process was terminated.");
                 return false;
             }
         } else {
@@ -148,8 +147,7 @@ public class DatabaseServiceImplement implements DatabaseService {
      * @return full command for database dump
      */
     private static String getDumpCommand() {
-        StringBuilder dumpCommand = new StringBuilder();
-        dumpCommand.append("cmd /c start cmd /c \"");
+        StringBuilder dumpCommand = new StringBuilder("cmd /c start cmd /c \"");
         dumpCommand.append(MYSQLDUMP);
         dumpCommand.append(MYSQLDUMP_PARAMETERS);
         dumpCommand.append(BACKUP_DIRECTORY).append("\\");
@@ -173,8 +171,7 @@ public class DatabaseServiceImplement implements DatabaseService {
      * @return full command for database restore
      */
     private static String getRestoreCommand(String fileName) {
-        StringBuilder restoreCommand = new StringBuilder();
-        restoreCommand.append("cmd /c start cmd /c \"");
+        StringBuilder restoreCommand = new StringBuilder("cmd /c start cmd /c \"");
         restoreCommand.append(MYSQL_RESTORE);
         restoreCommand.append(MYSQLRESTORE_PARAMETERS);
         restoreCommand.append(BACKUP_DIRECTORY).append("\\");
