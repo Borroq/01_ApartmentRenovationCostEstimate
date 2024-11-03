@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("api/rooms")
 public class RoomController {
+
     private RoomService roomService;
 
     @Autowired

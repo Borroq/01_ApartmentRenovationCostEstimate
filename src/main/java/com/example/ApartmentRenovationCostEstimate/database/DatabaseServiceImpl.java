@@ -17,7 +17,7 @@ import static java.lang.System.out;
 
 
 @Service
-public class DatabaseServiceImplement implements DatabaseService {
+public class DatabaseServiceImpl implements DatabaseService {
 
 
     /** Application exit code for Directory creation error */

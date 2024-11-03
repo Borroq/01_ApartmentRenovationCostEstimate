@@ -1,62 +1,81 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- <title th:text="${title}">Title</title> -->
+
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
     <title th:text="${title}"></title>
 
-    <link rel="stylesheet" href="styles.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </head>
+
+
 <body>
     <div class="header">
         <h1>Product List</h1>
     </div>
 
+
+    <!--==================================MENU BUTTON========================================-->
     <div class="container">
         <h2>Browse:</h2>
-        <a th:href="@{/}" class="btn btn-primary btn-sm mb-3" >Home</a>
+        <a th:href="@{/home}" class="btn btn-primary btn-sm mb-3" >Home</a>
         <a th:href="@{/users}" class="btn btn-primary btn-sm mb-3" >Users</a>
         <!--<a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a> -->
         <a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a>
         <a th:href="@{/carts}" class="btn btn-primary btn-sm mb-3" >Carts</a>
+        <a th:href="@{/login}" class="btn btn-primary btn-sm mb-3" style="display: none;">Login</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-danger btn-sm mb-3">Logout</button>
+        </form>
     </div>
 
+
+    <!--==================================PRODUCTS TABLE========================================-->
     <div class="container">
-        <table style="width:95%" border="2"
-               class="table table-striped table-bordered border-primary mx-auto">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Brand</th>
-                    <th style="width: 30%;" scope="col">Link</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Views</th>
-                </tr>
-            </thead>
-            <tbody class="colorText">
-                <tr th:each="product : ${products}">
-                    <td th:text="${product.id}"></td>
-                    <td th:text="${product.name}"></td>
-                    <td th:text="${product.brand}"></td>
-                    <td>
-                        <a th:if="${product.link != null}" th:href="${product.link}" th:text="${product.name}"></a>
-                    </td>
-                    <td th:text="${product.category}"></td>
-                    <td th:text="${product.price}"></td>
-                    <td>
-                        <div>
-                            <a th:href="@{/api/products/{id}(id=${product.id})}" class="btn btn-info btn-sm">view details</a>
-                            <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${product.id} + '\',\'' + 'products' + '\')'" >delete</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+
+            <table style="width:95%" border="2"
+                   class="table table-striped table-bordered border-primary mx-auto">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th style="width: 10%;" scope="col">Brand</th>
+                        <th style="width: 30%;" scope="col">Link</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th style="width: 14%;" scope="col">Views</th>
+                    </tr>
+                </thead>
+
+                <tbody class="colorText">
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.id}"></td>
+                        <td th:text="${product.name}"></td>
+                        <td th:text="${product.brand}"></td>
+                        <td>
+                            <a th:if="${product.link != null}" th:href="${product.link}" th:text="${product.name}"></a>
+                        </td>
+                        <td th:text="${product.category}"></td>
+                        <td th:text="${product.price}"></td>
+                        <td>
+                            <div>
+                                <a th:href="@{/api/products/{id}(id=${product.id})}" class="btn btn-info btn-sm">view details</a>
+                                <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${product.id} + '\',\'' + 'products' + '\')'" >delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
 
     <!--==================================DELETE ELEMENT========================================-->
 
@@ -76,15 +95,17 @@
         }
     </script>
 
+
     <!--=============================FLEXBOX WITH FORM=============================================-->
 
     <!--FLEXBOX-->
     <div class="container">
         <div class="d-flex justify-content-around">
 
-            <!-- FORMULARZ SLUZACY DO DODANIA NOWEJ ENCJI-->
+            <!-- FORM FOR ADDING A NEW ENTITY-->
             <div class="container">
                 <h2>Add new Product</h2>
+
                 <form id="productForm">
                     <div class="mb-3 row">
                         <div class="col-sm-2">
@@ -94,6 +115,7 @@
                             <input type="text" class="form-control" id="name" name="name">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="brand" class="col-sm-1 col-form-label">Brand</label>
@@ -102,6 +124,7 @@
                             <input type="text" class="form-control" id="brand" name="brand">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="link" class="col-sm-1 col-form-label">Link</label>
@@ -110,14 +133,16 @@
                             <input type="text" class="form-control" id="link" name="link">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="category" class="col-sm-1 col-form-label">Category</label>
                         </div>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" id="category" name="category">
+                            <input type="text" class="form-control" id="category" name="category" placeholder="Podaj kategorię">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="price" class="col-sm-1 col-form-label">Price</label>
@@ -126,14 +151,17 @@
                             <input type="number" step="0.01" class="form-control" id="price" name="price">
                         </div>
                     </div>
+
                     <button type="submit" class="btn btn-primary btn-sm mb-3">Confirm</button>
+
                 </form>
             </div>
 
 
-            <!--FORMULARZ SLUZACY DO AKTUALIZOWANIA ENCJI PRODUCT-->
+            <!--FORM FOR UPDATE PRODUCT ENTITY-->
             <div class="container">
                 <h2>Product Update</h2>
+
                 <form id="updateProductForm">
                     <div class="mb-3 row">
                         <div class="col-sm-2">
@@ -143,6 +171,7 @@
                             <input type="text" class="form-control" id="productId" name="productId">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="updateProductName" class="col-sm-1 col-form-label">Name</label>
@@ -151,6 +180,7 @@
                             <input type="text" class="form-control" id="updateProductName" name="updateProductName">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="updateProductBrand" class="col-sm-1 col-form-label">Brand</label>
@@ -159,6 +189,7 @@
                             <input type="text" class="form-control" id="updateProductBrand" name="updateProductBrand">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="updateProductLink" class="col-sm-1 col-form-label">Link</label>
@@ -167,6 +198,7 @@
                             <input type="text" class="form-control" id="updateProductLink" name="updateProductLink">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="updateProductCategory" class="col-sm-1 col-form-label">Category</label>
@@ -175,6 +207,7 @@
                             <input type="text" class="form-control" id="updateProductCategory" name="updateProductCategory">
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <div class="col-sm-2">
                             <label for="updateProductPrice" class="col-sm-1 col-form-label">Price</label>
@@ -183,17 +216,20 @@
                             <input type="number" step="0.01" class="form-control" id="updateProductPrice" name="updateProductPrice">
                         </div>
                     </div>
+
                     <button type="submit" class="btn btn-primary btn-sm mb-3">Confirm</button>
+
                 </form>
             </div>
 
         </div>
     </div>
 
+
     <!--==============================ADD NEW ELEMENT============================================-->
 
-    <!--SKRYPT SLUZACY DO DODANIA NOWEJ ENCJI-->
-    <!--SKRYPT pobiera dane z formularza i na ich podstawie tworzy nowa encje Product-->
+    <!--SCRIPT FOR ADDING A NEW ENTITY-->
+    <!--SCRIPT takes data from the form and creates a new Product entity based on it-->
     <script>
         document.getElementById('productForm').addEventListener('submit', function(event) {
             event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
@@ -228,9 +264,10 @@
         });
     </script>
 
+
     <!--===============================UPDATE ELEMENT===========================================-->
 
-    <!--SKRYPT SLUZACY DO AKTUALIZOWANIA ENCJI PRODUCT-->
+    <!--SCRIPT FOR UPDATE PRODUCT ENTITY-->
     <script>
         document.getElementById('updateProductForm').addEventListener('submit', function(event){
             event.preventDefault();
@@ -274,9 +311,10 @@
         });
     </script>
 
+
     <!--==================================FILTER BY CATEGORY========================================-->
 
-    <!--Wyświetlanie formularza SELECT z kategoriami do wyboru-->
+    <!--Displaying the SELECT form with categories to choose from-->
     <div class="container">
         <h2>Filter Products by Category</h2>
         <form id="filterProductsForm">
@@ -288,8 +326,9 @@
         </form>
     </div>
 
-    <!--SKRYPT URUCHAMIA SIĘ W TRAKCIE ŁAOWANA HTML-a, dzięki użyciu "DOMContentLoaded".-->
-    <!--Skrypt odpowiada za pobranie wszystkich istniejących kategorii w bazie Produktów i aktualizacje formularza z kategoriami-->
+
+    <!--THE SCRIPT STARTS WHILE LOADING HTML, using "DOMContentLoaded".-->
+    <!--The script is responsible for downloading all existing categories in the Product database and updating the form with categories-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
            fetch('/api/products/categories')
@@ -301,12 +340,14 @@
            })
            .then(categories => {
                const selectElement = document.getElementById('productCategory');
+
                categories.forEach(category => {
-                   const option = document.createElement('option');
-                   option.value = category;
-                   option.text = category.charAt(0).toUpperCase() + category.slice(1);
-                   selectElement.appendChild(option);
+                   const selectOption = document.createElement('option');
+                   selectOption.value = category;
+                   selectOption.text = category.charAt(0).toUpperCase() + category.slice(1);
+                   selectElement.appendChild(selectOption);
                })
+
            })
            .catch(error => {
                console.error('Error loading categories:', error);
@@ -314,7 +355,8 @@
         })
     </script>
 
-    <!--SKTYPT filtruje baze produktow na podstawie kategrii, a nastepnie wyswietla wynik filtracji bazy-->
+
+    <!--SCRIPT filters the product database based on categories and then displays the database filtering result-->
     <script>
         document.getElementById('filterProductsForm').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -377,7 +419,6 @@
             }
         });
     </script>
-
 
 
     <!-- Wysyłanie zapytania restowego do API -> wykorzystując skrypt JavaScript-->

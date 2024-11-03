@@ -6,6 +6,7 @@ import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class MainController {
         this.databaseService = databaseService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home (Model model) {
         model.addAttribute("title", title);
         return "home";
@@ -69,6 +70,11 @@ public class MainController {
         } catch (ResourceNotFoundException e) {
             return "redirect:/carts";
         }
+    }
+
+    @GetMapping("/login")
+    public String login (Model model) {
+        return "login";
     }
 
 }

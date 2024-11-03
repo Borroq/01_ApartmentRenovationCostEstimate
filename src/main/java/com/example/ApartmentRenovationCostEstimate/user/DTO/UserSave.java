@@ -1,4 +1,5 @@
-package com.example.ApartmentRenovationCostEstimate.cart;
+package com.example.ApartmentRenovationCostEstimate.user.DTO;
+
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,8 +11,12 @@ import lombok.experimental.FieldDefaults;
 @Getter @Setter @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddProductRequest {
+public class UserSave {
 
-    Long productId;
-    int quantity;
+    String name;
+    String surname;
+    String nick;
+    String password;
+    String email;
+    String role;
 }

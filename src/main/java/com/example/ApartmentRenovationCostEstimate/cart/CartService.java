@@ -1,13 +1,14 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
-import com.example.ApartmentRenovationCostEstimate.cart.Cart;
-import com.example.ApartmentRenovationCostEstimate.cart.CartItem;
+
 import com.example.ApartmentRenovationCostEstimate.user.User;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+
 public interface CartService {
+
     Cart createCart(User user, String name);
     Cart addProductToCart(Long cartId, Long productId, int quantity);
     Cart getCartById(Long cartId);

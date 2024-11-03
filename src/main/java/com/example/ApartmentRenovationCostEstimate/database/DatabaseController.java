@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/database")
 public class DatabaseController {
 
-    //PROBA STWORZENIA FUNKCJI BACKUP/RESTORE DATABASE -> NARAZIE NIE DZIAŁĄ.
 
     private DatabaseService databaseService;
 
@@ -39,6 +38,7 @@ public class DatabaseController {
     }
 
     @PostMapping("/restore/{fileName}")
+    //@Secured("ROLE_USER")
     public ResponseEntity<DatabaseResponse> restoreBackup(@PathVariable("fileName") String fileName) {
         try {
             int result = databaseService.performRestore(fileName);
@@ -53,6 +53,7 @@ public class DatabaseController {
     }
 
     @GetMapping("/backups")
+    //@Secured("ROLE_USER")
     public ResponseEntity<List<String>> getBackupFileNames() {
         List<String> backupFileNames = databaseService.getAllBackupsName();
         if (backupFileNames.isEmpty()) {

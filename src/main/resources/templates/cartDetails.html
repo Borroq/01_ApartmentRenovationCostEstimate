@@ -2,276 +2,304 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
     <title th:text="${title}"></title>
 
-    <link rel="stylesheet" href="styles.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </head>
+
+
 <body>
-<div class="header">
-    <h1>List of products in the cart: <span th:text="${singleCart.name}"></span></h1>
-</div>
+    <div class="header">
+        <h1>List of products in the cart: <span th:text="${singleCart.name}"></span></h1>
+    </div>
 
-<!--Przełączanie miedzy sekcjami-->
-<div class="container">
-    <h2>Browse:</h2>
-    <a th:href="@{/}" class="btn btn-primary btn-sm mb-3" >Home</a>
-    <a th:href="@{/users}" class="btn btn-primary btn-sm mb-3" >Users</a>
-    <a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a>
-    <a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a>
-    <a th:href="@{/carts}" class="btn btn-primary btn-sm mb-3" >Cart</a>
-</div>
+    <!--==================================MENU BUTTON========================================-->
+    <!--Switching between sections-->
+    <div class="container">
+        <h2>Browse:</h2>
+        <a th:href="@{/home}" class="btn btn-primary btn-sm mb-3" >Home</a>
+        <a th:href="@{/users}" class="btn btn-primary btn-sm mb-3" >Users</a>
+        <a th:href="@{/products}" class="btn btn-primary btn-sm mb-3" >Products</a>
+        <a th:href="@{/rooms}" class="btn btn-primary btn-sm mb-3" >Rooms</a>
+        <a th:href="@{/carts}" class="btn btn-primary btn-sm mb-3" >Cart</a>
+        <a th:href="@{/login}" class="btn btn-primary btn-sm mb-3" style="display: none;">Login</a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-danger btn-sm mb-3">Logout</button>
+        </form>
+    </div>
 
-<!--Lista produktów w koszyku-->
-<div class="container">
-    <table style="width:100%" border="2"
-           class="table table-striped table-bordered border-primary mx-auto">
-        <thead class="table-dark">
-        <tr>
-            <th scope="col">User name</th>
-            <th scope="col">Cart ID</th>
-            <th scope="col">Name</th>
-            <th style="width: 5%;" scope="col">Product ID</th>
-            <th style="width: 30%;" scope="col">Product Name</th>
-            <th style="width: 6%;" scope="col">Category</th>
-            <th style="width: 5%;" scope="col">Price</th>
-            <th style="width: 5%;" scope="col">Quantity</th>
-            <th style="width: 8%;" scope="col">Element Total Price</th>
-            <th style="width: 6%;" scope="col">Delete Product</th>
-            <th scope="col">Total Cost</th>
-            <th scope="col">Views</th>
-        </tr>
-        </thead>
-        <tbody class="colorText">
-        <tr th:each="cart : ${singleCart}">
-            <div class="d-grid gap-2">
-                <td th:text="${cart.user.name}"></td>
-            </div>
-            <td th:text="${cart.id}"></td>
-            <td th:text="${cart.name}"></td>
-            <td colspan="7">
-                <table class="table mb-0">
-                    <tbody id="productsList">
-                    <tr th:each="cartItem : ${cart.cartItems}">
-                        <td style="width: 5%;" th:text="${cartItem.product.id}"></td>
-                        <td style="width: 30%;" th:text="${cartItem.product.name}"></td>
-                        <td style="width: 5%;" th:text="${cartItem.product.category}"></td>
-                        <td style="width: 4%;" th:text="${cartItem.product.price}"></td>
-                        <td style="width: 5%;" th:text="${cartItem.quantity}"></td>
-                        <td style="width: 6%;" th:text="${cartItem.totalPrice != null ? cartItem.totalPrice : '###'}" th:classapend="${cartItem.totalPrice == null ? 'emptyCell' : ''}"></td>
-                        <td style="width: 1%;">
-                            <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cartItem.product.id} + '\',\'' + 'carts/' + ${cart.id} + '/products' + '\')'" >delete</button>
+
+    <!--==================================LIST OF PRODUCTS IN THE CART========================================-->
+    <div class="container">
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+
+            <table style="width:100%" border="2"
+                   class="table table-striped table-bordered border-primary mx-auto">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">User name</th>
+                        <th scope="col">Cart ID</th>
+                        <th scope="col">Name</th>
+                        <th style="width: 5%;" scope="col">Product ID</th>
+                        <th style="width: 30%;" scope="col">Product Name</th>
+                        <th style="width: 6%;" scope="col">Category</th>
+                        <th style="width: 5%;" scope="col">Price</th>
+                        <th style="width: 5%;" scope="col">Quantity</th>
+                        <th style="width: 8%;" scope="col">Element Total Price</th>
+                        <th style="width: 6%;" scope="col">Delete Product</th>
+                        <th scope="col">Total Cost</th>
+                        <th scope="col">Views</th>
+                    </tr>
+                </thead>
+
+                <tbody class="colorText">
+                    <tr th:each="cart : ${singleCart}">
+                        <div class="d-grid gap-2">
+                            <td th:text="${cart.user.name}"></td>
+                        </div>
+                        <td th:text="${cart.id}"></td>
+                        <td th:text="${cart.name}"></td>
+                        <td colspan="7">
+                            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                <table class="table mb-0">
+                                    <tbody id="productsList">
+                                    <tr th:each="cartItem : ${cart.cartItems}">
+                                        <td style="width: 5%;" th:text="${cartItem.product.id}"></td>
+                                        <td style="width: 30%;" th:text="${cartItem.product.name}"></td>
+                                        <td style="width: 5%;" th:text="${cartItem.product.category}"></td>
+                                        <td style="width: 4%;" th:text="${cartItem.product.price}"></td>
+                                        <td style="width: 5%;" th:text="${cartItem.quantity}"></td>
+                                        <td style="width: 6%;" th:text="${cartItem.totalPrice != null ? cartItem.totalPrice : '###'}" th:classapend="${cartItem.totalPrice == null ? 'emptyCell' : ''}"></td>
+                                        <td style="width: 1%;">
+                                            <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cartItem.product.id} + '\',\'' + 'carts/' + ${cart.id} + '/products' + '\')'" >delete</button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                        <td th:text="${cart.totalCost}"></td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a th:href="@{/api/carts}" class="btn btn-info btn-sm">view details</a>
+                                <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cart.id} + '\',\'' + 'carts' + '\')'" >delete</button>
+                            </div>
                         </td>
                     </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td th:text="${cart.totalCost}"></td>
-            <td>
-                <div class="d-grid gap-2">
-                    <a th:href="@{/api/carts}" class="btn btn-info btn-sm">view details</a>
-                    <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cart.id} + '\',\'' + 'carts' + '\')'" >delete</button>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-
-<!--USUWANIE ELEMENTU-->
-<script>
-    function deleteElement(elementId, name) {
-        if (confirm('Are you sure you want to delete this element?')) {
-            fetch('/api/' + name + '/' + elementId, {method: 'DELETE'})
-
-                .then(response => {
-                if (response.ok) {
-                    alert('Element successfully deleted');
-                    location.reload();
-                }else {
-                    alert('Failed to delete element');
-                }
-            });
-        }
-    }
-</script>
-
-<!-- FORMULARZ SLUZACY DO DODANIA PRODUKTÓW DO KOSZYKA-->
-<div class="container">
-    <h2>Add new product to cart.</h2>
-    <form id="addProductForm">
-        <div class="mb-3 row">
-            <label for="productId" class="col-sm-1 col-form-label">Product ID</label>
-            <div class="col-sm-3">
-                <input type="number" class="form-control" id="productId" name="productId" value="2">
-            </div>
+                </tbody>
+            </table>
         </div>
-        <div class="mb-3 row">
-            <label for="quantity" class="col-sm-1 col-form-label">Quantity</label>
-            <div class="col-sm-3">
-                <input type="number" class="form-control" id="quantity" name="quantity" value="1">
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-sm mb-3">Add product to Cart</button>
-    </form>
-</div>
+    </div>
 
-<script>
-    document.getElementById('addProductForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
 
-        const form = this;
+    <!--==================================DELETE ELEMENT========================================-->
+    <script>
+        function deleteElement(elementId, name) {
+            if (confirm('Are you sure you want to delete this element?')) {
+                fetch('/api/' + name + '/' + elementId, {method: 'DELETE'})
 
-        // Pobierz ID koszyka z URL
-        const cartId = new URL(window.location.href).pathname.split('/').pop();
-
-        const productId = document.getElementById('productId').value;
-        const quantity = document.getElementById('quantity').value;
-
-        <!--DODATKOWE LOGI, ABY UPEWNIC SIE, CZY FETCH JEST POPRAWNIE KONFIGUROWANY-->
-        console.log(`Sending request to: /api/carts/${cartId}/products`);
-        console.log(`Data: { productId: ${productId}, quantity: ${quantity} }`);
-
-        fetch(`/api/carts/${cartId}/products?quantity=${quantity}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({productId: productId, quantity: quantity})
-        })
-        .then(response => {
-            console.log('Response Status:', response.status);
-            return response.text().then(text => {
-                console.log('Response Text:', text);
-                if (response.ok) {
-                    return JSON.parse(text);
-                } else {
-                    alert('Failed add product to cart');
-                }
-            });
-        })
-        .then(data => {
-            console.log('Response Data: ', data);
-            alert('Product added to cart');
-            <!--form.reset(); // reset formularza-->
-            location.reload();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while adding the product to the cart');
-        });
-    });
-</script>
-
-<!--=================================================================================================================-->
-
-<!-- !!!! DODAĆ FILTROWANIE KOSZYKA PO KATEGORII !!!!-->
-
-<!--FORMULARZ SLUZACY DO FLITROWANIA KOSZYKA PO KATEGORII-->
-<div class="container">
-    <h2>Filter Products by Category</h2>
-    <form id="filterProductsForm">
-        <select id="productCategory" name="category">
-            <option value="none">None</option>
-            <!--Pozostałe opcje zostaną dodane dynamicznie przez skrypt JS-->
-        </select>
-        <button type="submit" class="btn btn-primary btn-sm mb-3">Filter Products</button>
-    </form>
-</div>
-
-<!--SKRYPT URUCHAMIA SIĘ W TRAKCIE ŁAOWANA HTML-a, dzięku użyciu "DOMContentLoaded".-->
-<!--Skrypt odpowiada za pobranie wszystkich istniejących kategorii w bazie Produktów i aktualizacje formularza z kategoriami-->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        const form = this;
-        // Pobierz ID koszyka z URL
-        const cartId = new URL(window.location.href).pathname.split('/').pop();
-
-        fetch(`/api/carts/${cartId}/products/categories`)
-        .then(response => {
-            if(!response.ok) {
-                throw new Error('Failed to fetch categories')
+                    .then(response => {
+                    if (response.ok) {
+                        alert('Element successfully deleted');
+                        location.reload();
+                    }else {
+                        alert('Failed to delete element');
+                    }
+                });
             }
-            return response.json();
-        })
-        .then(categories => {
-            const selectElement = document.getElementById('productCategory');
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.text = category.charAt(0).toUpperCase() + category.slice(1);
-                selectElement.appendChild(option);
+        }
+    </script>
+
+
+    <!--==================================FORM FOR ADDING PRODUCTS TO CART========================================-->
+    <div class="container">
+        <h2>Add new product to cart.</h2>
+
+        <form id="addProductForm">
+            <div class="mb-3 row">
+                <label for="productId" class="col-sm-1 col-form-label">Product ID</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" id="productId" name="productId" value="2">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="quantity" class="col-sm-1 col-form-label">Quantity</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" id="quantity" name="quantity" value="1">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm mb-3">Add product to Cart</button>
+
+        </form>
+    </div>
+
+
+    <!--==================================SCRIPT FOR ADDING PRODUCTS TO CART========================================-->
+    <script>
+        document.getElementById('addProductForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // zapobiega domyślnemu wysłaniu formularza
+
+            const form = this;
+
+            // Pobierz ID koszyka z URL
+            const cartId = new URL(window.location.href).pathname.split('/').pop();
+
+            const productId = document.getElementById('productId').value;
+            const quantity = document.getElementById('quantity').value;
+
+            <!--DODATKOWE LOGI, ABY UPEWNIC SIE, CZY FETCH JEST POPRAWNIE KONFIGUROWANY-->
+            console.log(`Sending request to: /api/carts/${cartId}/products`);
+            console.log(`Data: { productId: ${productId}, quantity: ${quantity} }`);
+
+            fetch(`/api/carts/${cartId}/products?quantity=${quantity}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({productId: productId, quantity: quantity})
             })
-        })
-        .catch(error => {
-            console.error('Error loading categories:', error);
-        })
-    })
-</script>
-
-<!--SKTYPT filtruje baze produktow na podstawie kategrii, a nastepnie wyswietla wynik filtracji bazy-->
-<script>
-    document.getElementById('filterProductsForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const form = this;
-        // Pobierz ID koszyka z URL
-        const cartId = new URL(window.location.href).pathname.split('/').pop();
-        const category = document.getElementById('productCategory').value;
-
-        if (category === "none") {
-            // Reload original list or handle the case when no filter is applied
-            location.reload();
-        } else {
-            fetch(`/api/carts/${cartId}/products/category/${category}`)
             .then(response => {
-                console.log('Raw response:', response);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.statusText);
-                }
-                return response.json()
+                console.log('Response Status:', response.status);
+                return response.text().then(text => {
+                    console.log('Response Text:', text);
+                    if (response.ok) {
+                        return JSON.parse(text);
+                    } else {
+                        alert('Failed add product to cart');
+                    }
+                });
             })
             .then(data => {
-                // Wyczyszczenie istniejącej listy produktów
-                const productList = document.getElementById('productsList');
-                productList.innerHTML = '';
-
-                if (data.length === 0) { //NARAZIE NIE DZIAŁA
-                    alert('No products found in this category');
-                    return;
-                }
-                //Dodać kod do wyświetlania produktu w interfejsie
-                data.forEach(cartItem => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td style="width: 5%;">${cartItem.product.id}</td>
-                        <td style="width: 30%;">${cartItem.product.name}</td>
-                        <td style="width: 5%;">${cartItem.product.category}</td>
-                        <td style="width: 4%;">${cartItem.product.price}</td>
-                        <td style="width: 5%;">${cartItem.quantity}</td>
-                        <td style="width: 6%;">${cartItem.totalPrice != null ? cartItem.totalPrice : '###'}</td>
-                        <td style="width: 1%;">
-                            <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cartItem.product.id} + '\',\'' + 'carts/' + ${cartId} + '/products' + '\')'" >delete</button>
-                        </td>
-                    </tr>
-                    `;
-                    productList.appendChild(row); //dodanie nowo utworzonych wierszy do tabeli
-                });
-                console.log(data);
+                console.log('Response Data: ', data);
+                alert('Product added to cart');
+                <!--form.reset(); // reset formularza-->
+                location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);
-                    alert('An error occurred while filtering products');
-                });
-        }
-    });
-</script>
+                alert('An error occurred while adding the product to the cart');
+            });
+        });
+    </script>
 
-<!-- Wysyłanie zapytania restowego do API -> wykorzystując skrypt JavaScript-->
-<script src="/js/scripts.js"></script> <!-- Dodanie linku do pliku JavaScript -->
+
+    <!--==================================FILTERING YOUR CART BY CATEGORY========================================-->
+
+    <!--FORM FOR FILTERING THE BASKET BY CATEGORY-->
+    <div class="container">
+        <h2>Filter Products by Category</h2>
+
+        <form id="filterProductsForm">
+            <select id="productCategory" name="category">
+                <option value="none">None</option>
+                <!--Pozostałe opcje zostaną dodane dynamicznie przez skrypt JS-->
+            </select>
+
+            <button type="submit" class="btn btn-primary btn-sm mb-3">Filter Products</button>
+        </form>
+    </div>
+
+
+    <!--THE SCRIPT STARTS DURING THE LOADING OF HTML, thanks to the use of "DOMContentLoaded".-->
+    <!--The script is responsible for downloading all existing categories in the Product database and updating the form with categories-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const form = this;
+            // Pobierz ID koszyka z URL
+            const cartId = new URL(window.location.href).pathname.split('/').pop();
+
+            fetch(`/api/carts/${cartId}/products/categories`)
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error('Failed to fetch categories')
+                }
+                return response.json();
+            })
+            .then(categories => {
+                const selectElement = document.getElementById('productCategory');
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.text = category.charAt(0).toUpperCase() + category.slice(1);
+                    selectElement.appendChild(option);
+                })
+            })
+            .catch(error => {
+                console.error('Error loading categories:', error);
+            })
+        })
+    </script>
+
+
+    <!--SCRIPT filters the product database based on categories and then displays the database filtering result-->
+    <script>
+        document.getElementById('filterProductsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = this;
+            // Pobierz ID koszyka z URL
+            const cartId = new URL(window.location.href).pathname.split('/').pop();
+            const category = document.getElementById('productCategory').value;
+
+            if (category === "none") {
+                // Reload original list or handle the case when no filter is applied
+                location.reload();
+            } else {
+                fetch(`/api/carts/${cartId}/products/category/${category}`)
+                .then(response => {
+                    console.log('Raw response:', response);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    // Wyczyszczenie istniejącej listy produktów
+                    const productList = document.getElementById('productsList');
+                    productList.innerHTML = '';
+
+                    if (data.length === 0) { //NARAZIE NIE DZIAŁA
+                        alert('No products found in this category');
+                        return;
+                    }
+                    //Dodać kod do wyświetlania produktu w interfejsie
+                    data.forEach(cartItem => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td style="width: 5%;">${cartItem.product.id}</td>
+                            <td style="width: 30%;">${cartItem.product.name}</td>
+                            <td style="width: 5%;">${cartItem.product.category}</td>
+                            <td style="width: 4%;">${cartItem.product.price}</td>
+                            <td style="width: 5%;">${cartItem.quantity}</td>
+                            <td style="width: 6%;">${cartItem.totalPrice != null ? cartItem.totalPrice : '###'}</td>
+                            <td style="width: 1%;">
+                                <button class="btn btn-danger btn-sm" th:attr="onclick='deleteElement(\'' + ${cartItem.product.id} + '\',\'' + 'carts/' + ${cartId} + '/products' + '\')'" >delete</button>
+                            </td>
+                        </tr>
+                        `;
+                        productList.appendChild(row); //dodanie nowo utworzonych wierszy do tabeli
+                    });
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                        alert('An error occurred while filtering products');
+                    });
+            }
+        });
+    </script>
+
+
+    <!-- Wysyłanie zapytania restowego do API -> wykorzystując skrypt JavaScript-->
+    <script src="/js/scripts.js"></script> <!-- Dodanie linku do pliku JavaScript -->
 
 </body>
 </html>

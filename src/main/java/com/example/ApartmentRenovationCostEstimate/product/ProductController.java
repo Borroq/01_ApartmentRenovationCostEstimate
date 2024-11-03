@@ -10,11 +10,14 @@ import java.util.List;
 @RestController
 @RequestMapping("api/products")
 public class ProductController {
+
     private ProductService productService;
+
     @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+
 
     //Create Product - REST API
     @PostMapping
@@ -63,4 +66,11 @@ public class ProductController {
         List<String> categories = productService.getAllCategories();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
+
+    @GetMapping("brands")
+    public ResponseEntity<List<String>> getProductBrands() {
+        List<String> brands = productService.getAllBrands();
+        return new ResponseEntity<>(brands, HttpStatus.OK);
+    }
+
 }

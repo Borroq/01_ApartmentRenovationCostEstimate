@@ -9,11 +9,12 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class ProductServiceImplement implements ProductService {
+public class ProductServiceImpl implements ProductService {
+
     private ProductRepository productRepository;
 
     @Autowired
-    public ProductServiceImplement(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -27,11 +28,6 @@ public class ProductServiceImplement implements ProductService {
         return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
-/*    @Override
-    public Product getProductById(Integer productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        return optionalProduct.get();
-    }*/
 
     @Override
     public List<Product> getAllProduct() {
@@ -73,8 +69,16 @@ public class ProductServiceImplement implements ProductService {
         List<Product> products = (List<Product>) productRepository.findAll();
         return products.stream()
                 .map(Product::getCategory)
-                .distinct() //usówanie duplikatów
+                .distinct() //usuwanie duplikatów
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> getAllBrands() {
+        List<Product> products = (List<Product>) productRepository.findAll();
+        return products.stream()
+                .map(Product::getBrand)
+                .distinct() //usuwanie duplikatów
+                .collect(Collectors.toList());
+    }
 }
