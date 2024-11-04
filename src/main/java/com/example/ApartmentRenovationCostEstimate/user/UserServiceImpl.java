@@ -38,34 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    // createUser without ModelMapper
-/*    @Override
-    public String createUser(UserSave userSave) {
-        // Sprawdzenie, czy użytkownik o podanym e-mailu już istnieje
-        User user = userRepository.findByEmail(userSave.getEmail()).orElse(null);
-        if (user != null) {
-            return "Already Exist";
-        }
-        // Ręczne mapowanie pól z DTO (PersonSaveCO) na encję (Person)
-        user = new User();
-        user.setName(userSave.getName());
-        user.setSurname(userSave.getSurname());
-        user.setNick(userSave.getNick());
-        user.setEmail(userSave.getEmail());
-        // Szyfrowanie hasła
-        user.setPassword(passwordEncoder.encode(userSave.getPassword()));
-
-        // Ustawienie ról (GrantedAuthority)
-        GrantedAuthorityImpl grantedAuthority = new GrantedAuthorityImpl();
-        grantedAuthority.setAuthority(userSave.getRole());
-        user.setGratedAuthorities(Collections.singletonList(grantedAuthority));
-
-        // Zapis osoby do bazy danych
-        userRepository.save(user);
-        return "User Saved";
-    }*/
-
-
     // create User with ModelMapper
     @Override
     public String createUser(UserSave userSave) {
@@ -116,19 +88,6 @@ public class UserServiceImpl implements UserService {
         return StreamSupport.stream(users.spliterator(),false)
                 .collect(Collectors.toList());
     }
-
-
-    // updateUser without ModelMapper
-/*    @Override
-    public User updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId()).get();
-        existingUser.setName(user.getName());
-        existingUser.setSurname(user.getSurname());
-        existingUser.setNick(user.getNick());
-        existingUser.setEmail(user.getEmail());
-        User updateUser = userRepository.save(existingUser);
-        return updateUser;
-    }    */
 
 
     // createUser with ModelMapper

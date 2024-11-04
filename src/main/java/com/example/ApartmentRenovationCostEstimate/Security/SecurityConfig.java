@@ -58,8 +58,8 @@ public class SecurityConfig {
                         .requestMatchers("/login/**", "/logout/**").permitAll() //Czy to aby na pewno jest potrzebne? Patrz niżej
                         .requestMatchers("/access-denied").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/users").anonymous() //Umożliwia dostęp do endpointu /users dla żądań typu POST, ale tylko dla anonimowych użytkowników (czyli tych, którzy nie są zalogowani).
-                        .requestMatchers(HttpMethod.PUT, "/users").permitAll() //Umożliwia wszystkim użytkownikom (zarówno zalogowanym, jak i anonimowym) dostęp do endpointu /users dla żądań typu PUT.
+                        .requestMatchers(HttpMethod.POST, "/users").anonymous()
+                        .requestMatchers(HttpMethod.PUT, "/users").permitAll()
 
                         .requestMatchers(HttpMethod.DELETE, "api/users/{id}").hasRole("ADMIN")
 
@@ -86,29 +86,6 @@ public class SecurityConfig {
                 .rememberMe(Customizer.withDefaults());
         return http.build();
     }
-
-
-/**
-     * User class from: package org.springframework.security.core.userdetails;
-     *<li> method in User class: withDefaultPasswordEncoder() is Deprecated.
-     *Using this method is not considered safe for production, but is acceptable for demos and getting started.</li>
-
-     * @return
-     */
-/*    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("12345"))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }*/
 
 
     @Bean

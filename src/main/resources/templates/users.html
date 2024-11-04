@@ -69,7 +69,7 @@
                     <td th:text="${user.email}"></td>
                     <td sec:authorize="hasRole('ADMIN')" >
                         <ul>
-                            <li th:each="authority  : ${user.gratedAuthorities}"
+                            <li th:each="authority  : ${user.grantedAuthorities}"
                                 th:text="${authority.authority}"></li>
                         </ul>
                     </td>
