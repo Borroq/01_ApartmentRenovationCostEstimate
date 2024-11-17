@@ -24,7 +24,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room getRoomById(Integer roomId) {
+    public Room getRoomById(Long roomId) {
         return roomRepository.findById(roomId).orElseThrow(() -> new ResourceNotFoundException("Room not found"));
     }
 
@@ -46,7 +46,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void deleteRoom(Integer roomId) {
+    public void deleteRoom(Long roomId) {
         roomRepository.deleteById(roomId);
     }
 }

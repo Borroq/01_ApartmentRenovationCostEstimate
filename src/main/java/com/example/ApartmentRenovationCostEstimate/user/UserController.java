@@ -1,8 +1,8 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
 
-import com.example.ApartmentRenovationCostEstimate.user.DTO.UserSave;
-import com.example.ApartmentRenovationCostEstimate.user.DTO.UserUpdate;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,8 @@ public class UserController{
 
     //Create User - REST API
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserSave userSave){
-        String savedUser = userService.createUser(userSave);
+    public ResponseEntity<String> createUser(@RequestBody UserSaveDto userSaveDto){
+        String savedUser = userService.createUser(userSaveDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
@@ -50,9 +50,9 @@ public class UserController{
 
     //Update User by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<String> updateUser(@PathVariable("id") Long userId, @RequestBody UserUpdate userUpdate){
-        userUpdate.setId(userId);
-        String uptadeUser = userService.updateUser(userUpdate);
+    public ResponseEntity<String> updateUser(@PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
+        userUpdateDto.setId(userId);
+        String uptadeUser = userService.updateUser(userUpdateDto);
         return new ResponseEntity<>(uptadeUser,HttpStatus.OK);
     }
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -63,7 +64,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCartById(Long cartId) {
-        return cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+        return cartRepository.findById(cartId).orElse(null);
+        //return cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
     }
 
     @Override
@@ -91,7 +93,7 @@ public class CartServiceImpl implements CartService {
         cartRepository.deleteById(cartId);
     }
 
-    //Całkowity koszt zawartości koszyka
+
     @Override
     public BigDecimal calculateCartTotalCost(Long cardId) {
         List<CartItem> cartItems = cartItemRepository.findByCartId(cardId);
@@ -100,7 +102,7 @@ public class CartServiceImpl implements CartService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    //Aktualizacja ceny za dany element w koszyku, np. 5 wiaderek farby
+
     @Override
     public void updateTotalPrice(CartItem cartItem) {
         BigDecimal totalPrice = cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
@@ -128,5 +130,10 @@ public class CartServiceImpl implements CartService {
         }
 
         return filteredItemsByCart;
+    }
+
+    @Override
+    public Optional<Cart> findById(Long id) {
+        return cartRepository.findById(id);
     }
 }

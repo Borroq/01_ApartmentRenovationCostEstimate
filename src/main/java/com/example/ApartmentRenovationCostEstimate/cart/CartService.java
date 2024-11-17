@@ -5,6 +5,7 @@ import com.example.ApartmentRenovationCostEstimate.user.User;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CartService {
@@ -19,4 +20,5 @@ public interface CartService {
     void updateTotalPrice(CartItem cartItem);
     List<String> getAllProductCategoriesFromCart(Long cartId);
     List<CartItem> getProductByCategoryFromCart(Long cartId, String category);
+    Optional<Cart> findById(Long id);
 }

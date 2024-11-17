@@ -3,8 +3,8 @@ package com.example.ApartmentRenovationCostEstimate.user;
 
 import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.Security.RoleRepository;
-import com.example.ApartmentRenovationCostEstimate.user.DTO.UserSave;
-import com.example.ApartmentRenovationCostEstimate.user.DTO.UserUpdate;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
@@ -40,18 +40,18 @@ public class UserServiceImpl implements UserService {
 
     // create User with ModelMapper
     @Override
-    public String createUser(UserSave userSave) {
-        User user = userRepository.findByEmail(userSave.getEmail()).orElse(null);
+    public String createUser(UserSaveDto userSaveDto) {
+        User user = userRepository.findByEmail(userSaveDto.getEmail()).orElse(null);
         if (user != null) {
-            return "User already exist";
+            return "User already exist. " + userSaveDto.getEmail();
         }
 
         // user mapping
-        user = modelMapper.map(userSave, User.class);
+        user = modelMapper.map(userSaveDto, User.class);
 
         String role;
-        if (userSave.getRole() != null) {
-            role = userSave.getRole();
+        if (userSaveDto.getRole() != null) {
+            role = userSaveDto.getRole();
         } else {
             role = "ROLE_USER";
         }
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setGrantedAuthorities(Collections.singletonList(grantedAuthority));
 
         // Password encryption
-        user.setPassword(passwordEncoder.encode(userSave.getPassword()));
+        user.setPassword(passwordEncoder.encode(userSaveDto.getPassword()));
 
         // Saving to the database
         userRepository.save(user);
@@ -92,17 +92,17 @@ public class UserServiceImpl implements UserService {
 
     // createUser with ModelMapper
     @Override
-    public String updateUser(UserUpdate userUpdate) {
-        User existingUser = userRepository.findById(userUpdate.getId()).orElse(null);
+    public String updateUser(UserUpdateDto userUpdateDto) {
+        User existingUser = userRepository.findById(userUpdateDto.getId()).orElse(null);
         if (existingUser == null) {
             return "User does not exist";
         }
 
-        if(userUpdate.getPassword() != null) {
-            existingUser.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+        if(userUpdateDto.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         }
 
-        modelMapper.map(userUpdate, existingUser);
+        modelMapper.map(userUpdateDto, existingUser);
         userRepository.save(existingUser);
 
         return "User updated";

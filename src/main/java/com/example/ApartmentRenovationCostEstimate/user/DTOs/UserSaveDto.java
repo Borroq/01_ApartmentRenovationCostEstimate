@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.user.DTO;
+package com.example.ApartmentRenovationCostEstimate.user.DTOs;
 
 
 import lombok.AccessLevel;
@@ -11,9 +11,8 @@ import lombok.experimental.FieldDefaults;
 @Getter @Setter @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdate {
+public class UserSaveDto {
 
-    Long id;
     String name;
     String surname;
     String nick;

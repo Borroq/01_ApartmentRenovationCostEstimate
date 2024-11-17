@@ -63,7 +63,7 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.DELETE, "api/users/{id}").hasRole("ADMIN")
 
-                        //.requestMatchers("/**", "/users/**").permitAll()
+                        .requestMatchers("/**", "/users/**").permitAll() // DISABLING SECURITY
 
                         .requestMatchers("/home/**", "/rooms/**", "/carts/**", "/products/**", "/users/**", "/api/database/**", "/api/users/**").hasAnyRole("USER", "ADMIN")
 

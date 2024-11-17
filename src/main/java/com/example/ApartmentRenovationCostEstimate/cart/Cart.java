@@ -34,7 +34,7 @@ public class Cart {
     List<CartItem> cartItems;
 
 
-    String name; //Nazwa koszyka
+    String name;
     BigDecimal totalCost;
 
 }

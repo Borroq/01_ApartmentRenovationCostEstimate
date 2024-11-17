@@ -1,7 +1,9 @@
-# ApartmentRenovationCostEstimate (ARCEA)
+# Apartment Renovation Cost Estimate (ARCEA)
+
+***W fazie rozwoju...***
 
 ## Opis
-**ApartmentRenovationCostEstimate** jest internetową aplikacją do tworzenia kosztorysów wykończenia i remontu mieszkań. Umożliwia użytkownikom łatwe i szybkie szacowanie kosztów remontu poprzez dodawanie produktów do personalizowanego koszyka zakupowego.
+**Apartment Renovation Cost Estimate** jest internetową aplikacją do tworzenia kosztorysów wykończenia i remontu mieszkań. Umożliwia użytkownikom łatwe i szybkie szacowanie kosztów remontu poprzez dodawanie produktów do personalizowanego koszyka zakupowego.
 
 ## Funkcjonalności
 - **Zarządzanie użytkownikami**: dodawanie nowych użytkowników, usuwanie istniejących oraz przydzielanie ról, takich jak Administrator i Użytkownik.
@@ -24,10 +26,10 @@
   - Hasła użytkowników są hashowane przy użyciu algorytmu **BCrypt** przed zapisaniem w bazie danych.
 
 ## Technologie i narzędzia
-- **Backend**: Java, Spring Boot v3.3.0, Spring Data JPA, Spring Security v6.3.0, Hibernate
-- **Frontend**: HTML, CSS, JavaScript, Bootstrap (wersja 5.2.3), Thymeleaf
+- **Backend**: Java v17, Spring Boot v3.3.0, Spring Data JPA v3.3.0, Spring Security v6.3.0, Hibernate
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap (wersja 5.2.3), Thymeleaf v3.1.1
 - **Baza danych**: MySQL
-- **Narzędzia**: Lombok, Postman, phpMyAdmin
+- **Narzędzia**: Lombok 1.18.32, Postman v11.17.1, phpMyAdmin
 
 ## Jak zacząć?
 Aby uruchomić projekt lokalnie, wykonaj następujące kroki:

@@ -1,5 +1,8 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
+import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
+import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
+import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +24,19 @@ public class RoomController {
 
     //Create Room - REST API
     @PostMapping
-    public ResponseEntity<Room> createRooms(@RequestBody Room room){
+    public ResponseEntity<Object> createRooms(@RequestBody Room room){
         Room savedRoom = roomService.createRoom(room);
-        return new ResponseEntity<>(savedRoom, HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse<>("Product created successfully.", savedRoom), HttpStatus.CREATED);
     }
 
     //Get Room by ID - REST API
     @GetMapping("{id}")
-    public ResponseEntity<Room> getRoomById(@PathVariable("id") Integer roomId){
+    public ResponseEntity<Object> getRoomById(@PathVariable("id") Long roomId){
         Room room = roomService.getRoomById(roomId);
-        return new ResponseEntity<>(room,HttpStatus.OK);
+        if (room == null) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorType.ROOM_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ApiResponse<>("Room retrieved successfully", room),HttpStatus.OK);
     }
 
     //Get all Rooms - REST API
@@ -42,16 +48,27 @@ public class RoomController {
 
     //Update Room by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Room> updateRoom(@PathVariable("id") Integer roomId, @RequestBody Room room){
+    public ResponseEntity<Object> updateRoom(@PathVariable("id") Long roomId, @RequestBody Room room){
+        Room existingRoom = roomService.getRoomById(roomId);
+        if (existingRoom == null) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorType.ROOM_NOT_FOUND),HttpStatus.NOT_FOUND);
+        }
+
         room.setId(roomId);
         Room updateRoom = roomService.updateRoom(room);
-        return new ResponseEntity<>(updateRoom, HttpStatus.OK);
+
+        return new ResponseEntity<>(new ApiResponse<>("Room updated successfully", updateRoom), HttpStatus.OK);
     }
 
     //Delete Room by Id
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteRoom(@PathVariable("id") Integer roomId){
+    public ResponseEntity<Object> deleteRoom(@PathVariable("id") Long roomId){
+        Room room = roomService.getRoomById(roomId);
+        if (room == null) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorType.ROOM_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+
         roomService.deleteRoom(roomId);
-        return new ResponseEntity<>("Room succesfully deleted", HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse<>("Room succesfully deleted"), HttpStatus.OK);
     }
 }

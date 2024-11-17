@@ -1,17 +1,17 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.user.DTO.UserSave;
-import com.example.ApartmentRenovationCostEstimate.user.DTO.UserUpdate;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public interface UserService {
-    String createUser(UserSave userSave);
+    String createUser(UserSaveDto userSaveDto);
     User getUserById(Long userId);
     List<User> getAllUsers();
-    String updateUser(UserUpdate userUpdate);
+    String updateUser(UserUpdateDto userUpdateDto);
     void deleteUser(Long userId);
     Optional<User> findById(Long id);
 }

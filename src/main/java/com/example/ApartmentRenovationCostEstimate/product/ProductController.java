@@ -1,8 +1,12 @@
 package com.example.ApartmentRenovationCostEstimate.product;
 
+import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
+import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
+import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +25,19 @@ public class ProductController {
 
     //Create Product - REST API
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+    public ResponseEntity<Object> createProduct(@RequestBody Product product){
         Product savedProduct = productService.createProduct(product);
-        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse<>("Product created successfully.", savedProduct), HttpStatus.CREATED);
     }
 
     //Get Product by ID - REST API
     @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long productId){
+    public ResponseEntity<Object> getProductById(@PathVariable("id") Long productId){
         Product product = productService.getProductById(productId);
-        return new ResponseEntity<>(product,HttpStatus.OK);
+        if (product == null) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ApiResponse<>("Product retrieved successfully", product),HttpStatus.OK);
     }
 
     //Get all Products - REST API
@@ -42,17 +49,28 @@ public class ProductController {
 
     //Update Product by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
+    public ResponseEntity<Object> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
+        Product existingProduct = productService.getProductById(productId);
+        if (existingProduct == null) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+
         product.setId(productId);
         Product updateProduct = productService.updateProduct(product);
-        return new ResponseEntity<>(updateProduct, HttpStatus.OK);
+
+        return new ResponseEntity<>(new ApiResponse<>("Product updated successfully", updateProduct), HttpStatus.OK);
     }
 
     //Delete Product by Id
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long productId) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable("id") Long productId) {
+        Product product = productService.getProductById(productId);
+        if (product == null) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+
         productService.deleteProduct(productId);
-        return new ResponseEntity<>("Product successfully deleted", HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse<>("Product successfully deleted"), HttpStatus.OK);
     }
 
     @GetMapping("category/{category}")
