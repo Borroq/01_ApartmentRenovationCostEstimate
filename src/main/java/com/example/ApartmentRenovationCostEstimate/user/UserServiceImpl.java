@@ -3,6 +3,7 @@ package com.example.ApartmentRenovationCostEstimate.user;
 
 import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.Security.RoleRepository;
+import com.example.ApartmentRenovationCostEstimate.exceptions.UserNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 import lombok.AccessLevel;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
     // create User with ModelMapper
     @Override
+    @Transactional
     public String createUser(UserSaveDto userSaveDto) {
         User user = userRepository.findByEmail(userSaveDto.getEmail()).orElse(null);
         if (user != null) {
@@ -78,7 +81,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
 
@@ -92,28 +95,28 @@ public class UserServiceImpl implements UserService {
 
     // createUser with ModelMapper
     @Override
-    public String updateUser(UserUpdateDto userUpdateDto) {
-        User existingUser = userRepository.findById(userUpdateDto.getId()).orElse(null);
-        if (existingUser == null) {
-            return "User does not exist";
-        }
+    @Transactional
+    public User updateUser(UserUpdateDto userUpdateDto) {
+        User existingUser = userRepository.findById(userUpdateDto.getId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if(userUpdateDto.getPassword() != null) {
             existingUser.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         }
 
         modelMapper.map(userUpdateDto, existingUser);
-        userRepository.save(existingUser);
 
-        return "User updated";
+        return userRepository.save(existingUser);
     }
 
 
     //@Transactional    // Dzięki adnotacji @Transactional operacje na bazie danych będą wykonane w jednej transakcji.
                         // Adnotacja @Transactional zapewnia, że jeśli cokolwiek pójdzie nie tak, wszystkie zmiany zostaną wycofane.
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Usuń powiązania ról z użytkownikiem, aby uniknąć problemów z kluczami obcymi
         user.getGrantedAuthorities().clear();

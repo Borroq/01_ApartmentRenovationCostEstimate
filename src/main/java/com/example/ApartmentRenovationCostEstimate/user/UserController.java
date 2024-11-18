@@ -1,6 +1,9 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
 
+import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
+import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
+import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 import lombok.AccessLevel;
@@ -12,6 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 //http://localhost:8080/api/user/...
@@ -26,35 +30,44 @@ public class UserController{
         this.userService = userService;
     }
 
+
     //Create User - REST API
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserSaveDto userSaveDto){
+    public ResponseEntity<Object> createUser(@RequestBody UserSaveDto userSaveDto){
         String savedUser = userService.createUser(userSaveDto);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(new ApiResponse<>("User created successfully.", savedUser), HttpStatus.CREATED);
     }
+
 
     //Get User by ID - REST API
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId){
-        User user = userService.getUserById(userId);
+    public ResponseEntity<Object> getUserById(@PathVariable("id") Long userId){
+        Optional<User> user = userService.findById(userId);
+
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
+
 
     //Get all Users - REST API
     @GetMapping
     @Secured("ROLE_ADMIN")
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> users = userService.getAllUsers();
+
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
+
     //Update User by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<String> updateUser(@PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
+    public ResponseEntity<Object> updateUser(@PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
         userUpdateDto.setId(userId);
-        String uptadeUser = userService.updateUser(userUpdateDto);
-        return new ResponseEntity<>(uptadeUser,HttpStatus.OK);
+        User uptadeUser = userService.updateUser(userUpdateDto);
+
+        return new ResponseEntity<>(new ApiResponse<>("User updated successfully" , uptadeUser),HttpStatus.OK);
     }
+
 
     //Delete User by Id
     @DeleteMapping("{id}")

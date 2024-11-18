@@ -11,7 +11,7 @@ public interface UserService {
     String createUser(UserSaveDto userSaveDto);
     User getUserById(Long userId);
     List<User> getAllUsers();
-    String updateUser(UserUpdateDto userUpdateDto);
+    User updateUser(UserUpdateDto userUpdateDto);
     void deleteUser(Long userId);
     Optional<User> findById(Long id);
 }
