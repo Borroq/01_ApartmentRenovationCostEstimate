@@ -4,6 +4,7 @@ package com.example.ApartmentRenovationCostEstimate.user;
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 import lombok.AccessLevel;
@@ -42,8 +43,8 @@ public class UserController{
 
     //Get User by ID - REST API
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUserById(@PathVariable("id") Long userId){
-        Optional<User> user = userService.findById(userId);
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable("id") Long userId){
+        UserResponseDto user = userService.getUserById(userId);
 
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
@@ -52,8 +53,8 @@ public class UserController{
     //Get all Users - REST API
     @GetMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<User>> getAllUsers(){
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(){
+        List<UserResponseDto> users = userService.getAllUsers();
 
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
