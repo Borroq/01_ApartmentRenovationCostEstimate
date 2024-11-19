@@ -12,32 +12,6 @@ import java.util.Optional;
 @NoArgsConstructor
 public class ErrorResponse {
 
-/*    public enum ErrorType {
-        USER_NOT_FOUND("User not found!"),
-        USERID_IS_MISSING("UserId is missing!"),
-        INVALID_USER_FORMAT("Invalid user format!"),
-        CART_NOT_FOUND("Cart not found!"),
-        CART_NAME_IS_MISSING("Cart name is missing!"),
-        PRODUCT_NOT_FOUND("Product not found!"),
-        
-        CART_OR_PRODUCT_NOT_FOUND("Cart or product not found!");
-
-        private String errorMessage;
-
-        ErrorType(String errorMessage) {
-            this.errorMessage = errorMessage;
-        }
-
-        public String getErrorMessage() {
-            return errorMessage;
-        }
-
-        @Override
-        public String toString() {
-            return this.errorMessage;
-        }
-    }*/
-
     private Optional<String> message = Optional.empty();
     private ErrorType type;
 

@@ -34,7 +34,7 @@ public class UserController{
     //Create User - REST API
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody UserSaveDto userSaveDto){
-        String savedUser = userService.createUser(userSaveDto);
+        User savedUser = userService.createUser(userSaveDto);
 
         return new ResponseEntity<>(new ApiResponse<>("User created successfully.", savedUser), HttpStatus.CREATED);
     }

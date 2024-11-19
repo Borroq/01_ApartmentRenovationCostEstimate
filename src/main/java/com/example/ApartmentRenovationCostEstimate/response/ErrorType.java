@@ -9,6 +9,7 @@ import lombok.ToString;
 public enum ErrorType {
     USER_NOT_FOUND("User not found!"),
     USERID_IS_MISSING("UserId is missing!"),
+    USER_ALREADY_EXIST("User already exist!"),
     INVALID_USER_FORMAT("Invalid user format!"),
     CART_NOT_FOUND("Cart not found!"),
     CART_NAME_IS_MISSING("Cart name is missing!"),

@@ -3,7 +3,9 @@ package com.example.ApartmentRenovationCostEstimate.user;
 
 import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.Security.RoleRepository;
+import com.example.ApartmentRenovationCostEstimate.exceptions.UserAlreadyExistsException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.UserNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
 import lombok.AccessLevel;
@@ -43,10 +45,10 @@ public class UserServiceImpl implements UserService {
     // create User with ModelMapper
     @Override
     @Transactional
-    public String createUser(UserSaveDto userSaveDto) {
+    public User createUser(UserSaveDto userSaveDto) {
         User user = userRepository.findByEmail(userSaveDto.getEmail()).orElse(null);
         if (user != null) {
-            return "User already exist. " + userSaveDto.getEmail();
+            throw new UserAlreadyExistsException("User already exist with email: " + userSaveDto.getEmail());
         }
 
         // user mapping
@@ -60,12 +62,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Setting roles (GrantedAuthority)
-        GrantedAuthorityImpl grantedAuthority = roleRepository.findByAuthority(role)
-                .orElseGet(() -> {
-            GrantedAuthorityImpl newRole = new GrantedAuthorityImpl();
-            newRole.setAuthority(role);
-            return roleRepository.save(newRole);
-        });
+        GrantedAuthorityImpl grantedAuthority = getOrCreateRole(role);
 
         user.setGrantedAuthorities(Collections.singletonList(grantedAuthority));
 
@@ -73,22 +70,24 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userSaveDto.getPassword()));
 
         // Saving to the database
-        userRepository.save(user);
-        return "User Saved";
+        return userRepository.save(user);
     }
 
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+    public UserResponseDto getUserById(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         Iterable<User> users = userRepository.findAll();
         return StreamSupport.stream(users.spliterator(),false)
+                .map(user -> modelMapper.map(user, UserResponseDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -132,4 +131,15 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
+
+
+    private GrantedAuthorityImpl getOrCreateRole(String role) {
+        return roleRepository.findByAuthority(role)
+                .orElseGet(() -> {
+                    GrantedAuthorityImpl newRole = new GrantedAuthorityImpl();
+                    newRole.setAuthority(role);
+                    return roleRepository.save(newRole);
+                });
+    }
+
 }
