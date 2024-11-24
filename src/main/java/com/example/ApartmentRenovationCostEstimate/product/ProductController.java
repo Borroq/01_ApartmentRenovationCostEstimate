@@ -3,10 +3,10 @@ package com.example.ApartmentRenovationCostEstimate.product;
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ProductController {
 
     //Create Product - REST API
     @PostMapping
-    public ResponseEntity<Object> createProduct(@RequestBody Product product){
+    public ResponseEntity<Object> createProduct(@Valid @RequestBody Product product){
         Product savedProduct = productService.createProduct(product);
         return new ResponseEntity<>(new ApiResponse<>("Product created successfully.", savedProduct), HttpStatus.CREATED);
     }
@@ -49,7 +49,7 @@ public class ProductController {
 
     //Update Product by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateProduct(@PathVariable("id") Long productId, @RequestBody Product product) {
+    public ResponseEntity<Object> updateProduct(@Valid @PathVariable("id") Long productId, @RequestBody Product product) {
         Product existingProduct = productService.getProductById(productId);
         if (existingProduct == null) {
             return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
