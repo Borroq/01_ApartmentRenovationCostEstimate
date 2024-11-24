@@ -5,6 +5,9 @@ import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl
 import com.example.ApartmentRenovationCostEstimate.cart.Cart;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,13 +34,25 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-
+    @NotBlank(message = "Name cannot be null")
+    @Size(min = 3, max = 70)
     String name;
+
+    @NotBlank(message = "Surname cannot be null")
+    @Size(min = 3, max = 70)
     String surname;
+
+    @Size(max = 70)
     String nick;
+
+    @Size(min = 6, max = 200)
     String password;
+
+    @NotBlank(message = "Email cannot be null")
+    @Email(message = "Invalid email format")
     @Column(unique = true)
     String email;
+
 
     public User(String name, String surname, String nick, String password, String email) {
         this.name = name;

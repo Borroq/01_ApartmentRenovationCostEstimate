@@ -5,6 +5,7 @@ import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class UserController{
 
     //Create User - REST API
     @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody UserSaveDto userSaveDto){
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserSaveDto userSaveDto){
         User savedUser = userService.createUser(userSaveDto);
 
         return new ResponseEntity<>(new ApiResponse<>("User created successfully.", savedUser), HttpStatus.CREATED);
@@ -51,8 +52,11 @@ public class UserController{
     //Get all Users - REST API
     @GetMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<UserResponseDto>> getAllUsers(){
+    public ResponseEntity<Object> getAllUsers(){
         List<UserResponseDto> users = userService.getAllUsers();
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse<>("No rooms found"), HttpStatus.OK);
+        }
 
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
@@ -60,7 +64,7 @@ public class UserController{
 
     //Update User by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
+    public ResponseEntity<Object> updateUser(@Valid @PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
         userUpdateDto.setId(userId);
         User uptadeUser = userService.updateUser(userUpdateDto);
 
@@ -72,6 +76,6 @@ public class UserController{
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long userId){
         userService.deleteUser(userId);
-        return new ResponseEntity<>(new ApiResponse<>("User succesfully deleted"), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse<>("User successfully deleted"), HttpStatus.OK);
     }
 }

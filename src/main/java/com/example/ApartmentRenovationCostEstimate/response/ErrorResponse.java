@@ -38,6 +38,4 @@ public class ErrorResponse {
         }
         return type.getErrorMessage();
     }
-
-
 }
