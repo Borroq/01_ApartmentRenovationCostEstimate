@@ -3,8 +3,8 @@ package com.example.ApartmentRenovationCostEstimate.user;
 
 import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.Security.RoleRepository;
-import com.example.ApartmentRenovationCostEstimate.exceptions.UserAlreadyExistsException;
-import com.example.ApartmentRenovationCostEstimate.exceptions.UserNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserAlreadyExistsException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
@@ -12,7 +12,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

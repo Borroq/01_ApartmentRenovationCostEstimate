@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.exceptions;
+package com.example.ApartmentRenovationCostEstimate.exceptions.product;
 
 
 import lombok.Getter;

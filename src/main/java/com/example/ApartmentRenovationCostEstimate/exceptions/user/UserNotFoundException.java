@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.exceptions;
+package com.example.ApartmentRenovationCostEstimate.exceptions.user;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException(String message) {
