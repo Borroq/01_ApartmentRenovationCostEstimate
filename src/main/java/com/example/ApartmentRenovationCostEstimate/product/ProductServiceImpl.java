@@ -1,8 +1,13 @@
 package com.example.ApartmentRenovationCostEstimate.product;
 
+import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductSaveDto;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductUpdateDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,63 +16,74 @@ import java.util.stream.StreamSupport;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Product createProduct(Product product) {
+    @Transactional
+    public Product createProduct(ProductSaveDto productSaveDto) {
+        Product product = modelMapper.map(productSaveDto, Product.class);
+
         return productRepository.save(product);
     }
 
     @Override
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElse(null);
-        //return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    public ProductResponseDto getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        return modelMapper.map(product, ProductResponseDto.class);
     }
 
 
     @Override
-    public List<Product> getAllProduct() {
+    public List<ProductResponseDto> getAllProduct() {
         Iterable<Product> products = productRepository.findAll();
+
         return StreamSupport.stream(products.spliterator(),false)
+                .map(product -> modelMapper.map(product, ProductResponseDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Product updateProduct(Product product) {
-        Product existingProduct = productRepository.findById(product.getId()).get();
-        existingProduct.setName(product.getName());
-        existingProduct.setBrand(product.getBrand());
-        existingProduct.setLink(product.getLink());
-        existingProduct.setCategory(product.getCategory());
-        existingProduct.setPrice(product.getPrice());
-        Product updateProduct = productRepository.save(existingProduct);
-        return updateProduct;
+    @Transactional
+    public Product updateProduct(ProductUpdateDto productUpdateDto) {
+        Product existingProduct = productRepository.findById(productUpdateDto.getId())
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        modelMapper.map(productUpdateDto, existingProduct);
+
+        return productRepository.save(existingProduct);
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                        .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
         productRepository.deleteById(productId);
     }
 
     @Override
-    public List<Product> getProductsByCategory(String category) {
+    public List<ProductResponseDto> getProductsByCategory(String category) {
         List<Product> productByCategory = productRepository.findByCategory(category);
 
-        if(productByCategory.isEmpty()) {
-            throw new ResourceNotFoundException("No products found in the category: " + category);
-        }
-
-        return productByCategory;
+        return productByCategory.stream()
+                .map(productCategory -> modelMapper.map(productCategory, ProductResponseDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<String> getAllCategories() {
         List<Product> products = (List<Product>) productRepository.findAll();
+
         return products.stream()
                 .map(Product::getCategory)
                 .distinct() //usuwanie duplikatów

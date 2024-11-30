@@ -338,7 +338,8 @@
                }
                return response.json();
            })
-           .then(categories => {
+           .then(apiResponse => {
+               const categories = apiResponse.data;
                const selectElement = document.getElementById('productCategory');
 
                categories.forEach(category => {

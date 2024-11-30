@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("api/rooms")
 public class RoomController {
 
-    private RoomService roomService;
+    private final RoomService roomService;
 
     @Autowired
     public RoomController(RoomService roomService) {
@@ -27,6 +27,7 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<Object> createRooms(@Valid @RequestBody RoomSaveDto room){
         Room savedRoom = roomService.createRoom(room);
+
         return new ResponseEntity<>(new ApiResponse<>("Room created successfully.", savedRoom), HttpStatus.CREATED);
     }
 
@@ -64,6 +65,7 @@ public class RoomController {
     public ResponseEntity<Object> deleteRoom(@PathVariable("id") Long roomId){
 
         roomService.deleteRoom(roomId);
+        
         return new ResponseEntity<>(new ApiResponse<>("Room successfully deleted"), HttpStatus.OK);
     }
 }

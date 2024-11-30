@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class RoomServiceImpl implements RoomService {
 
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -28,6 +28,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public Room createRoom(RoomSaveDto roomSaveDto) {
         Room room = modelMapper.map(roomSaveDto, Room.class);
+
         return roomRepository.save(room);
     }
 
@@ -35,6 +36,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomDto getRoomById(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
+
         return modelMapper.map(room, RoomDto.class);
     }
 

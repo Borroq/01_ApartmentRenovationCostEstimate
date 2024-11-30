@@ -55,7 +55,7 @@ public class UserController{
     public ResponseEntity<Object> getAllUsers(){
         List<UserResponseDto> users = userService.getAllUsers();
         if (users.isEmpty()) {
-            return new ResponseEntity<>(new ApiResponse<>("No rooms found"), HttpStatus.OK);
+            return new ResponseEntity<>(new ApiResponse<>("No users found"), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(users,HttpStatus.OK);

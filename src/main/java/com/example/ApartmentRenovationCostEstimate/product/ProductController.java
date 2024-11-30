@@ -1,8 +1,9 @@
 package com.example.ApartmentRenovationCostEstimate.product;
 
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductSaveDto;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductUpdateDto;
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
-import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
-import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequestMapping("api/products")
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -25,38 +26,37 @@ public class ProductController {
 
     //Create Product - REST API
     @PostMapping
-    public ResponseEntity<Object> createProduct(@Valid @RequestBody Product product){
-        Product savedProduct = productService.createProduct(product);
+    public ResponseEntity<Object> createProduct(@Valid @RequestBody ProductSaveDto productSaveDto){
+        Product savedProduct = productService.createProduct(productSaveDto);
+
         return new ResponseEntity<>(new ApiResponse<>("Product created successfully.", savedProduct), HttpStatus.CREATED);
     }
 
     //Get Product by ID - REST API
     @GetMapping("{id}")
     public ResponseEntity<Object> getProductById(@PathVariable("id") Long productId){
-        Product product = productService.getProductById(productId);
-        if (product == null) {
-            return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
+        ProductResponseDto product = productService.getProductById(productId);
+
         return new ResponseEntity<>(new ApiResponse<>("Product retrieved successfully", product),HttpStatus.OK);
     }
 
     //Get all Products - REST API
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(){
-        List<Product> products = productService.getAllProduct();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<Object> getAllProducts(){
+        List<ProductResponseDto> products = productService.getAllProduct();
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse<>("No products found."), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new ApiResponse<>("Products retrieved successfully", products), HttpStatus.OK);
     }
 
     //Update Product by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateProduct(@Valid @PathVariable("id") Long productId, @RequestBody Product product) {
-        Product existingProduct = productService.getProductById(productId);
-        if (existingProduct == null) {
-            return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Object> updateProduct(@Valid @PathVariable("id") Long productId, @RequestBody ProductUpdateDto productUpdateDto) {
 
-        product.setId(productId);
-        Product updateProduct = productService.updateProduct(product);
+        productUpdateDto.setId(productId);
+        Product updateProduct = productService.updateProduct(productUpdateDto);
 
         return new ResponseEntity<>(new ApiResponse<>("Product updated successfully", updateProduct), HttpStatus.OK);
     }
@@ -64,31 +64,33 @@ public class ProductController {
     //Delete Product by Id
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") Long productId) {
-        Product product = productService.getProductById(productId);
-        if (product == null) {
-            return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
-
         productService.deleteProduct(productId);
+
         return new ResponseEntity<>(new ApiResponse<>("Product successfully deleted"), HttpStatus.OK);
     }
 
     @GetMapping("category/{category}")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String category) {
-        List<Product> productsByCategory = productService.getProductsByCategory(category);
+    public ResponseEntity<Object> getProductsByCategory(@PathVariable String category) {
+        List<ProductResponseDto> productsByCategory = productService.getProductsByCategory(category);
+        if (productsByCategory.isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse<>("No products found in the category: " + category), HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(productsByCategory, HttpStatus.OK);
     }
 
     @GetMapping("categories")
-    public ResponseEntity<List<String>> getProductCategories() {
+    public ResponseEntity<Object> getProductCategories() {
         List<String> categories = productService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+
+        return new ResponseEntity<>(new ApiResponse<>("Categories retrieved successfully", categories), HttpStatus.OK);
     }
 
     @GetMapping("brands")
-    public ResponseEntity<List<String>> getProductBrands() {
+    public ResponseEntity<Object> getProductBrands() {
         List<String> brands = productService.getAllBrands();
-        return new ResponseEntity<>(brands, HttpStatus.OK);
+
+        return new ResponseEntity<>(new ApiResponse<>("Brands retrieved successfully", brands), HttpStatus.OK);
     }
 
 }

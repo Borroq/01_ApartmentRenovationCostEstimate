@@ -1,6 +1,5 @@
-package com.example.ApartmentRenovationCostEstimate.product;
+package com.example.ApartmentRenovationCostEstimate.product.DTOs;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -15,16 +14,12 @@ import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
 
-@Entity
 @Getter @Setter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "products")
-public class Product {
+public class ProductUpdateDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @NotBlank(message = "Name cannot be null")
@@ -44,5 +39,4 @@ public class Product {
 
     @PositiveOrZero(message = "Price must be greater than or equal to 0")
     BigDecimal price;
-
 }

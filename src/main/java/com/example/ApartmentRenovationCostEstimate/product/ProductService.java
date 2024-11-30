@@ -1,16 +1,20 @@
 package com.example.ApartmentRenovationCostEstimate.product;
 
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductSaveDto;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductUpdateDto;
+
 import java.util.List;
 
 
 public interface ProductService {
 
-    Product createProduct(Product product);
-    Product getProductById(Long productId);
-    List<Product> getAllProduct();
-    Product updateProduct(Product product);
+    Product createProduct(ProductSaveDto productSaveDto);
+    ProductResponseDto getProductById(Long productId);
+    List<ProductResponseDto> getAllProduct();
+    Product updateProduct(ProductUpdateDto productUpdateDto);
     void deleteProduct(Long productId);
-    List<Product> getProductsByCategory(String category);
+    List<ProductResponseDto> getProductsByCategory(String category);
     List<String> getAllCategories();
     List<String> getAllBrands();
 }

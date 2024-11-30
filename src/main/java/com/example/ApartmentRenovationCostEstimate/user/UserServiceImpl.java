@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getAllUsers() {
         Iterable<User> users = userRepository.findAll();
+
         return StreamSupport.stream(users.spliterator(),false)
                 .map(user -> modelMapper.map(user, UserResponseDto.class))
                 .collect(Collectors.toList());

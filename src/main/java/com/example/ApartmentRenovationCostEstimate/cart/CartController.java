@@ -1,9 +1,9 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
 
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
-import com.example.ApartmentRenovationCostEstimate.product.Product;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
 import com.example.ApartmentRenovationCostEstimate.user.User;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
@@ -22,9 +22,9 @@ import java.util.Optional;
 @RequestMapping("/api/carts")
 public class CartController {
 
-    private CartService cartService;
-    private UserService userService;
-    private ProductService productService;
+    private final CartService cartService;
+    private final UserService userService;
+    private final ProductService productService;
 
 
     @Autowired
@@ -73,7 +73,7 @@ public class CartController {
         }
 
         /*Sprawdzanie czy produkt instnieje*/
-        Product product = productService.getProductById(request.getProductId());
+        ProductResponseDto product = productService.getProductById(request.getProductId());
         if(product == null) {
             return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
