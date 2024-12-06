@@ -4,6 +4,8 @@ package com.example.ApartmentRenovationCostEstimate.cart;
 import com.example.ApartmentRenovationCostEstimate.product.Product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +28,7 @@ public class CartItem {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "card_id", nullable = false)
+    @JoinColumn(name = "cart_id", nullable = false)
     @JsonBackReference
     Cart cart;
 
@@ -34,7 +36,9 @@ public class CartItem {
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
+    @Positive(message = "Quantity must be greater than zero")
     int quantity;
 
+    @PositiveOrZero(message = "Total cost must be zero or greater")
     BigDecimal totalPrice;
 }

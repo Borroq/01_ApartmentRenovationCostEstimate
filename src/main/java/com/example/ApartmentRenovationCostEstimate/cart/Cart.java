@@ -4,6 +4,9 @@ import com.example.ApartmentRenovationCostEstimate.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,8 +25,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    /*W Cart, relacja @ManyToOne oznacza, że wiele koszyków może być
-    przypisanych do jednego użytkownika. Dlatego Cart ma pole User user.*/
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
@@ -34,7 +36,11 @@ public class Cart {
     List<CartItem> cartItems;
 
 
+    @NotBlank(message = "Name cannot be null")
+    @Size(min = 3, max = 70)
     String name;
+
+    @PositiveOrZero(message = "Total cost must be zero or greater")
     BigDecimal totalCost;
 
 }

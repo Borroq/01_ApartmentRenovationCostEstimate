@@ -1,6 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.exceptions;
 
 
+import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartItemNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.room.RoomNotFoundException;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handlerUserAlreadyExistsException (UserAlreadyExistsException exception) {
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException (UserAlreadyExistsException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.USER_ALREADY_EXIST),HttpStatus.CONFLICT);
     }
 
@@ -40,6 +40,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCartNotFoundException (CartNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.CART_NOT_FOUND), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCartItemNotFoundException (CartItemNotFoundException exception) {
+        return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RoomNotFoundException.class)

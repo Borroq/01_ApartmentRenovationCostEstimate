@@ -1,53 +1,82 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
+import com.example.ApartmentRenovationCostEstimate.cart.DTOs.AddProductRequest;
+import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
+import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
+import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartItemNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.product.Product;
+import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSummaryDto;
 import com.example.ApartmentRenovationCostEstimate.user.User;
 import com.example.ApartmentRenovationCostEstimate.product.ProductRepository;
+import com.example.ApartmentRenovationCostEstimate.user.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class CartServiceImpl implements CartService {
 
-    private CartRepository cartRepository;
-    private CartItemRepository cartItemRepository;
-    private ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public CartServiceImpl(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository) {
+    public CartServiceImpl(UserRepository userRepository, CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
+        this.modelMapper = modelMapper;
     }
 
 
     @Override
-    public Cart createCart(User user, String name) {
+    @Transactional
+    public Cart createCart(Long userId, String name) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+
         Cart cart = new Cart();
+
         cart.setUser(user);
         cart.setName(name);
         cart.setTotalCost(BigDecimal.ZERO);
+
         return cartRepository.save(cart);
     }
 
     @Override
-    public Cart addProductToCart(Long cartId, Long productId, int quantity) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId).orElse(new CartItem());
+    @Transactional
+    public Cart addProductToCart(Long cartId, AddProductRequest addProductRequest) {
+        Cart cart = cartRepository
+                .findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
+
+        Product product = productRepository
+                .findById(addProductRequest.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        CartItem cartItem = cartItemRepository
+                .findByCartIdAndProductId(cartId, addProductRequest.getProductId())
+                .orElse(new CartItem());
 
         cartItem.setCart(cart);
         cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
+        cartItem.setQuantity(addProductRequest.getQuantity());
 
         //Update total price for this cart item
         updateTotalPrice(cartItem);
@@ -57,39 +86,73 @@ public class CartServiceImpl implements CartService {
         BigDecimal newTotalCost = calculateCartTotalCost(cartId);
         cart.setTotalCost(newTotalCost);
 
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
+    }
 
-        return cart;
+
+    @Override
+    public CartResponseDto getCartById(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
+
+        return modelMapper.map(cart, CartResponseDto.class);
+    }
+
+
+    @Override
+    public Page<CartListDto> getAllCarts(Pageable pageable) {
+
+        return cartRepository.findAll(pageable)
+                .map(cart -> {
+                    CartListDto dto = new CartListDto();
+                    dto.setId(cart.getId());
+                    dto.setName(cart.getName());
+                    dto.setTotalCost(cart.getTotalCost());
+                    dto.setCartItemsCount(cart.getCartItems().size());
+                    UserSummaryDto userDto = modelMapper.map(cart.getUser(), UserSummaryDto.class);
+                    dto.setUser(userDto);
+                    return dto;
+                });
     }
 
     @Override
-    public Cart getCartById(Long cartId) {
-        return cartRepository.findById(cartId).orElse(null);
-        //return cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+    public Page<CartListDto> getAllCartsByUser(Long userId, Pageable pageable) {
+
+        return cartRepository.findByUserId(userId, pageable)
+                .map(cart -> {
+                    CartListDto dto = new CartListDto();
+                    dto.setId(cart.getId());
+                    dto.setName(cart.getName());
+                    dto.setTotalCost(cart.getTotalCost());
+                    dto.setCartItemsCount(cart.getCartItems().size());
+                    UserSummaryDto userDto = modelMapper.map(cart.getUser(), UserSummaryDto.class);
+                    dto.setUser(userDto);
+                    return dto;
+                });
     }
 
     @Override
-    public List<Cart> getAllCarts() {
-        Iterable<Cart> carts = cartRepository.findAll();
-        return StreamSupport.stream(carts.spliterator(),false)
-                .collect(Collectors.toList());
-    }
-
-    @Override
+    @Transactional
     public void removeProductFromCart(Long cartId, Long productId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cartId, productId)
-                .orElseThrow(() -> new ResourceNotFoundException("CartItem not found"));
+                .orElseThrow(() -> new CartItemNotFoundException("CartItem not found"));
+
+        cartItemRepository.delete(cartItem);
 
         BigDecimal newTotalCost = calculateCartTotalCost(cartId);
         cart.setTotalCost(newTotalCost);
 
-        cartItemRepository.delete(cartItem);
+        cartRepository.save(cart);
     }
 
     @Override
+    @Transactional
     public void deleteCart(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
+
         cartRepository.deleteById(cartId);
     }
 

@@ -5,8 +5,8 @@ import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,9 +56,9 @@ public class MainController {
         return "rooms";
     }
     @GetMapping("/carts")
-    public String cart (Model model) {
+    public String cart (Model model, Pageable pageable) {
         model.addAttribute("title", title);
-        model.addAttribute("carts", cartService.getAllCarts());
+        model.addAttribute("carts", cartService.getAllCarts(pageable));
         return "carts";
     }
     @GetMapping("/carts/cart-details/{cartId}")

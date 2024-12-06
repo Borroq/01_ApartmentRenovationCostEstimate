@@ -1,11 +1,11 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    List<Cart> findByUserId(Long userId);
+    Page<Cart> findByUserId(Long userId, Pageable pageable);
 }

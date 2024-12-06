@@ -45,10 +45,7 @@
                         <th scope="col">User name</th>
                         <th scope="col">Cart ID</th>
                         <th scope="col">Name</th>
-                        <th style="width: 8%;" scope="col">Product ID</th>
-                        <th style="width: 30%;" scope="col">Product Name</th>
-                        <th style="width: 8%;" scope="col">Quantity</th>
-                        <th style="width: 8%;" scope="col">Element Total Price</th>
+                        <th scope="col">Quantity</th>
                         <th scope="col">Total Cost</th>
                         <th scope="col">Views</th>
                     </tr>
@@ -61,20 +58,7 @@
                         </div>
                         <td th:text="${cart.id}"></td>
                         <td th:text="${cart.name}"></td>
-                        <td colspan="4">
-                            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-                                <table class="table mb-0">
-                                    <tbody>
-                                        <tr th:each="cartItem : ${cart.cartItems}">
-                                            <td style="width: 7%;" th:text="${cartItem.product.id}"></td>
-                                            <td style="width: 33%;" th:text="${cartItem.product.name}"></td>
-                                            <td style="width: 8%;" th:text="${cartItem.quantity}"></td>
-                                            <td style="width: 5%;" th:text="${cartItem.totalPrice != null ? cartItem.totalPrice : '###'}" th:classapend="${cartItem.totalPrice == null ? 'emptyCell' : ''}"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
+                        <td th:text="${cart.cartItemsCount}"></td>
                         <td th:text="${cart.totalCost}"></td>
                         <td>
 
@@ -209,7 +193,8 @@
                 }
             })
             .then(data => {
-                alert('Cart created with ID: ' + data.id);
+                console.log('Received response:', data);
+                alert('Cart created with ID: ' + data.data.id);
                 console.log(data);
                 location.reload()
                 // Możesz zaktualizować UI lub przekierować użytkownika na stronę koszyka
