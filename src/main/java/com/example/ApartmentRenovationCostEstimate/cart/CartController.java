@@ -13,6 +13,7 @@ import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +59,13 @@ public class CartController {
     }
 
     @GetMapping("{cartId}")
-    public ResponseEntity<Object> getCartById(@PathVariable("cartId") Long cartId) {
-        CartResponseDto cart = cartService.getCartById(cartId);
+    public ResponseEntity<Object> getCartById(
+            @PathVariable("cartId") Long cartId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        CartResponseDto cart = cartService.getCartById(cartId, pageable);
 
         return new ResponseEntity<>(new ApiResponse<>("Cart retrieved successfully",cart), HttpStatus.OK);
     }

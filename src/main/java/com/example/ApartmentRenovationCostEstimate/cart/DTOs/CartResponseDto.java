@@ -1,6 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.cart.DTOs;
 
 
+import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSummaryDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,4 +25,5 @@ public class CartResponseDto {
     BigDecimal totalCost;
     UserSummaryDto user;
     List<CartItemDto> cartItems;
+    PageMetadata cartItemsPageMetadata;
 }

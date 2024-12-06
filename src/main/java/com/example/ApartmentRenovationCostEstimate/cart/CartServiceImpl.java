@@ -1,6 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
 import com.example.ApartmentRenovationCostEstimate.cart.DTOs.AddProductRequest;
+import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartItemDto;
 import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
 import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartItemNotFoundException;
@@ -8,6 +9,7 @@ import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartNotFoundE
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.product.Product;
+import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
 import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSummaryDto;
 import com.example.ApartmentRenovationCostEstimate.user.User;
 import com.example.ApartmentRenovationCostEstimate.product.ProductRepository;
@@ -91,11 +93,29 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public CartResponseDto getCartById(Long cartId) {
+    public CartResponseDto getCartById(Long cartId, Pageable pageable) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found"));
 
-        return modelMapper.map(cart, CartResponseDto.class);
+        Page<CartItem> cartItemPage = cartItemRepository.findByCartId(cartId, pageable);
+
+        CartResponseDto cartResponseDto = modelMapper.map(cart, CartResponseDto.class);
+
+        List<CartItemDto> cartItems = cartItemPage.getContent()
+                .stream()
+                .map(item -> modelMapper.map(item, CartItemDto.class))
+                .collect(Collectors.toList());
+
+        cartResponseDto.setCartItems(cartItems);
+        cartResponseDto.setCartItemsPageMetadata(new PageMetadata(
+                cartItemPage.getNumber(),
+                cartItemPage.getSize(),
+                cartItemPage.getTotalPages(),
+                cartItemPage.getTotalElements()
+        ));
+
+        return cartResponseDto;
+        //return modelMapper.map(cart, CartResponseDto.class);
     }
 
 

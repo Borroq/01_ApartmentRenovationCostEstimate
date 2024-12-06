@@ -1,16 +1,18 @@
-package com.example.ApartmentRenovationCostEstimate.controller;
+package com.example.ApartmentRenovationCostEstimate.shared.controller;
 
 import com.example.ApartmentRenovationCostEstimate.cart.CartService;
 import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
@@ -62,10 +64,13 @@ public class MainController {
         return "carts";
     }
     @GetMapping("/carts/cart-details/{cartId}")
-    public String cartDetails (@PathVariable("cartId") Long cartId, Model model) {
+    public String cartDetails (@PathVariable("cartId") Long cartId, Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "100") int size) {
         model.addAttribute("title", title);
         try {
-            model.addAttribute("singleCart", cartService.getCartById(cartId));
+            Pageable pageable = PageRequest.of(page, size);
+            model.addAttribute("singleCart", cartService.getCartById(cartId, pageable));
             return "cartDetails";
         } catch (ResourceNotFoundException e) {
             return "redirect:/carts";
