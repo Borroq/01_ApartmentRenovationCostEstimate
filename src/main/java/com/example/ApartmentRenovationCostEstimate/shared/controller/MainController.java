@@ -2,9 +2,11 @@ package com.example.ApartmentRenovationCostEstimate.shared.controller;
 
 import com.example.ApartmentRenovationCostEstimate.cart.CartService;
 import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
+import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -50,8 +52,15 @@ public class MainController {
                             @RequestParam(defaultValue = "100") int size) {
         Pageable pageable = PageRequest.of(page, size);
 
+        Page<ProductResponseDto> productPage = productService.getAllProduct(pageable);
+
         model.addAttribute("title", title);
-        model.addAttribute("products", productService.getAllProduct(pageable));
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", productPage.getNumber());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("pageSize", productPage.getSize());
+        model.addAttribute("totalElements", productPage.getTotalElements());
+
         return "products";
     }
 
