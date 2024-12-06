@@ -45,9 +45,13 @@ public class MainController {
     }
 
     @GetMapping("/products")
-    public String products (Model model) {
+    public String products (Model model,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "100") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
         model.addAttribute("title", title);
-        model.addAttribute("products", productService.getAllProduct());
+        model.addAttribute("products", productService.getAllProduct(pageable));
         return "products";
     }
 
@@ -70,6 +74,7 @@ public class MainController {
         model.addAttribute("title", title);
         try {
             Pageable pageable = PageRequest.of(page, size);
+
             model.addAttribute("singleCart", cartService.getCartById(cartId, pageable));
             return "cartDetails";
         } catch (ResourceNotFoundException e) {

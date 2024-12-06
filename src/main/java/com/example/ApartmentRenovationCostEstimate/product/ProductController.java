@@ -6,6 +6,9 @@ import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductUpdateDto
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +29,7 @@ public class ProductController {
 
     //Create Product - REST API
     @PostMapping
-    public ResponseEntity<Object> createProduct(@Valid @RequestBody ProductSaveDto productSaveDto){
+    public ResponseEntity<Object> createProduct(@Valid @RequestBody ProductSaveDto productSaveDto) {
         Product savedProduct = productService.createProduct(productSaveDto);
 
         return new ResponseEntity<>(new ApiResponse<>("Product created successfully.", savedProduct), HttpStatus.CREATED);
@@ -34,7 +37,7 @@ public class ProductController {
 
     //Get Product by ID - REST API
     @GetMapping("{id}")
-    public ResponseEntity<Object> getProductById(@PathVariable("id") Long productId){
+    public ResponseEntity<Object> getProductById(@PathVariable("id") Long productId) {
         ProductResponseDto product = productService.getProductById(productId);
 
         return new ResponseEntity<>(new ApiResponse<>("Product retrieved successfully", product),HttpStatus.OK);
@@ -42,8 +45,13 @@ public class ProductController {
 
     //Get all Products - REST API
     @GetMapping
-    public ResponseEntity<Object> getAllProducts(){
-        List<ProductResponseDto> products = productService.getAllProduct();
+    public ResponseEntity<Object> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponseDto> products = productService.getAllProduct(pageable);
+
         if (products.isEmpty()) {
             return new ResponseEntity<>(new ApiResponse<>("No products found."), HttpStatus.OK);
         }
@@ -53,7 +61,9 @@ public class ProductController {
 
     //Update Product by Id - REST API
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateProduct(@Valid @PathVariable("id") Long productId, @RequestBody ProductUpdateDto productUpdateDto) {
+    public ResponseEntity<Object> updateProduct(
+            @Valid @PathVariable("id") Long productId,
+            @RequestBody ProductUpdateDto productUpdateDto) {
 
         productUpdateDto.setId(productId);
         Product updateProduct = productService.updateProduct(productUpdateDto);

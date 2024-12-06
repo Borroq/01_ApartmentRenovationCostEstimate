@@ -6,12 +6,14 @@ import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductSaveDto;
 import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductUpdateDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -43,12 +45,10 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<ProductResponseDto> getAllProduct() {
-        Iterable<Product> products = productRepository.findAll();
+    public Page<ProductResponseDto> getAllProduct(Pageable pageable) {
 
-        return StreamSupport.stream(products.spliterator(),false)
-                .map(product -> modelMapper.map(product, ProductResponseDto.class))
-                .collect(Collectors.toList());
+        return productRepository.findAll(pageable)
+                .map(product -> modelMapper.map(product, ProductResponseDto.class));
     }
 
     @Override
