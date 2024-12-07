@@ -71,8 +71,13 @@ public class CartController {
     }
 
     @GetMapping()
-    public ResponseEntity<Object> getAllCarts(Pageable pageable) {
+    public ResponseEntity<Object> getAllCarts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
         Page<CartListDto> allCarts = cartService.getAllCarts(pageable);
+
         if (allCarts.isEmpty()) {
             return new ResponseEntity<>(new ApiResponse<>("No cart found."), HttpStatus.OK);
         }

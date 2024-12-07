@@ -1,6 +1,8 @@
 package com.example.ApartmentRenovationCostEstimate.shared.controller;
 
 import com.example.ApartmentRenovationCostEstimate.cart.CartService;
+import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
+import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
 import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
 import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
@@ -49,9 +51,9 @@ public class MainController {
     @GetMapping("/products")
     public String products (Model model,
                             @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "100") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+                            @RequestParam(defaultValue = "50") int size) {
 
+        Pageable pageable = PageRequest.of(page, size);
         Page<ProductResponseDto> productPage = productService.getAllProduct(pageable);
 
         model.addAttribute("title", title);
@@ -71,19 +73,32 @@ public class MainController {
         return "rooms";
     }
     @GetMapping("/carts")
-    public String cart (Model model, Pageable pageable) {
+    public String cart (Model model,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CartListDto> cartsPage = cartService.getAllCarts(pageable);
+
         model.addAttribute("title", title);
-        model.addAttribute("carts", cartService.getAllCarts(pageable));
+        model.addAttribute("carts", cartsPage.getContent());
+        model.addAttribute("currentPage", cartsPage.getNumber());
+        model.addAttribute("totalPages", cartsPage.getTotalPages());
+        model.addAttribute("pageSize", cartsPage.getSize());
+        model.addAttribute("totalElements", cartsPage.getTotalElements());
+
         return "carts";
     }
     @GetMapping("/carts/cart-details/{cartId}")
     public String cartDetails (@PathVariable("cartId") Long cartId, Model model,
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "100") int size) {
-        model.addAttribute("title", title);
-        try {
-            Pageable pageable = PageRequest.of(page, size);
 
+        Pageable pageable = PageRequest.of(page, size);
+
+        model.addAttribute("title", title);
+
+        try {
             model.addAttribute("singleCart", cartService.getCartById(cartId, pageable));
             return "cartDetails";
         } catch (ResourceNotFoundException e) {
