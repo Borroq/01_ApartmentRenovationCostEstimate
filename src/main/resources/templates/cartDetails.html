@@ -96,6 +96,46 @@
         </div>
     </div>
 
+    <!--==================================PAGINATION NAV========================================-->
+
+
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Previous page -->
+            <li class="page-item" th:classappend="${singleCart.cartItemsPageMetadata.pageNumber == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/carts/cart-details/{cartId}(cartId=${singleCart.id},
+                        page=${singleCart.cartItemsPageMetadata.pageNumber - 1},
+                        size=${singleCart.cartItemsPageMetadata.pageSize})}">
+                    Previous
+                </a>
+            </li>
+
+            <!-- Page numbers -->
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, singleCart.cartItemsPageMetadata.totalPages - 1)}"
+                th:classappend="${pageNum == singleCart.cartItemsPageMetadata.pageNumber} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/carts/cart-details/{cartId}(cartId=${singleCart.id},
+                        page=${pageNum},
+                        size=${singleCart.cartItemsPageMetadata.pageSize})}"
+                   th:text="${pageNum + 1}">
+                </a>
+            </li>
+
+            <!-- Next page -->
+            <li class="page-item" th:classappend="${singleCart.cartItemsPageMetadata.pageNumber == singleCart.cartItemsPageMetadata.totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/carts/cart-details/{cartId}(cartId=${singleCart.id},
+                        page=${singleCart.cartItemsPageMetadata.pageNumber + 1},
+                        size=${singleCart.cartItemsPageMetadata.pageSize})}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
+
 
     <!--==================================DELETE ELEMENT========================================-->
     <script>

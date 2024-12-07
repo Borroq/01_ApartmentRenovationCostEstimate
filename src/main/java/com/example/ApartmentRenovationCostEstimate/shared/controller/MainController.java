@@ -7,6 +7,7 @@ import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
 import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
+import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,10 +59,12 @@ public class MainController {
 
         model.addAttribute("title", title);
         model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", productPage.getNumber());
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("pageSize", productPage.getSize());
-        model.addAttribute("totalElements", productPage.getTotalElements());
+        model.addAttribute("pageMetadata", new PageMetadata(
+                productPage.getNumber(),
+                productPage.getSize(),
+                productPage.getTotalPages(),
+                productPage.getTotalElements()
+        ));
 
         return "products";
     }
@@ -72,6 +75,7 @@ public class MainController {
         model.addAttribute("rooms", roomService.getAllRoom());
         return "rooms";
     }
+
     @GetMapping("/carts")
     public String cart (Model model,
                         @RequestParam(defaultValue = "0") int page,
@@ -82,13 +86,16 @@ public class MainController {
 
         model.addAttribute("title", title);
         model.addAttribute("carts", cartsPage.getContent());
-        model.addAttribute("currentPage", cartsPage.getNumber());
-        model.addAttribute("totalPages", cartsPage.getTotalPages());
-        model.addAttribute("pageSize", cartsPage.getSize());
-        model.addAttribute("totalElements", cartsPage.getTotalElements());
+        model.addAttribute("pageMetadata", new PageMetadata(
+                cartsPage.getNumber(),
+                cartsPage.getSize(),
+                cartsPage.getTotalPages(),
+                cartsPage.getTotalElements()
+        ));
 
         return "carts";
     }
+
     @GetMapping("/carts/cart-details/{cartId}")
     public String cartDetails (@PathVariable("cartId") Long cartId, Model model,
                                @RequestParam(defaultValue = "0") int page,

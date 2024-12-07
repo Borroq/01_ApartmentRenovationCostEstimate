@@ -79,19 +79,19 @@
     <nav aria-label="Page navigation" class="mt-4">
         <ul class="pagination justify-content-center">
             <!-- Previous page -->
-            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/carts(page=${currentPage - 1}, size=${pageSize})}">Previous</a>
+            <li class="page-item" th:classappend="${pageMetadata.pageNumber == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/carts(page=${pageMetadata.pageNumber - 1}, size=${pageMetadata.pageSize})}">Previous</a>
             </li>
 
             <!-- Page numbers -->
-            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                th:classappend="${pageNum == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/carts(page=${pageNum}, size=${pageSize})}" th:text="${pageNum + 1}"></a>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, pageMetadata.totalPages - 1)}"
+                th:classappend="${pageNum == pageMetadata.pageNumber} ? 'active'">
+                <a class="page-link" th:href="@{/carts(page=${pageNum}, size=${pageMetadata.pageSize})}" th:text="${pageNum + 1}"></a>
             </li>
 
             <!-- Next page -->
-            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/carts(page=${currentPage + 1}, size=${pageSize})}">Next</a>
+            <li class="page-item" th:classappend="${pageMetadata.pageNumber == pageMetadata.totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/carts(page=${pageMetadata.pageNumber + 1}, size=${pageMetadata.pageSize})}">Next</a>
             </li>
         </ul>
     </nav>
