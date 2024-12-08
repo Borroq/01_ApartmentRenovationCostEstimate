@@ -2,13 +2,12 @@ package com.example.ApartmentRenovationCostEstimate.user;
 
 
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -25,13 +24,12 @@ import java.util.List;
 public class UserController{
 
     private final UserService userService;
-    @Autowired
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
 
-    //Create User - REST API
     @PostMapping
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserSaveDto userSaveDto){
         User savedUser = userService.createUser(userSaveDto);
@@ -40,7 +38,6 @@ public class UserController{
     }
 
 
-    //Get User by ID - REST API
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable("id") Long userId){
         UserResponseDto user = userService.getUserById(userId);
@@ -49,7 +46,6 @@ public class UserController{
     }
 
 
-    //Get all Users - REST API
     @GetMapping
     @Secured("ROLE_ADMIN")
     public ResponseEntity<Object> getAllUsers(){
@@ -62,7 +58,6 @@ public class UserController{
     }
 
 
-    //Update User by Id - REST API
     @PutMapping("{id}")
     public ResponseEntity<Object> updateUser(@Valid @PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
         userUpdateDto.setId(userId);
@@ -72,7 +67,6 @@ public class UserController{
     }
 
 
-    //Delete User by Id
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long userId){
         userService.deleteUser(userId);

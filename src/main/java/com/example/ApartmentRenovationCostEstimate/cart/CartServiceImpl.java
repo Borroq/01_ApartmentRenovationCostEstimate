@@ -1,21 +1,20 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.AddProductRequest;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartItemDto;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.AddProductRequest;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartItemDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartResponseDto;
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartItemNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.product.Product;
 import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSummaryDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSummaryDto;
 import com.example.ApartmentRenovationCostEstimate.user.User;
 import com.example.ApartmentRenovationCostEstimate.product.ProductRepository;
 import com.example.ApartmentRenovationCostEstimate.user.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +34,7 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
+
     public CartServiceImpl(UserRepository userRepository, CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
@@ -60,6 +58,7 @@ public class CartServiceImpl implements CartService {
 
         return cartRepository.save(cart);
     }
+
 
     @Override
     @Transactional
@@ -134,6 +133,7 @@ public class CartServiceImpl implements CartService {
                 });
     }
 
+
     @Override
     public Page<CartListDto> getAllCartsByUser(Long userId, Pageable pageable) {
 
@@ -150,6 +150,7 @@ public class CartServiceImpl implements CartService {
                 });
     }
 
+
     @Override
     @Transactional
     public void removeProductFromCart(Long cartId, Long productId) {
@@ -165,6 +166,7 @@ public class CartServiceImpl implements CartService {
 
         cartRepository.save(cart);
     }
+
 
     @Override
     @Transactional
@@ -191,6 +193,7 @@ public class CartServiceImpl implements CartService {
         cartItem.setTotalPrice(totalPrice);
     }
 
+
     @Override
     public List<String> getAllProductCategoriesFromCart(Long cartId) {
         List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
@@ -199,6 +202,7 @@ public class CartServiceImpl implements CartService {
                 .distinct()
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public List<CartItem> getProductByCategoryFromCart(Long cartId, String category) {
@@ -212,10 +216,5 @@ public class CartServiceImpl implements CartService {
         }
 
         return filteredItemsByCart;
-    }
-
-    @Override
-    public Optional<Cart> findById(Long id) {
-        return cartRepository.findById(id);
     }
 }

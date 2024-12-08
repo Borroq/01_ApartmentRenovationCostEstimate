@@ -1,24 +1,22 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
 
-import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl;
-import com.example.ApartmentRenovationCostEstimate.Security.RoleRepository;
+import com.example.ApartmentRenovationCostEstimate.security.GrantedAuthorityImpl;
+import com.example.ApartmentRenovationCostEstimate.security.RoleRepository;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserAlreadyExistsException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserNotFoundException;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -32,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    @Autowired
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
@@ -41,7 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    // create User with ModelMapper
     @Override
     @Transactional
     public User createUser(UserSaveDto userSaveDto) {
@@ -92,7 +88,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    // createUser with ModelMapper
     @Override
     @Transactional
     public User updateUser(UserUpdateDto userUpdateDto) {
@@ -124,12 +119,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         userRepository.deleteById(userId);
-    }
-
-
-    @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
     }
 
 

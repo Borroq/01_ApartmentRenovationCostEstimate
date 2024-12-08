@@ -1,10 +1,8 @@
 package com.example.ApartmentRenovationCostEstimate.shared.controller;
 
 import com.example.ApartmentRenovationCostEstimate.cart.CartService;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
-import com.example.ApartmentRenovationCostEstimate.database.DatabaseService;
-import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
+import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
@@ -26,15 +24,14 @@ public class MainController {
     private final ProductService productService;
     private final RoomService roomService;
     private final CartService cartService;
-    private final DatabaseService databaseService;
 
-    public MainController(UserService userService, ProductService productService, RoomService roomService, CartService cartService, DatabaseService databaseService) {
+    public MainController(UserService userService, ProductService productService, RoomService roomService, CartService cartService) {
         this.userService = userService;
         this.productService = productService;
         this.roomService = roomService;
         this.cartService = cartService;
-        this.databaseService = databaseService;
     }
+
 
     @GetMapping("/home")
     public String home (Model model) {
@@ -42,12 +39,14 @@ public class MainController {
         return "home";
     }
 
+
     @GetMapping("/users")
     public String users (Model model) {
         model.addAttribute("title", title);
         model.addAttribute("users", userService.getAllUsers());
         return "users";
     }
+
 
     @GetMapping("/products")
     public String products (Model model,
@@ -69,12 +68,14 @@ public class MainController {
         return "products";
     }
 
+
     @GetMapping("/rooms")
     public String rooms (Model model) {
         model.addAttribute("title", title);
         model.addAttribute("rooms", roomService.getAllRoom());
         return "rooms";
     }
+
 
     @GetMapping("/carts")
     public String cart (Model model,
@@ -96,10 +97,11 @@ public class MainController {
         return "carts";
     }
 
+
     @GetMapping("/carts/cart-details/{cartId}")
     public String cartDetails (@PathVariable("cartId") Long cartId, Model model,
                                @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "100") int size) {
+                               @RequestParam(defaultValue = "50") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -112,6 +114,7 @@ public class MainController {
             return "redirect:/carts";
         }
     }
+
 
     @GetMapping("/login")
     public String login (Model model) {

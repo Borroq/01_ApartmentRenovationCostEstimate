@@ -1,15 +1,14 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
 
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.AddProductRequest;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.AddProductRequest;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface CartService {
@@ -25,5 +24,4 @@ public interface CartService {
     void updateTotalPrice(CartItem cartItem);
     List<String> getAllProductCategoriesFromCart(Long cartId);
     List<CartItem> getProductByCategoryFromCart(Long cartId, String category);
-    Optional<Cart> findById(Long id);
 }

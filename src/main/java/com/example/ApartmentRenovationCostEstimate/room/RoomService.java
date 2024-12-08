@@ -1,8 +1,8 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
 
-import com.example.ApartmentRenovationCostEstimate.room.DTOs.RoomDto;
-import com.example.ApartmentRenovationCostEstimate.room.DTOs.RoomSaveDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomSaveDto;
 
 import java.util.List;
 

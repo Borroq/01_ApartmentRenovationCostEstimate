@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 
 @Entity
-@Getter @Setter @ToString
+@Getter @Setter  @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "cartItem")

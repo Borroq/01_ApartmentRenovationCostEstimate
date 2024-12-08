@@ -1,11 +1,10 @@
 package com.example.ApartmentRenovationCostEstimate.product;
 
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
-import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
-import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductSaveDto;
-import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductResponseDto;
+import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductSaveDto;
+import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductUpdateDto;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,12 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
+
     public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
     }
+
 
     @Override
     @Transactional
@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.save(product);
     }
+
 
     @Override
     public ProductResponseDto getProductById(Long productId) {
@@ -51,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> modelMapper.map(product, ProductResponseDto.class));
     }
 
+
     @Override
     @Transactional
     public Product updateProduct(ProductUpdateDto productUpdateDto) {
@@ -62,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(existingProduct);
     }
 
+
     @Override
     @Transactional
     public void deleteProduct(Long productId) {
@@ -70,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.deleteById(productId);
     }
+
 
     @Override
     public List<ProductResponseDto> getProductsByCategory(String category) {
@@ -80,9 +84,10 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<String> getAllCategories() {
-        List<Product> products = (List<Product>) productRepository.findAll();
+        List<Product> products = productRepository.findAll();
 
         return products.stream()
                 .map(Product::getCategory)
@@ -90,12 +95,13 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<String> getAllBrands() {
-        List<Product> products = (List<Product>) productRepository.findAll();
+        List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(Product::getBrand)
-                .distinct() //usuwanie duplikatów
+                .distinct()
                 .collect(Collectors.toList());
     }
 }

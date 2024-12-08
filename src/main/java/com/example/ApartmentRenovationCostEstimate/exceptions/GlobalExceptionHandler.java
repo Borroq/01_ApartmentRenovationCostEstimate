@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -27,30 +28,36 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.USER_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException (UserAlreadyExistsException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.USER_ALREADY_EXIST),HttpStatus.CONFLICT);
     }
+
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException (ProductNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCartNotFoundException (CartNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.CART_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
+
 
     @ExceptionHandler(CartItemNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCartItemNotFoundException (CartItemNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(RoomNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRoomNotFoundException (RoomNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.ROOM_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions (MethodArgumentNotValidException exception) {

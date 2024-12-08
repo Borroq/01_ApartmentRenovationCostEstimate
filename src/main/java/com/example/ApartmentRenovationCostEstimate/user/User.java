@@ -1,7 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
 
-import com.example.ApartmentRenovationCostEstimate.Security.GrantedAuthorityImpl;
+import com.example.ApartmentRenovationCostEstimate.security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.cart.Cart;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ import java.util.List;
 @Entity
 @Getter @Setter @ToString
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE) // -> Ustawia domyślnie poziom dostępu na private dla wszystkich pól w klasie
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "users")
 public class User implements UserDetails {
 

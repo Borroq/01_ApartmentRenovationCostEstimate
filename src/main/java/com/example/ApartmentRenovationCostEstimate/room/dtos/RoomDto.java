@@ -1,10 +1,9 @@
-package com.example.ApartmentRenovationCostEstimate.room.DTOs;
+package com.example.ApartmentRenovationCostEstimate.room.dtos;
 
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,9 +12,10 @@ import lombok.experimental.FieldDefaults;
 
 @Getter @Setter @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomSaveDto {
+public class RoomDto {
+
+    Long id;
 
     @NotNull(message = "Name cannot be null")
     String name;
@@ -27,5 +27,4 @@ public class RoomSaveDto {
     @NotNull(message = "Wall area cannot be null")
     @Positive(message = "Wall area must be greater than 0")
     Double wallArea;
-
 }

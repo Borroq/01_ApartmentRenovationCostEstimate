@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.product.DTOs;
+package com.example.ApartmentRenovationCostEstimate.product.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;

@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Entity
-@Getter @Setter @ToString
+@Getter @Setter  @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "cart")

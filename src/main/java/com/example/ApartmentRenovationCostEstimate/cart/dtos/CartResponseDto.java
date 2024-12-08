@@ -1,8 +1,8 @@
-package com.example.ApartmentRenovationCostEstimate.cart.DTOs;
+package com.example.ApartmentRenovationCostEstimate.cart.dtos;
 
 
 import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSummaryDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSummaryDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Getter @Setter @ToString
+@Getter @Setter  @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

@@ -1,10 +1,9 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
 import com.example.ApartmentRenovationCostEstimate.exceptions.room.RoomNotFoundException;
-import com.example.ApartmentRenovationCostEstimate.room.DTOs.RoomDto;
-import com.example.ApartmentRenovationCostEstimate.room.DTOs.RoomSaveDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomSaveDto;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +17,11 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public RoomServiceImpl(RoomRepository roomRepository, ModelMapper modelMapper) {
         this.roomRepository = roomRepository;
         this.modelMapper = modelMapper;
     }
+
 
     @Override
     @Transactional
@@ -32,6 +31,7 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.save(room);
     }
 
+
     @Override
     public RoomDto getRoomById(Long roomId) {
         Room room = roomRepository.findById(roomId)
@@ -39,6 +39,7 @@ public class RoomServiceImpl implements RoomService {
 
         return modelMapper.map(room, RoomDto.class);
     }
+
 
     @Override
     public List<RoomDto> getAllRoom() {
@@ -48,6 +49,7 @@ public class RoomServiceImpl implements RoomService {
                 .map(room -> modelMapper.map(room, RoomDto.class))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     @Transactional
@@ -59,6 +61,7 @@ public class RoomServiceImpl implements RoomService {
 
         return roomRepository.save(existingRoom);
     }
+
 
     @Override
     @Transactional

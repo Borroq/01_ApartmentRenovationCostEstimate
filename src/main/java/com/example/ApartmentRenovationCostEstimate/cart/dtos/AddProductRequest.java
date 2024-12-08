@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.cart.DTOs;
+package com.example.ApartmentRenovationCostEstimate.cart.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-@Getter @Setter @ToString
+@Getter @Setter  @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddProductRequest {

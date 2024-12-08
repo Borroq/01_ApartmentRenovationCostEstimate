@@ -1,17 +1,14 @@
 package com.example.ApartmentRenovationCostEstimate.cart;
 
 
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.AddProductRequest;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartListDto;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CartResponseDto;
-import com.example.ApartmentRenovationCostEstimate.cart.DTOs.CreateCartDTO;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.AddProductRequest;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartResponseDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CreateCartDto;
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
 import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
-import com.example.ApartmentRenovationCostEstimate.product.ProductService;
-import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,34 +18,29 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/carts")
 public class CartController {
 
     private final CartService cartService;
-    private final UserService userService;
-    private final ProductService productService;
 
-
-    @Autowired
-    public CartController(CartService cartService, UserService userService, ProductService productService) {
+    public CartController(CartService cartService) {
         this.cartService = cartService;
-        this.userService = userService;
-        this.productService = productService;
+
     }
 
 
-    @PostMapping("/create")
-    public ResponseEntity<Object> createCart(@Valid @RequestBody CreateCartDTO createCartDTO){
+    @PostMapping("create")
+    public ResponseEntity<Object> createCart(@Valid @RequestBody CreateCartDto createCartDTO){
         Cart saveCart = cartService.createCart(createCartDTO.getUserId(), createCartDTO.getName());
 
         return new ResponseEntity<>(new ApiResponse<>("Cart created successfully.", saveCart), HttpStatus.CREATED);
     }
 
-
     @PostMapping("{cartId}/products")
     public ResponseEntity<?> addProductToCart(@Valid @PathVariable Long cartId, @RequestBody AddProductRequest request) {
-        /*Dodanie produktu do koszyka*/
+
         try {
             Cart addedProduct = cartService.addProductToCart(cartId, request);
             return ResponseEntity.ok(new ApiResponse<>("Product added to cart", addedProduct));
@@ -85,7 +77,7 @@ public class CartController {
         return new ResponseEntity<>(new ApiResponse<>("Carts retrieved successfully", allCarts), HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("user/{userId}")
     public ResponseEntity<Object> getAllCartsByUserId(@PathVariable("userId") Long userId, Pageable pageable) {
         Page<CartListDto> allCarts = cartService.getAllCartsByUser(userId, pageable);
         if (allCarts.isEmpty()) {

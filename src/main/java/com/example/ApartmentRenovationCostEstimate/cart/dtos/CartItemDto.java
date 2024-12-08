@@ -1,6 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.cart.DTOs;
+package com.example.ApartmentRenovationCostEstimate.cart.dtos;
 
-import com.example.ApartmentRenovationCostEstimate.product.DTOs.ProductResponseDto;
+import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductResponseDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 
 
-@Getter @Setter @ToString
+@Getter @Setter  @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemDto {

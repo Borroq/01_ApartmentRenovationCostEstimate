@@ -4,12 +4,13 @@ package com.example.ApartmentRenovationCostEstimate.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Getter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorResponse {
@@ -22,15 +23,18 @@ public class ErrorResponse {
         this.type = type;
     }
 
+
     public ErrorResponse(ErrorType type, String message) {
         this.type = type;
         this.message = Optional.of(message);
     }
 
+
     public ErrorResponse(ErrorType type, List<Map<String, String>> errors) {
         this.type = type;
         this.errors = errors;
     }
+
 
     public String getMessage() {
         if (message.isPresent()) {

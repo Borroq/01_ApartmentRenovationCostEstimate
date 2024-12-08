@@ -1,10 +1,9 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
-import com.example.ApartmentRenovationCostEstimate.room.DTOs.RoomDto;
-import com.example.ApartmentRenovationCostEstimate.room.DTOs.RoomSaveDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomSaveDto;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +17,11 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    @Autowired
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
     }
 
-    //Create Room - REST API
+
     @PostMapping
     public ResponseEntity<Object> createRooms(@Valid @RequestBody RoomSaveDto room){
         Room savedRoom = roomService.createRoom(room);
@@ -31,7 +29,7 @@ public class RoomController {
         return new ResponseEntity<>(new ApiResponse<>("Room created successfully.", savedRoom), HttpStatus.CREATED);
     }
 
-    //Get Room by ID - REST API
+
     @GetMapping("{id}")
     public ResponseEntity<RoomDto> getRoomById(@PathVariable("id") Long roomId){
         RoomDto room = roomService.getRoomById(roomId);
@@ -39,7 +37,7 @@ public class RoomController {
         return new ResponseEntity<>(room, HttpStatus.OK);
     }
 
-    //Get all Rooms - REST API
+
     @GetMapping
     public ResponseEntity<Object> getAllRooms(){
         List<RoomDto> rooms = roomService.getAllRoom();
@@ -50,7 +48,7 @@ public class RoomController {
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
-    //Update Room by Id - REST API
+
     @PutMapping("{id}")
     public ResponseEntity<Object> updateRoom(@Valid @PathVariable("id") Long roomId, @RequestBody RoomDto roomDto){
 
@@ -60,7 +58,7 @@ public class RoomController {
         return new ResponseEntity<>(new ApiResponse<>("Room updated successfully", updateRoom), HttpStatus.OK);
     }
 
-    //Delete Room by Id
+
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteRoom(@PathVariable("id") Long roomId){
 

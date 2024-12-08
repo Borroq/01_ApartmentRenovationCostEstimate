@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.Security;
+package com.example.ApartmentRenovationCostEstimate.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class AppAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
         String acceptHeader = request.getHeader("Accept");
 

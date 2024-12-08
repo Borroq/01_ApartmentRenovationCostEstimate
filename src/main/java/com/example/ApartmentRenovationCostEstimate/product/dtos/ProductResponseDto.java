@@ -1,19 +1,27 @@
-package com.example.ApartmentRenovationCostEstimate.user.DTOs;
+package com.example.ApartmentRenovationCostEstimate.product.dtos;
 
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Getter @Setter @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserSummaryDto {
+public class ProductResponseDto {
+
     Long id;
     String name;
-    String surname;
-    String email;
+    String brand;
+    String link;
+    String category;
+    BigDecimal price;
+
 }

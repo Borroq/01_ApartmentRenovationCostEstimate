@@ -1,10 +1,9 @@
-package com.example.ApartmentRenovationCostEstimate.Security;
+package com.example.ApartmentRenovationCostEstimate.security;
 
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -44,10 +43,10 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
-    @Autowired
     public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -61,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users").anonymous()
                         .requestMatchers(HttpMethod.PUT, "/users").permitAll()
 
-                        .requestMatchers(HttpMethod.DELETE, "api/users/{id}").hasRole("ADMIN")
+                        //.requestMatchers(HttpMethod.DELETE, "api/users/{id}").hasRole("ADMIN")
 
                         .requestMatchers("/**", "/users/**").permitAll() // DISABLING SECURITY
 

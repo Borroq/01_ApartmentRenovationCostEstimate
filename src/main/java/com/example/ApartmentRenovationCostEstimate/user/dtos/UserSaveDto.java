@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.user.DTOs;
+package com.example.ApartmentRenovationCostEstimate.user.dtos;
 
 
 import jakarta.persistence.Column;

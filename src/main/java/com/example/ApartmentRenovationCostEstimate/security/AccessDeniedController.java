@@ -1,4 +1,4 @@
-package com.example.ApartmentRenovationCostEstimate.Security;
+package com.example.ApartmentRenovationCostEstimate.security;
 
 
 import org.springframework.stereotype.Controller;

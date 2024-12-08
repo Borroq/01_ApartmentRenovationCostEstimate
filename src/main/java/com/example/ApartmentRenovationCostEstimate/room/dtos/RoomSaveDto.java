@@ -1,7 +1,6 @@
-package com.example.ApartmentRenovationCostEstimate.cart.DTOs;
+package com.example.ApartmentRenovationCostEstimate.room.dtos;
 
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
@@ -16,12 +15,17 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateCartDTO {
+public class RoomSaveDto {
 
-    @NotNull(message = "UserId is required")
-    @Positive(message = "UserId must be greater than 0")
-    Long userId;
-
-    @NotBlank(message = "Cart name is required")
+    @NotNull(message = "Name cannot be null")
     String name;
+
+    @NotNull(message = "Floor area cannot be null")
+    @Positive(message = "Floor area must be greater than 0")
+    Double floorArea;
+
+    @NotNull(message = "Wall area cannot be null")
+    @Positive(message = "Wall area must be greater than 0")
+    Double wallArea;
+
 }

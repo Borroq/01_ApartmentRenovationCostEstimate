@@ -1,11 +1,10 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserResponseDto;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserSaveDto;
-import com.example.ApartmentRenovationCostEstimate.user.DTOs.UserUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface UserService {
@@ -14,5 +13,4 @@ public interface UserService {
     List<UserResponseDto> getAllUsers();
     User updateUser(UserUpdateDto userUpdateDto);
     void deleteUser(Long userId);
-    Optional<User> findById(Long id);
 }
