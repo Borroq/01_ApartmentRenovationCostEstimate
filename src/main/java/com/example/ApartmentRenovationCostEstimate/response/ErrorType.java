@@ -14,6 +14,7 @@ public enum ErrorType {
     CART_NOT_FOUND("Cart not found!"),
     CART_NAME_IS_MISSING("Cart name is missing!"),
     PRODUCT_NOT_FOUND("Product not found!"),
+    PRODUCT_CATEGORY_NOT_FOUND_EXCEPTION("Product category not found!"),
     FAILED_TO_ADD_PRODUCT_TO_CART("Failed to add product to cart!"),
     ROOM_NOT_FOUND("Room not found!"),
     ROOMS_NOT_FOUND("Rooms not found!"),

@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
 
+
 @Getter @Setter @ToString
 @NoArgsConstructor
 @AllArgsConstructor

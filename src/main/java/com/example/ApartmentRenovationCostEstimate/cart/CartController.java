@@ -36,18 +36,14 @@ public class CartController {
     public ResponseEntity<ApiResponse<CartResponseDto>> createCart(@Valid @RequestBody CreateCartDto createCartDto){
         CartResponseDto saveCartDto = cartService.createCart(createCartDto.getUserId(), createCartDto.getName());
 
-        ApiResponse<CartResponseDto> response = new ApiResponse<>("Cart created successfully.", saveCartDto);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse<>("Cart created successfully.", saveCartDto), HttpStatus.CREATED);
     }
 
     @PostMapping("{cartId}/products")
     public ResponseEntity<ApiResponse<CartResponseDto>> addProductToCart(@Valid @PathVariable Long cartId, @RequestBody AddProductRequest request) {
             CartResponseDto addedProduct = cartService.addProductToCart(cartId, request);
 
-            ApiResponse<CartResponseDto> response = new ApiResponse<>("Product added to cart", addedProduct);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(new ApiResponse<>("Product added to cart", addedProduct), HttpStatus.OK);
 
     }
 

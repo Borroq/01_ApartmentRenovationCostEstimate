@@ -80,13 +80,13 @@ public class CartServiceImpl implements CartService {
         cartItem.setProduct(product);
         cartItem.setQuantity(addProductRequest.getQuantity());
 
-        //Update total price for this cart item
+
         updateTotalPrice(cartItem);
         cartItemRepository.save(cartItem);
 
-        //Calculating the TOTAL COST of Cart
-        BigDecimal newTotalCost = calculateCartTotalCost(cartId);
-        cart.setTotalCost(newTotalCost);
+
+        BigDecimal newTotalCostCart = calculateCartTotalCost(cartId);
+        cart.setTotalCost(newTotalCostCart);
 
         cartRepository.save(cart);
 

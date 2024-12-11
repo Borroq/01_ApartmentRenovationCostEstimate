@@ -1,5 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.product;
 
+import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductCategoryNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductSaveDto;
@@ -29,10 +30,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product createProduct(ProductSaveDto productSaveDto) {
+    public ProductResponseDto createProduct(ProductSaveDto productSaveDto) {
         Product product = modelMapper.map(productSaveDto, Product.class);
+        Product savedProduct = productRepository.save(product);
 
-        return productRepository.save(product);
+        return modelMapper.map(savedProduct, ProductResponseDto.class);
     }
 
 
@@ -47,21 +49,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductResponseDto> getAllProduct(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
 
-        return productRepository.findAll(pageable)
+        if (productPage.isEmpty()) {
+            throw new ProductNotFoundException("Product not found");
+        }
+
+        return productPage
                 .map(product -> modelMapper.map(product, ProductResponseDto.class));
     }
 
 
     @Override
     @Transactional
-    public Product updateProduct(ProductUpdateDto productUpdateDto) {
+    public ProductResponseDto updateProduct(ProductUpdateDto productUpdateDto) {
         Product existingProduct = productRepository.findById(productUpdateDto.getId())
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
-        modelMapper.map(productUpdateDto, existingProduct);
+        existingProduct.setName(productUpdateDto.getName());
+        existingProduct.setBrand(productUpdateDto.getBrand());
+        existingProduct.setLink(productUpdateDto.getLink());
+        existingProduct.setCategory(productUpdateDto.getCategory());
+        existingProduct.setPrice(productUpdateDto.getPrice());
 
-        return productRepository.save(existingProduct);
+        Product updatedProduct = productRepository.save(existingProduct);
+
+        return modelMapper.map(updatedProduct, ProductResponseDto.class);
     }
 
 
@@ -78,6 +91,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponseDto> getProductsByCategory(String category) {
         List<Product> productByCategory = productRepository.findByCategory(category);
+
+        if (productByCategory.isEmpty()) {
+            throw new ProductCategoryNotFoundException("Product category not found");
+        }
 
         return productByCategory.stream()
                 .map(productCategory -> modelMapper.map(productCategory, ProductResponseDto.class))

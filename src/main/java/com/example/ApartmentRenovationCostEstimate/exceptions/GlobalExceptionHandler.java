@@ -3,6 +3,7 @@ package com.example.ApartmentRenovationCostEstimate.exceptions;
 
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartItemNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartNotFoundException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductCategoryNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.room.RoomNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserAlreadyExistsException;
@@ -38,6 +39,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException (ProductNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_NOT_FOUND), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler (ProductCategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductCategoryNotFoundException (ProductCategoryNotFoundException exception) {
+        return new ResponseEntity<>(new ErrorResponse(ErrorType.PRODUCT_CATEGORY_NOT_FOUND_EXCEPTION), HttpStatus.NOT_FOUND);
     }
 
 
