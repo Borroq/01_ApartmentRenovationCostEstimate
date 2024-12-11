@@ -46,30 +46,31 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public Cart createCart(Long userId, String name) {
+    public CartResponseDto createCart(Long userId, String name) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         Cart cart = new Cart();
-
         cart.setUser(user);
         cart.setName(name);
         cart.setTotalCost(BigDecimal.ZERO);
 
-        return cartRepository.save(cart);
+        Cart savedCart = cartRepository.save(cart);
+
+        return modelMapper.map(savedCart, CartResponseDto.class);
     }
 
 
     @Override
     @Transactional
-    public Cart addProductToCart(Long cartId, AddProductRequest addProductRequest) {
+    public CartResponseDto addProductToCart(Long cartId, AddProductRequest addProductRequest) {
         Cart cart = cartRepository
                 .findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
+                .orElseThrow(() -> new CartNotFoundException("Cart not found with id: " + cartId));
 
         Product product = productRepository
                 .findById(addProductRequest.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + addProductRequest.getProductId()));
 
         CartItem cartItem = cartItemRepository
                 .findByCartIdAndProductId(cartId, addProductRequest.getProductId())
@@ -87,7 +88,9 @@ public class CartServiceImpl implements CartService {
         BigDecimal newTotalCost = calculateCartTotalCost(cartId);
         cart.setTotalCost(newTotalCost);
 
-        return cartRepository.save(cart);
+        cartRepository.save(cart);
+
+        return modelMapper.map(cart, CartResponseDto.class);
     }
 
 
@@ -119,8 +122,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Page<CartListDto> getAllCarts(Pageable pageable) {
+        Page<Cart> cartPage = cartRepository.findAll(pageable);
 
-        return cartRepository.findAll(pageable)
+        if (cartPage.isEmpty()) {
+            throw new CartNotFoundException("Cart not found");
+        }
+
+        return cartPage
                 .map(cart -> {
                     CartListDto dto = new CartListDto();
                     dto.setId(cart.getId());
@@ -136,8 +144,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Page<CartListDto> getAllCartsByUser(Long userId, Pageable pageable) {
+        Page<Cart> cartPage = cartRepository.findByUserId(userId, pageable);
 
-        return cartRepository.findByUserId(userId, pageable)
+        if (cartPage.isEmpty()) {
+            throw new CartNotFoundException("No cart found for this user");
+        }
+
+        return cartPage
                 .map(cart -> {
                     CartListDto dto = new CartListDto();
                     dto.setId(cart.getId());

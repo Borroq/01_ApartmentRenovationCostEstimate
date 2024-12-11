@@ -13,8 +13,8 @@ import java.util.List;
 
 public interface CartService {
 
-    Cart createCart(Long userId, String name);
-    Cart addProductToCart(Long cartId, AddProductRequest addProductRequest);
+    CartResponseDto createCart(Long userId, String name);
+    CartResponseDto addProductToCart(Long cartId, AddProductRequest addProductRequest);
     CartResponseDto getCartById(Long cartId, Pageable pageable);
     Page<CartListDto> getAllCarts(Pageable pageable);
     Page<CartListDto> getAllCartsByUser(Long userId, Pageable pageable);
