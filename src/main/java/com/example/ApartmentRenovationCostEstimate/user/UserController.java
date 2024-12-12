@@ -16,9 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-
 
 //http://localhost:8080/api/user/...
 @RestController
