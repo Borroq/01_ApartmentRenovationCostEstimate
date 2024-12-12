@@ -1,13 +1,12 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
-import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
+
 import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
 import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSaveDto;
 import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 
 public interface UserService {
