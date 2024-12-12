@@ -8,6 +8,7 @@ import com.example.ApartmentRenovationCostEstimate.room.RoomService;
 import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +43,22 @@ public class MainController {
 
 
     @GetMapping("/users")
-    public String users (Model model) {
+    public String users (Model model,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserResponseDto> usersPage = userService.getAllUsers(pageable);
+
         model.addAttribute("title", title);
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("users", usersPage.getContent());
+        model.addAttribute("pageMetadata", new PageMetadata(
+                usersPage.getNumber(),
+                usersPage.getSize(),
+                usersPage.getTotalPages(),
+                usersPage.getTotalElements()
+        ));
+
         return "users";
     }
 

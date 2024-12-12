@@ -1,6 +1,7 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
 
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.security.RoleRepository;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserAlreadyExistsException;
@@ -11,6 +12,8 @@ import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserSaveDto userSaveDto) {
+    public UserResponseDto createUser(UserSaveDto userSaveDto) {
         User user = userRepository.findByEmail(userSaveDto.getEmail()).orElse(null);
         if (user != null) {
             throw new UserAlreadyExistsException("User already exist with email: " + userSaveDto.getEmail());
@@ -65,7 +68,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userSaveDto.getPassword()));
 
         // Saving to the database
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return modelMapper.map(savedUser, UserResponseDto.class);
     }
 
 
@@ -79,18 +84,21 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<UserResponseDto> getAllUsers() {
-        Iterable<User> users = userRepository.findAll();
+    public Page<UserResponseDto> getAllUsers(Pageable pageable) {
+        Page<User> usersPage = userRepository.findAll(pageable);
 
-        return StreamSupport.stream(users.spliterator(),false)
-                .map(user -> modelMapper.map(user, UserResponseDto.class))
-                .collect(Collectors.toList());
+        if (usersPage.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        return usersPage
+                .map(user -> modelMapper.map(user, UserResponseDto.class));
     }
 
 
     @Override
     @Transactional
-    public User updateUser(UserUpdateDto userUpdateDto) {
+    public UserResponseDto updateUser(UserUpdateDto userUpdateDto) {
         User existingUser = userRepository.findById(userUpdateDto.getId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
@@ -100,7 +108,9 @@ public class UserServiceImpl implements UserService {
 
         modelMapper.map(userUpdateDto, existingUser);
 
-        return userRepository.save(existingUser);
+        User updatedUser = userRepository.save(existingUser);
+
+        return modelMapper.map(updatedUser, UserResponseDto.class);
     }
 
 

@@ -8,6 +8,9 @@ import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -31,44 +34,49 @@ public class UserController{
 
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserSaveDto userSaveDto){
-        User savedUser = userService.createUser(userSaveDto);
+    public ResponseEntity<ApiResponse<UserResponseDto>> createUser(@Valid @RequestBody UserSaveDto userSaveDto){
+        UserResponseDto savedUser = userService.createUser(userSaveDto);
 
         return new ResponseEntity<>(new ApiResponse<>("User created successfully.", savedUser), HttpStatus.CREATED);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable("id") Long userId){
+    public ResponseEntity<ApiResponse<UserResponseDto>> getUserById(@PathVariable("id") Long userId){
         UserResponseDto user = userService.getUserById(userId);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse<>("User retrieved successfully", user),HttpStatus.OK);
     }
 
 
     @GetMapping
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<Object> getAllUsers(){
-        List<UserResponseDto> users = userService.getAllUsers();
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(new ApiResponse<>("No users found"), HttpStatus.OK);
-        }
+    public ResponseEntity<ApiResponse<Page<UserResponseDto>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size){
 
-        return new ResponseEntity<>(users,HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserResponseDto> users = userService.getAllUsers(pageable);
+
+
+        return new ResponseEntity<>(new ApiResponse<>("Users retrieved successfully", users),HttpStatus.OK);
     }
 
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateUser(@Valid @PathVariable("id") Long userId, @RequestBody UserUpdateDto userUpdateDto){
+    public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(
+            @Valid @PathVariable("id") Long userId,
+            @RequestBody UserUpdateDto userUpdateDto){
+
         userUpdateDto.setId(userId);
-        User uptadeUser = userService.updateUser(userUpdateDto);
+        UserResponseDto uptadeUser = userService.updateUser(userUpdateDto);
 
         return new ResponseEntity<>(new ApiResponse<>("User updated successfully" , uptadeUser),HttpStatus.OK);
     }
 
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable("id") Long userId){
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable("id") Long userId){
         userService.deleteUser(userId);
         return new ResponseEntity<>(new ApiResponse<>("User successfully deleted"), HttpStatus.OK);
     }
