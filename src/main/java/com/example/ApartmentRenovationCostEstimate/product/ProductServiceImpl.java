@@ -49,13 +49,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductResponseDto> getAllProduct(Pageable pageable) {
-        Page<Product> productPage = productRepository.findAll(pageable);
+        Page<Product> productsPage = productRepository.findAll(pageable);
 
-        if (productPage.isEmpty()) {
+        if (productsPage.isEmpty()) {
             throw new ProductNotFoundException("Product not found");
         }
 
-        return productPage
+        return productsPage
                 .map(product -> modelMapper.map(product, ProductResponseDto.class));
     }
 

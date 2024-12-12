@@ -1,15 +1,14 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
 import com.example.ApartmentRenovationCostEstimate.exceptions.room.RoomNotFoundException;
-import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomSaveDto;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -25,41 +24,49 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public Room createRoom(RoomSaveDto roomSaveDto) {
+    public RoomResponseDto createRoom(RoomSaveDto roomSaveDto) {
         Room room = modelMapper.map(roomSaveDto, Room.class);
+        Room savedRoom = roomRepository.save(room);
 
-        return roomRepository.save(room);
+        return modelMapper.map(savedRoom, RoomResponseDto.class);
     }
 
 
     @Override
-    public RoomDto getRoomById(Long roomId) {
+    public RoomResponseDto getRoomById(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
-        return modelMapper.map(room, RoomDto.class);
+        return modelMapper.map(room, RoomResponseDto.class);
     }
 
 
     @Override
-    public List<RoomDto> getAllRoom() {
-        Iterable<Room> rooms = roomRepository.findAll();
+    public Page<RoomResponseDto> getAllRoom(Pageable pageable) {
+        Page<Room> roomsPage = roomRepository.findAll(pageable);
 
-        return StreamSupport.stream(rooms.spliterator(), false)
-                .map(room -> modelMapper.map(room, RoomDto.class))
-                .collect(Collectors.toList());
+        if (roomsPage.isEmpty()) {
+            throw new RoomNotFoundException("Room not found");
+        }
+
+        return roomsPage
+                .map(room -> modelMapper.map(room, RoomResponseDto.class));
     }
 
 
     @Override
     @Transactional
-    public Room updateRoom(RoomDto roomDto) {
-        Room existingRoom = roomRepository.findById(roomDto.getId())
+    public RoomResponseDto updateRoom(RoomUpdateDto roomUpdateDto) {
+        Room existingRoom = roomRepository.findById(roomUpdateDto.getId())
                 .orElseThrow(() -> new RoomNotFoundException("Room not found"));
 
-        modelMapper.map(roomDto, existingRoom);
+        existingRoom.setName(roomUpdateDto.getName());
+        existingRoom.setFloorArea(roomUpdateDto.getFloorArea());
+        existingRoom.setWallArea(roomUpdateDto.getWallArea());
 
-        return roomRepository.save(existingRoom);
+        Room updatedRoom = roomRepository.save(existingRoom);
+
+        return modelMapper.map(updatedRoom, RoomResponseDto.class);
     }
 
 

@@ -1,14 +1,16 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
-import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomSaveDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -23,45 +25,47 @@ public class RoomController {
 
 
     @PostMapping
-    public ResponseEntity<Object> createRooms(@Valid @RequestBody RoomSaveDto room){
-        Room savedRoom = roomService.createRoom(room);
+    public ResponseEntity<ApiResponse<RoomResponseDto>> createRooms(@Valid @RequestBody RoomSaveDto room){
+        RoomResponseDto savedRoom = roomService.createRoom(room);
 
         return new ResponseEntity<>(new ApiResponse<>("Room created successfully.", savedRoom), HttpStatus.CREATED);
     }
 
 
     @GetMapping("{id}")
-    public ResponseEntity<RoomDto> getRoomById(@PathVariable("id") Long roomId){
-        RoomDto room = roomService.getRoomById(roomId);
+    public ResponseEntity<ApiResponse<RoomResponseDto>> getRoomById(@PathVariable("id") Long roomId){
+        RoomResponseDto room = roomService.getRoomById(roomId);
 
-        return new ResponseEntity<>(room, HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse<>("Room retrieved successfully", room), HttpStatus.OK);
     }
 
 
     @GetMapping
-    public ResponseEntity<Object> getAllRooms(){
-        List<RoomDto> rooms = roomService.getAllRoom();
-        if (rooms.isEmpty()) {
-            return new ResponseEntity<>(new ApiResponse<>("No rooms found"), HttpStatus.OK);
-        }
+    public ResponseEntity<ApiResponse<Page<RoomResponseDto>>> getAllRooms(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
 
-        return new ResponseEntity<>(rooms, HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RoomResponseDto> rooms = roomService.getAllRoom(pageable);
+
+        return new ResponseEntity<>(new ApiResponse<>("Rooms retrieved successfully", rooms), HttpStatus.OK);
     }
 
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateRoom(@Valid @PathVariable("id") Long roomId, @RequestBody RoomDto roomDto){
+    public ResponseEntity<ApiResponse<RoomResponseDto>> updateRoom(
+            @Valid @PathVariable("id") Long roomId,
+            @RequestBody RoomUpdateDto roomUpdateDto){
 
-        roomDto.setId(roomId);
-        Room updateRoom = roomService.updateRoom(roomDto);
+        roomUpdateDto.setId(roomId);
+        RoomResponseDto updateRoom = roomService.updateRoom(roomUpdateDto);
 
         return new ResponseEntity<>(new ApiResponse<>("Room updated successfully", updateRoom), HttpStatus.OK);
     }
 
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> deleteRoom(@PathVariable("id") Long roomId){
-
+    public ResponseEntity<ApiResponse> deleteRoom(@PathVariable("id") Long roomId){
         roomService.deleteRoom(roomId);
         
         return new ResponseEntity<>(new ApiResponse<>("Room successfully deleted"), HttpStatus.OK);

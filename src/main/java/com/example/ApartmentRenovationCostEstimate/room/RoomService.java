@@ -1,15 +1,16 @@
 package com.example.ApartmentRenovationCostEstimate.room;
 
 
-import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomUpdateDto;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomSaveDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface RoomService {
-    Room createRoom(RoomSaveDto roomSaveDto);
-    RoomDto getRoomById(Long roomId);
-    List<RoomDto> getAllRoom();
-    Room updateRoom(RoomDto roomDto);
+    RoomResponseDto createRoom(RoomSaveDto roomSaveDto);
+    RoomResponseDto getRoomById(Long roomId);
+    Page<RoomResponseDto> getAllRoom(Pageable pageable);
+    RoomResponseDto updateRoom(RoomUpdateDto roomUpdateDto);
     void deleteRoom(Long roomId);
 }

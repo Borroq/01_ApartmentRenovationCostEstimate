@@ -6,15 +6,12 @@ import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
 import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartResponseDto;
 import com.example.ApartmentRenovationCostEstimate.cart.dtos.CreateCartDto;
 import com.example.ApartmentRenovationCostEstimate.response.ApiResponse;
-import com.example.ApartmentRenovationCostEstimate.response.ErrorResponse;
-import com.example.ApartmentRenovationCostEstimate.response.ErrorType;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,7 +68,12 @@ public class CartController {
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<ApiResponse<Page<CartListDto>>> getAllCartsByUserId(@PathVariable("userId") Long userId, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<CartListDto>>> getAllCartsByUserId(
+            @PathVariable("userId") Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
         Page<CartListDto> allCarts = cartService.getAllCartsByUser(userId, pageable);
 
         return new ResponseEntity<>(new ApiResponse<>("Carts retrieved successfully", allCarts), HttpStatus.OK);

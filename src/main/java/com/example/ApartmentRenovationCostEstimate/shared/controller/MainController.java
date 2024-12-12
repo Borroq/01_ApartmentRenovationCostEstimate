@@ -5,6 +5,7 @@ import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
 import com.example.ApartmentRenovationCostEstimate.product.dtos.ProductResponseDto;
 import com.example.ApartmentRenovationCostEstimate.product.ProductService;
 import com.example.ApartmentRenovationCostEstimate.room.RoomService;
+import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.shared.dtos.PageMetadata;
 import com.example.ApartmentRenovationCostEstimate.user.UserService;
 import org.springframework.data.domain.Page;
@@ -70,9 +71,21 @@ public class MainController {
 
 
     @GetMapping("/rooms")
-    public String rooms (Model model) {
+    public String rooms (Model model,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam(defaultValue = "50") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RoomResponseDto> roomsPage = roomService.getAllRoom(pageable);
+
         model.addAttribute("title", title);
-        model.addAttribute("rooms", roomService.getAllRoom());
+        model.addAttribute("rooms", roomsPage.getContent());
+        model.addAttribute("pageMetadata", new PageMetadata(
+                roomsPage.getNumber(),
+                roomsPage.getSize(),
+                roomsPage.getTotalPages(),
+                roomsPage.getTotalElements()
+        ));
         return "rooms";
     }
 
