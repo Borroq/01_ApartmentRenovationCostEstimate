@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Getter @Setter  @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "cartItem")
+@Table(name = "cart_item")
 public class CartItem {
 
     @Id

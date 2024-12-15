@@ -72,9 +72,7 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setCategory(productUpdateDto.getCategory());
         existingProduct.setPrice(productUpdateDto.getPrice());
 
-        Product updatedProduct = productRepository.save(existingProduct);
-
-        return modelMapper.map(updatedProduct, ProductResponseDto.class);
+        return modelMapper.map(existingProduct, ProductResponseDto.class);
     }
 
 
@@ -104,21 +102,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<String> getAllCategories() {
-        List<Product> products = productRepository.findAll();
+        List<String> products = productRepository.findAllDistinctCategories();
 
-        return products.stream()
-                .map(Product::getCategory)
-                .distinct() //usuwanie duplikatów
-                .collect(Collectors.toList());
+        return products;
     }
 
 
     @Override
     public List<String> getAllBrands() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(Product::getBrand)
-                .distinct()
-                .collect(Collectors.toList());
+        List<String> products = productRepository.findAllDistinctBrands();
+
+        return products;
     }
 }

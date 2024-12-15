@@ -64,9 +64,7 @@ public class RoomServiceImpl implements RoomService {
         existingRoom.setFloorArea(roomUpdateDto.getFloorArea());
         existingRoom.setWallArea(roomUpdateDto.getWallArea());
 
-        Room updatedRoom = roomRepository.save(existingRoom);
-
-        return modelMapper.map(updatedRoom, RoomResponseDto.class);
+        return modelMapper.map(existingRoom, RoomResponseDto.class);
     }
 
 
