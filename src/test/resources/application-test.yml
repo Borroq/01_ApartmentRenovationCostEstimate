@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: ApartmentRenovationCostEstimate
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/test_db
+    username: root
+    password:
+    initialize: true
+    initialization-mode: always
+    # data: classpath:data.sql
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
+
+  web:
+    resources:
+      chain:
+        strategy:
+          content:
+            enabled: true
+      add-mappings: true
+
+  mvc:
+    static-path-pattern: /static/**
+
+
+# Uncomment the following lines for Spring Security default credentials
+# spring:
+#   security:
+#     user:
+#       name: Borroq
+#       password: 12345
