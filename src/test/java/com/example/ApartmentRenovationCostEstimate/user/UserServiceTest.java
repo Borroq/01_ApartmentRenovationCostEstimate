@@ -2,6 +2,7 @@ package com.example.ApartmentRenovationCostEstimate.user;
 
 
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserAlreadyExistsException;
+import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.security.RoleRepository;
 import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
@@ -139,7 +140,7 @@ public class UserServiceTest {
         user.setPassword(password);
         user.setEmail(email);
 
-        //When
+        //Mocking
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         //When & Then
@@ -147,6 +148,71 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).findByEmail(email);
         verify(userRepository, times(0)).save(any());
+    }
+
+
+    @Test
+    void itShouldReturnUserResponseDtoWhenUserExists() {
+        // Given
+        Long userId = 1L;
+        String name = "Janko";
+        String surname = "Kowalski";
+        String nick = "Tester";
+        String password = "testPassword";
+        String email = "janko.kowalski@gmail.com";
+        String role = "ROLE_USER";
+
+        User user = new User();
+        user.setId(userId);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setNick(nick);
+        user.setPassword(password);
+        user.setEmail(email);
+
+        GrantedAuthorityImpl grantedAuthority = new GrantedAuthorityImpl();
+        grantedAuthority.setAuthority(role);
+        user.setGrantedAuthorities(Collections.singletonList(grantedAuthority));
+
+        UserResponseDto expectedResponse = new UserResponseDto();
+        expectedResponse.setName(name);
+        expectedResponse.setSurname(surname);
+        expectedResponse.setNick(nick);
+        expectedResponse.setEmail(email);
+        expectedResponse.setRole(role);
+
+        //Mocking
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(modelMapper.map(user, UserResponseDto.class)).thenReturn(expectedResponse);
+
+        //When
+        UserResponseDto actualResponse = underTest.getUserById(userId);
+
+        //Then
+        assertNotNull(actualResponse);
+        assertEquals(expectedResponse.getName(), actualResponse.getName());
+        assertEquals(expectedResponse.getSurname(), actualResponse.getSurname());
+        assertEquals(expectedResponse.getNick(), actualResponse.getNick());
+        assertEquals(expectedResponse.getEmail(), actualResponse.getEmail());
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(modelMapper, times(1)).map(user, UserResponseDto.class);
+    }
+
+
+    @Test
+    void itShouldThrowUserNotFoundExceptionWhenUserDoesNotExist() {
+        //Given
+        Long userId = 1L;
+
+        //Mocking
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        //When & Then
+        assertThrows(UserNotFoundException.class, () -> underTest.getUserById(userId));
+
+        verify(userRepository, times(1)).findById(userId);
+
     }
 
 }
