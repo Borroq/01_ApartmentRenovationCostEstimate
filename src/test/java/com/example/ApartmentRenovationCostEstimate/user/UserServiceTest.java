@@ -7,6 +7,7 @@ import com.example.ApartmentRenovationCostEstimate.security.GrantedAuthorityImpl
 import com.example.ApartmentRenovationCostEstimate.security.RoleRepository;
 import com.example.ApartmentRenovationCostEstimate.user.dtos.UserResponseDto;
 import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSaveDto;
+import com.example.ApartmentRenovationCostEstimate.user.dtos.UserUpdateDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -276,6 +278,112 @@ public class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> underTest.getAllUsers(pageable));
 
         verify(userRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    void itShouldUpdateUser() {
+        //Given
+        Long userId = 1L;
+        String newPassword = "newPassword123";
+        String updatedName = "Updated Name";
+
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setId(userId);
+        userUpdateDto.setName(updatedName);
+        userUpdateDto.setPassword(newPassword);
+
+        User existingUser = new User();
+        existingUser.setId(userId);
+        existingUser.setName("Old Name");
+        existingUser.setPassword("OldPassword");
+
+        User updatedUser = new User();
+        existingUser.setId(userId);
+        existingUser.setName(updatedName);
+        existingUser.setPassword("encodedNewPassword123");
+
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setName(updatedName);
+
+        //Mocking
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(passwordEncoder.encode(newPassword)).thenReturn("encodedNewPassword123");
+        when(userRepository.save(existingUser)).thenReturn(updatedUser);
+        when(modelMapper.map(updatedUser, UserResponseDto.class)).thenReturn(userResponseDto);
+
+        //When
+        UserResponseDto actualResponse = underTest.updateUser(userUpdateDto);
+
+        //Then
+        assertNotNull(actualResponse);
+        assertEquals(userResponseDto.getName(), actualResponse.getName());
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(passwordEncoder, times(1)).encode(newPassword);
+        verify(userRepository, times(1)).save(existingUser);
+        verify(modelMapper, times(1)).map(updatedUser, UserResponseDto.class);
+    }
+
+
+    @Test
+    void itShouldThrowExceptionWhenUserNotFound() {
+        //Given
+        Long userId = 1L;
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setId(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> underTest.updateUser(userUpdateDto));
+
+        verify(userRepository, times(0)).save(any());
+        verify(userRepository, times(1)).findById(userId);
+    }
+
+
+    @Test
+    void itShouldDeleteUser() {
+        //Given
+        Long userId = 1L;
+        String name = "Janko";
+        String surname = "Kowalski";
+        String nick = "Tester";
+        String password = "testPassword";
+        String email = "janko.kowalski@gmail.com";
+
+        User user = new User();
+        user.setId(userId);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setNick(nick);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setGrantedAuthorities(new ArrayList<>());
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        //When
+        underTest.deleteUser(userId);
+
+        //Then
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(user);
+        verify(userRepository, times(1)).deleteById(userId);
+    }
+
+
+    @Test
+    void itShouldThrowUserNotFoundExceptionWhenTryDeleteUser() {
+        //Given
+        Long userId = 1L;
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        //When & Then
+        assertThrows(UserNotFoundException.class, () -> underTest.deleteUser(userId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).deleteById(userId);
     }
 
 
