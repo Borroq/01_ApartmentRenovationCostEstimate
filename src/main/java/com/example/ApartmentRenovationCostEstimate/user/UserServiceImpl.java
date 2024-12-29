@@ -1,7 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.user;
 
 
-import com.example.ApartmentRenovationCostEstimate.room.dtos.RoomResponseDto;
 import com.example.ApartmentRenovationCostEstimate.security.GrantedAuthorityImpl;
 import com.example.ApartmentRenovationCostEstimate.security.RoleRepository;
 import com.example.ApartmentRenovationCostEstimate.exceptions.user.UserAlreadyExistsException;
@@ -19,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 @Service
