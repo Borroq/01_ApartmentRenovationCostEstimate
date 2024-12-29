@@ -13,6 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
@@ -212,7 +216,67 @@ public class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> underTest.getUserById(userId));
 
         verify(userRepository, times(1)).findById(userId);
-
     }
+
+
+    @Test
+    void itShouldReturnUserListWhenUsersExist() {
+        //Given
+        Long id = 1L;
+        String name = "Janko";
+        String surname = "Kowalski";
+        String nick = "Tester";
+        String email = "janko.kowalski@gmail.com";
+
+        User user = new User();
+        user.setId(id);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setNick(nick);
+        user.setEmail(email);
+
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setName(name);
+        userResponseDto.setSurname(surname);
+        userResponseDto.setNick(nick);
+        userResponseDto.setEmail(email);
+
+        //Mocking
+        Pageable pageable = PageRequest.of(0,10);
+        Page<User> usersPage = new PageImpl<>(Collections.singletonList(user), pageable, 1);
+
+        when(userRepository.findAll(pageable)).thenReturn(usersPage);
+        when(modelMapper.map(user, UserResponseDto.class)).thenReturn(userResponseDto);
+
+        //When
+        Page<UserResponseDto> actualResponse = underTest.getAllUsers(pageable);
+
+        //Then
+        assertNotNull(actualResponse);
+        assertEquals(1, actualResponse.getTotalElements());
+        assertEquals(userResponseDto.getName(), actualResponse.getContent().get(0).getName());
+        assertEquals(userResponseDto.getSurname(), actualResponse.getContent().get(0).getSurname());
+        assertEquals(userResponseDto.getNick(), actualResponse.getContent().get(0).getNick());
+        assertEquals(userResponseDto.getEmail(), actualResponse.getContent().get(0).getEmail());
+
+        verify(userRepository, times(1)).findAll(pageable);
+        verify(modelMapper, times(1)).map(user, UserResponseDto.class);
+    }
+
+
+    @Test
+    void itShouldThrowUserNotFoundExceptionWhenNoUsersExist() {
+        //Given
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> usersPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        when(userRepository.findAll(pageable)).thenReturn(usersPage);
+
+        //When &Then
+        assertThrows(UserNotFoundException.class, () -> underTest.getAllUsers(pageable));
+
+        verify(userRepository, times(1)).findAll(pageable);
+    }
+
 
 }
