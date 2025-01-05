@@ -61,7 +61,7 @@ public class UserControllerIntegrationTest {
     @Test
     @Transactional
     void testCreateUser_shouldReturnBadRequestForInvalidEmail() throws Exception {
-        String invalicEmailUserJson = """
+        String invalidEmailUserJson = """
                 {
                     "name": "Janko",
                     "surname": "Kowalski",
@@ -73,7 +73,7 @@ public class UserControllerIntegrationTest {
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalicEmailUserJson))
+                        .content(invalidEmailUserJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Validation failed!"))
                 .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
