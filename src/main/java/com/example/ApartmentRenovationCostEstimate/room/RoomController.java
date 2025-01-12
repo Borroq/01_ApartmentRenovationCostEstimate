@@ -46,7 +46,7 @@ public class RoomController {
             @RequestParam(defaultValue = "50") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<RoomResponseDto> rooms = roomService.getAllRoom(pageable);
+        Page<RoomResponseDto> rooms = roomService.getAllRooms(pageable);
 
         return new ResponseEntity<>(new ApiResponse<>("Rooms retrieved successfully", rooms), HttpStatus.OK);
     }

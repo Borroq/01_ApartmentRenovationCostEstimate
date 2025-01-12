@@ -42,11 +42,11 @@ public class RoomServiceImpl implements RoomService {
 
 
     @Override
-    public Page<RoomResponseDto> getAllRoom(Pageable pageable) {
+    public Page<RoomResponseDto> getAllRooms(Pageable pageable) {
         Page<Room> roomsPage = roomRepository.findAll(pageable);
 
         if (roomsPage.isEmpty()) {
-            throw new RoomNotFoundException("Room not found");
+            throw new RoomNotFoundException("Room not found!");
         }
 
         return roomsPage

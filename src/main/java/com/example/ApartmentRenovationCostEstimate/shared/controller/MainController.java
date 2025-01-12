@@ -90,7 +90,7 @@ public class MainController {
                          @RequestParam(defaultValue = "50") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<RoomResponseDto> roomsPage = roomService.getAllRoom(pageable);
+        Page<RoomResponseDto> roomsPage = roomService.getAllRooms(pageable);
 
         model.addAttribute("title", title);
         model.addAttribute("rooms", roomsPage.getContent());

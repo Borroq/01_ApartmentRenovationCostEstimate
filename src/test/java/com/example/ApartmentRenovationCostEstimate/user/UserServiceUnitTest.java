@@ -55,7 +55,7 @@ public class UserServiceUnitTest {
     }
 
     @AfterEach
-    void afterAll() throws Exception{
+    void afterAll() throws Exception {
             autoCloseable.close();
     }
 

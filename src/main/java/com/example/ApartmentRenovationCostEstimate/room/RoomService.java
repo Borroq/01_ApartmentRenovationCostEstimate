@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 public interface RoomService {
     RoomResponseDto createRoom(RoomSaveDto roomSaveDto);
     RoomResponseDto getRoomById(Long roomId);
-    Page<RoomResponseDto> getAllRoom(Pageable pageable);
+    Page<RoomResponseDto> getAllRooms(Pageable pageable);
     RoomResponseDto updateRoom(RoomUpdateDto roomUpdateDto);
     void deleteRoom(Long roomId);
 }
