@@ -11,9 +11,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategory(String category);
 
-    @Query("SELECT DISTINCT p.category FROM Product p")
+    @Query("SELECT DISTINCT p.category FROM Product p ORDER BY p.category ASC")
     List<String> findAllDistinctCategories();
 
-    @Query("SELECT DISTINCT p.brand FROM Product p")
+    @Query("SELECT DISTINCT p.brand FROM Product p ORDER BY p.brand ASC")
     List<String> findAllDistinctBrands();
 }
