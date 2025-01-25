@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productByCategory = productRepository.findByCategory(category);
 
         if (productByCategory.isEmpty()) {
-            throw new ProductCategoryNotFoundException("Product category not found");
+            throw new ProductCategoryNotFoundException("Product category not found!");
         }
 
         return productByCategory.stream()

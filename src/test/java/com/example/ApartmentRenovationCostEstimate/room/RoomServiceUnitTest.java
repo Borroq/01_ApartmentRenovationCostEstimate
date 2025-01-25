@@ -238,6 +238,7 @@ public class RoomServiceUnitTest {
 
         //Mocking
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(existingRoom));
+        when(roomRepository.save(updatedRoom)).thenReturn(updatedRoom);
         when(modelMapper.map(existingRoom, RoomResponseDto.class)).thenReturn(roomResponseDto);
 
         //When
@@ -247,9 +248,7 @@ public class RoomServiceUnitTest {
 
         assertAll(
                 () -> assertNotNull(actualResponse),
-                () -> assertEquals(updatedName, actualResponse.getName()),
-                () -> assertEquals(updateFloorArea, actualResponse.getFloorArea()),
-                () -> assertEquals(updatedWallArea, actualResponse.getWallArea()),
+                () -> assertEquals(roomResponseDto, actualResponse),
 
                 () -> verify(roomRepository, times(1)).findById(roomId),
                 () -> verify(modelMapper, times(1)).map(existingRoom, RoomResponseDto.class)

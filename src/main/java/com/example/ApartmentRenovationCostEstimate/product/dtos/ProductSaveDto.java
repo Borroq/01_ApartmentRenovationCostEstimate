@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductSaveDto {
 
-    Long id;
+    //Long id;
 
     @NotBlank(message = "Name cannot be null")
     @Size(min = 3, max = 200)
