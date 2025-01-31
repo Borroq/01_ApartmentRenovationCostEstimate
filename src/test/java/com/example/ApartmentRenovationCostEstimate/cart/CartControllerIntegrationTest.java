@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,7 +82,7 @@ public class CartControllerIntegrationTest {
                 .andExpect(jsonPath("$.errors[*].message").value("Cart name is required"));
 
         long cartCount = cartRepository.count();
-        Assertions.assertEquals(2, cartCount, "No cart should be saved in the database");
+        assertEquals(2, cartCount, "No cart should be saved in the database");
     }
 
 
