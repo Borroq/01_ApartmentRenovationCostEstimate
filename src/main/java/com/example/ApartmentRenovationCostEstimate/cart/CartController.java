@@ -37,11 +37,13 @@ public class CartController {
     }
 
     @PostMapping("{cartId}/products")
-    public ResponseEntity<ApiResponse<CartResponseDto>> addProductToCart(@Valid @PathVariable Long cartId, @RequestBody AddProductRequest request) {
-            CartResponseDto addedProduct = cartService.addProductToCart(cartId, request);
+    public ResponseEntity<ApiResponse<CartResponseDto>> addProductToCart(
+            @Valid @PathVariable Long cartId,
+            @Valid @RequestBody AddProductRequest request) {
 
-            return new ResponseEntity<>(new ApiResponse<>("Product added to cart", addedProduct), HttpStatus.OK);
+        CartResponseDto addedProduct = cartService. addProductToCart(cartId, request);
 
+        return new ResponseEntity<>(new ApiResponse<>("Product added to cart", addedProduct), HttpStatus.OK);
     }
 
     @GetMapping("{cartId}")

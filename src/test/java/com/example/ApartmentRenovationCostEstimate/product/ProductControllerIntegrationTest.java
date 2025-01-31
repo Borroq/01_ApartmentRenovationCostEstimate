@@ -171,6 +171,7 @@ public class ProductControllerIntegrationTest {
     void testGetAllProducts_shouldReturnPaginatedProducts() throws Exception {
         mockMvc.perform(get("/api/products?page=0&size=10")
                         .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("@.message").value("Products retrieved successfully"))
                 .andExpect(jsonPath("$.data.page.size").value(10))

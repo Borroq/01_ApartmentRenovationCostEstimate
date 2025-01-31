@@ -1,7 +1,6 @@
 package com.example.ApartmentRenovationCostEstimate.cart.dtos;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,6 +18,6 @@ public class AddProductRequest {
     @PositiveOrZero(message = "Quantity must be greater than zero or equal")
     Long productId;
 
-    @Positive(message = "Quantity must be greater than zero")
+    //@Positive(message = "Quantity must be greater than zero")
     int quantity;
 }

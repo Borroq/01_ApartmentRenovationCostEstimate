@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.Collator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,16 +76,20 @@ public class CartServiceImpl implements CartService {
 
         CartItem cartItem = cartItemRepository
                 .findByCartIdAndProductId(cartId, addProductRequest.getProductId())
-                .orElse(new CartItem());
+                .orElse(null);
 
-        cartItem.setCart(cart);
-        cartItem.setProduct(product);
-        cartItem.setQuantity(addProductRequest.getQuantity());
+        if (cartItem != null) {
+            cartItem.setQuantity(cartItem.getQuantity() + addProductRequest.getQuantity());
+        } else {
+            cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setQuantity(addProductRequest.getQuantity());
+        }
 
 
         updateTotalPrice(cartItem);
         cartItemRepository.save(cartItem);
-
 
         BigDecimal newTotalCostCart = calculateCartTotalCost(cartId);
         cart.setTotalCost(newTotalCostCart);
@@ -210,9 +216,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<String> getAllProductCategoriesFromCart(Long cartId) {
         List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
+        Collator collator = Collator.getInstance(new Locale("pl", "PL"));
         return cartItems.stream()
                 .map(cartItem -> cartItem.getProduct().getCategory())
                 .distinct()
+                .sorted(collator)
                 .collect(Collectors.toList());
     }
 
