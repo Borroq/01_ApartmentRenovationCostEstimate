@@ -18,6 +18,7 @@ import static com.example.ApartmentRenovationCostEstimate.shared.PaginationConst
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+
 @DataJpaTest
 @ActiveProfiles(value = "test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
