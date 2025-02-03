@@ -2,6 +2,7 @@ package com.example.ApartmentRenovationCostEstimate.cart;
 
 import com.example.ApartmentRenovationCostEstimate.cart.dtos.AddProductRequest;
 import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartItemDto;
+import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartListDto;
 import com.example.ApartmentRenovationCostEstimate.cart.dtos.CartResponseDto;
 import com.example.ApartmentRenovationCostEstimate.exceptions.cart.CartNotFoundException;
 import com.example.ApartmentRenovationCostEstimate.exceptions.product.ProductNotFoundException;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import static com.example.ApartmentRenovationCostEstimate.shared.PaginationConstant.PAGE_DEFAULT;
 import static com.example.ApartmentRenovationCostEstimate.shared.PaginationConstant.SIZE_DEFAULT;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.atIndex;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -340,6 +342,295 @@ public class CartServiceUnitTest {
                 () -> verify(modelMapper, times(1)).map(cart, CartResponseDto.class),
                 () -> verify(modelMapper, times(2)).map(any(CartItem.class), eq(CartItemDto.class))
         );
+
+    }
+
+
+    @Test
+    @DisplayName("It should return cart list when carts exist")
+    void itShouldReturnCartListWhenCartsExist() {
+        //Given
+        Cart cart_1 = new Cart();
+        cart_1.setId(1L);
+        cart_1.setName("Cart 1");
+        cart_1.setTotalCost(new BigDecimal(300));
+        cart_1.setCartItems(List.of(new CartItem()));
+        cart_1.setUser(new User());
+
+        Cart cart_2 = new Cart();
+        cart_2.setId(2L);
+        cart_2.setName("Cart 2");
+        cart_2.setTotalCost(new BigDecimal(800));
+        cart_2.setCartItems(List.of(new CartItem()));
+        cart_2.setUser(new User());
+
+
+        int page = Integer.parseInt(PAGE_DEFAULT);
+        int size = Integer.parseInt(SIZE_DEFAULT);
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Cart> carts = List.of(cart_1, cart_2);
+        Page<Cart> cartPage = new PageImpl<>(carts, pageable, 2);
+
+
+        CartListDto cartListDto_1 = new CartListDto();
+        cartListDto_1.setId(1L);
+        cartListDto_1.setName("Cart 1");
+        cartListDto_1.setTotalCost(new BigDecimal(300));
+        cartListDto_1.setCartItemsCount(1);
+
+        CartListDto cartListDto_2 = new CartListDto();
+        cartListDto_2.setId(2L);
+        cartListDto_2.setName("Cart 2");
+        cartListDto_2.setTotalCost(new BigDecimal(800));
+        cartListDto_2.setCartItemsCount(1);
+
+        //Mocking
+        when(cartRepository.findAll(pageable)).thenReturn(cartPage);
+        when(modelMapper.map(cart_1.getUser(), UserSummaryDto.class)).thenReturn(new UserSummaryDto());
+        when(modelMapper.map(cart_2.getUser(), UserSummaryDto.class)).thenReturn(new UserSummaryDto());
+
+        //When
+        Page<CartListDto> actualResponse = underTest.getAllCarts(pageable);
+
+        //Then
+        assertAll(
+                () -> assertThat(actualResponse).isNotEmpty(),
+                () -> assertThat(actualResponse.getTotalElements()).isEqualTo(2),
+                () -> assertThat(actualResponse.getContent()).hasSize(2),
+                () -> assertThat(actualResponse.getContent().get(0).getName()).isEqualTo("Cart 1"),
+                () -> assertThat(actualResponse.getContent().get(1).getName()).isEqualTo("Cart 2"),
+
+                () -> verify(cartRepository, times(1)).findAll(pageable),
+                () -> verify(modelMapper, times(2)).map(any(User.class), eq(UserSummaryDto.class))
+        );
+    }
+
+
+    @Test
+    @DisplayName("It should return all carts by given user")
+    void itShouldReturnAllCartsByGivenUser() {
+        //Given
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+
+        Cart cart_1 = new Cart();
+        cart_1.setId(1L);
+        cart_1.setName("Cart 1");
+        cart_1.setTotalCost(new BigDecimal(300));
+        cart_1.setCartItems(List.of(new CartItem()));
+        cart_1.setUser(user);
+
+        Cart cart_2 = new Cart();
+        cart_2.setId(2L);
+        cart_2.setName("Cart 2");
+        cart_2.setTotalCost(new BigDecimal(800));
+        cart_2.setCartItems(List.of(new CartItem()));
+        cart_2.setUser(user);
+
+
+        int page = Integer.parseInt(PAGE_DEFAULT);
+        int size = Integer.parseInt(SIZE_DEFAULT);
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Cart> carts = List.of(cart_1, cart_2);
+        Page<Cart> cartPage = new PageImpl<>(carts, pageable, 2);
+
+
+        CartListDto cartListDto_1 = new CartListDto();
+        cartListDto_1.setId(1L);
+        cartListDto_1.setName("Cart 1");
+        cartListDto_1.setTotalCost(new BigDecimal(300));
+        cartListDto_1.setCartItemsCount(1);
+
+        CartListDto cartListDto_2 = new CartListDto();
+        cartListDto_2.setId(2L);
+        cartListDto_2.setName("Cart 2");
+        cartListDto_2.setTotalCost(new BigDecimal(800));
+        cartListDto_2.setCartItemsCount(1);
+
+        //Mocking
+        UserSummaryDto userSummaryDto = new UserSummaryDto();
+        userSummaryDto.setId(1L);
+        when(cartRepository.findByUserId(userId, pageable)).thenReturn(cartPage);
+        when(modelMapper.map(cart_1.getUser(), UserSummaryDto.class)).thenReturn(userSummaryDto);
+        when(modelMapper.map(cart_2.getUser(), UserSummaryDto.class)).thenReturn(userSummaryDto);
+
+        //When
+        Page<CartListDto> actualResponse = underTest.getAllCartsByUser(userId, pageable);
+
+        //Then
+        assertAll(
+                () -> assertThat(actualResponse).isNotEmpty(),
+                () -> assertThat(actualResponse.getTotalElements()).isEqualTo(2),
+                () -> assertThat(actualResponse.getContent()).hasSize(2),
+                () -> assertThat(actualResponse.getContent().get(0).getUser().getId()).isEqualTo(1),
+                () -> assertThat(actualResponse.getContent().get(1).getUser().getId()).isEqualTo(1),
+
+                () -> verify(cartRepository, times(1)).findByUserId(userId, pageable),
+                () -> verify(modelMapper, times(2)).map(any(User.class), eq(UserSummaryDto.class))
+        );
+    }
+
+
+    @Test
+    @DisplayName("It should remove product from cart")
+    void itShouldRemoveProductFromCart() {
+        //Given
+        Long cartId = 1L;
+        Long productId = 10L;
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+
+        Product product = new Product();
+        product.setId(productId);
+
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setProduct(product);
+        cartItem.setQuantity(5);
+
+        //Mocking
+        when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartIdAndProductId(cartId, productId)).thenReturn(Optional.of(cartItem));
+
+        //When
+        underTest.removeProductFromCart(cartId, productId);
+
+        //Then
+        verify(cartRepository, times(1)).findById(cartId);
+        verify(cartItemRepository, times(1)).findByCartIdAndProductId(cartId, productId);
+        verify(cartItemRepository, times(1)).delete(cartItem);
+        verify(cartRepository, times(1)).save(cart);
+    }
+
+
+    @Test
+    @DisplayName("It should delete cart")
+    void itShouldDeleteCart() {
+        //Given
+        Long cartId = 1L;
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+
+
+        //Mocking
+        when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
+
+        //When
+        underTest.deleteCart(cartId);
+
+        //Then
+        verify(cartRepository, times(1)).findById(cartId);
+        verify(cartRepository, times(1)).deleteById(cartId);
+    }
+
+
+    @Test
+    @DisplayName("It should calculate cart total cost")
+    void itShouldCalculateCartTotalCost() {
+        //Given
+        Long cartId = 1L;
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+
+        Product product_1 = new Product();
+        product_1.setPrice(new BigDecimal(100.00));
+
+        Product product_2 = new Product();
+        product_2.setPrice(new BigDecimal(150.00));
+
+        CartItem cartItem_1 = new CartItem();
+        cartItem_1.setProduct(product_1);
+        cartItem_1.setQuantity(5);
+        cartItem_1.setCart(cart);
+
+        CartItem cartItem_2 = new CartItem();
+        cartItem_2.setProduct(product_2);
+        cartItem_2.setQuantity(3);
+        cartItem_2.setCart(cart);
+
+        List<CartItem> cartItems = List.of(cartItem_1, cartItem_2);
+
+        //Mocking
+        when(cartItemRepository.findByCartId(cartId)).thenReturn(cartItems);
+
+        //When
+        BigDecimal result = underTest.calculateCartTotalCost(cartId);
+
+        //Then
+        assertThat(result).isEqualTo("950");
+
+        verify(cartItemRepository, times(1)).findByCartId(cartId);
+    }
+
+
+    @Test
+    @DisplayName("It should return all product categories from cart")
+    void itShouldReturnAllCategoriesFromCart() {
+        //Given
+        Long cartId = 1L;
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+
+        Product product_1 = new Product();
+        product_1.setPrice(new BigDecimal(100.00));
+        product_1.setCategory("Category 1");
+
+        Product product_2 = new Product();
+        product_2.setPrice(new BigDecimal(150.00));
+        product_2.setCategory("Category 2");
+
+        Product product_3 = new Product();
+        product_3.setPrice(new BigDecimal(150.00));
+        product_3.setCategory("Category 1");
+
+        CartItem cartItem_1 = new CartItem();
+        cartItem_1.setProduct(product_1);
+        cartItem_1.setQuantity(5);
+        cartItem_1.setCart(cart);
+
+        CartItem cartItem_2 = new CartItem();
+        cartItem_2.setProduct(product_2);
+        cartItem_2.setQuantity(3);
+        cartItem_2.setCart(cart);
+
+        CartItem cartItem_3 = new CartItem();
+        cartItem_3.setProduct(product_3);
+        cartItem_3.setQuantity(3);
+        cartItem_3.setCart(cart);
+
+        List<CartItem> cartItems = List.of(cartItem_1, cartItem_2, cartItem_3);
+
+        //Mocking
+        when(cartItemRepository.findByCartId(cartId)).thenReturn(cartItems);
+
+        //When
+        List<String> result = underTest.getAllProductCategoriesFromCart(cartId);
+
+        //Then
+        assertThat(result)
+                .hasSize(2)
+                .containsExactly("Category 1", "Category 2")
+                .doesNotContain("Category 1", atIndex(1));
+    }
+
+
+    @Test
+    @DisplayName("It should return products from cart by given category")
+    void itShouldReturnProductsFromCartByGivenCategory() {
+        //Given
+
+        //Mocking
+
+        //When
+
+        //Then
 
     }
 }
