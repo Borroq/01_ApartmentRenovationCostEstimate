@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -625,12 +626,72 @@ public class CartServiceUnitTest {
     @DisplayName("It should return products from cart by given category")
     void itShouldReturnProductsFromCartByGivenCategory() {
         //Given
+        Long cartId = 1L;
+        String category = "Category 1";
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+
+        Product product_1 = new Product();
+        product_1.setPrice(new BigDecimal(100.00));
+        product_1.setCategory("Category 1");
+
+        Product product_2 = new Product();
+        product_2.setPrice(new BigDecimal(150.00));
+        product_2.setCategory("Category 2");
+
+        Product product_3 = new Product();
+        product_3.setPrice(new BigDecimal(150.00));
+        product_3.setCategory("Category 1");
+
+        CartItem cartItem_1 = new CartItem();
+        cartItem_1.setProduct(product_1);
+        cartItem_1.setQuantity(5);
+        cartItem_1.setCart(cart);
+
+        CartItem cartItem_2 = new CartItem();
+        cartItem_2.setProduct(product_2);
+        cartItem_2.setQuantity(3);
+        cartItem_2.setCart(cart);
+
+        CartItem cartItem_3 = new CartItem();
+        cartItem_3.setProduct(product_3);
+        cartItem_3.setQuantity(3);
+        cartItem_3.setCart(cart);
+
+        List<CartItem> cartItems = List.of(cartItem_1, cartItem_2, cartItem_3);
 
         //Mocking
+        when(cartItemRepository.findByCartId(cartId)).thenReturn(cartItems);
 
         //When
+        List<CartItem> result = underTest.getProductByCategoryFromCart(cartId, category);
 
         //Then
+        assertAll(
+                () -> assertThat(result).isNotEmpty(),
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result).allMatch(cartItem -> cartItem.getProduct().getCategory().equals(category)),
+                () -> assertThat(result.get(0).getProduct().getCategory()).isEqualTo("Category 1"),
+                () -> assertThat(result.get(0).getProduct().getCategory()).isEqualTo("Category 1")
+        );
+    }
 
+
+    @Test
+    @DisplayName("It hould throw exception when no products found in the category")
+    void itShouldThrowExceptionWhenNoProductsFoundInTheCategory() {
+        //Given
+        Long cartId = 1L;
+        String category = "Category 1";
+
+        Cart cart = new Cart();
+        cart.setId(cartId);
+
+        //Mocking
+        when(cartItemRepository.findByCartId(cartId)).thenReturn(List.of());
+
+        //When & Then
+        assertThrows(ResourceNotFoundException.class, () -> underTest.getProductByCategoryFromCart(cartId, category));
     }
 }
