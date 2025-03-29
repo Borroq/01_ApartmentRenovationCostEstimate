@@ -11,6 +11,10 @@ spring:
     initialization-mode: always
     # data: classpath:data.sql
 
+  data:
+    rest:
+      enabled: false
+
   jpa:
     properties:
       hibernate:
@@ -41,3 +45,7 @@ spring:
 #     user:
 #       name: Borroq
 #       password: 12345
+
+springdoc:
+  api-docs:
+    path: /api-docs

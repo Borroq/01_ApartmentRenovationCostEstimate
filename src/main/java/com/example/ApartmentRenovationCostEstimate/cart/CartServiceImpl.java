@@ -105,7 +105,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Cart not found"));
 
-        Page<CartItem> cartItemPage = cartItemRepository.findByCartId(cartId, pageable);
+        Page<CartItem> cartItemPage = cartItemRepository.findPageByCartId(cartId, pageable);
 
         CartResponseDto cartResponseDto = modelMapper.map(cart, CartResponseDto.class);
 

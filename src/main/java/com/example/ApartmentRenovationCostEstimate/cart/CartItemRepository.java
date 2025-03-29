@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findByCartId(Long cartId);
-    Page<CartItem> findByCartId(Long cartId, Pageable pageable);
+    Page<CartItem> findPageByCartId(Long cartId, Pageable pageable);
     Optional<CartItem> findByCartIdAndProductId(Long cartId, Long productId);
 
 }

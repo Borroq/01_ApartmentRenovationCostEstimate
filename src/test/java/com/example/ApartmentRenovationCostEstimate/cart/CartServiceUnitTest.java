@@ -15,6 +15,7 @@ import com.example.ApartmentRenovationCostEstimate.user.dtos.UserSummaryDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -72,7 +73,8 @@ public class CartServiceUnitTest {
     }
 
 
-    @Test
+    //@Test
+    @RepeatedTest(value = 5, name = "{displayName} - repetition {currentRepetition} of {totalRepetitions}")
     @DisplayName("It should save new cart")
     void itShouldSaveNewCart() {
         //Given
@@ -114,7 +116,7 @@ public class CartServiceUnitTest {
     }
 
 
-    @Test
+    @RepeatedTest(value = 5, name = RepeatedTest.LONG_DISPLAY_NAME)
     @DisplayName("It should return UserNotFoundException when user does not exist when creating new Cart")
     void itShouldReturnExceptionWhenUserDoesNotExistWhenCreatingNewCart() {
         //Given
@@ -215,7 +217,7 @@ public class CartServiceUnitTest {
         //Mocking
         when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        when(cartItemRepository.findByCartIdAndProductId(cartId, productId)).thenReturn(Optional.empty());
+        when(cartItemRepository.findByCartIdAndProductId(cartId, productId)).thenReturn(Optional.of(cartItem));
         when(cartItemRepository.save(any(CartItem.class))).thenReturn(cartItem);
         when(cartRepository.save(cart)).thenReturn(cart);
         when(modelMapper.map(cart, CartResponseDto.class)).thenReturn(cartResponseDto);
@@ -228,6 +230,7 @@ public class CartServiceUnitTest {
         assertAll(
                 () -> assertNotNull(actualResponse),
                 () -> assertThat(actualResponse.getId()).isEqualTo(cartId),
+                () -> assertThat(cartItem.getQuantity()).isEqualTo(20),
                 () -> assertThat(actualResponse.getTotalCost()).isEqualTo(new BigDecimal(1000)),
 
                 () -> verify(cartItemRepository, times(1)).save(any(CartItem.class)),
@@ -322,7 +325,7 @@ public class CartServiceUnitTest {
 
         //Mocking
         when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
-        when(cartItemRepository.findByCartId(cartId, pageable)).thenReturn(cartItemPage);
+        when(cartItemRepository.findPageByCartId(cartId, pageable)).thenReturn(cartItemPage);
         when(modelMapper.map(cart, CartResponseDto.class)).thenReturn(expectedCartResponseDto);
         when(modelMapper.map(cartItem1, CartItemDto.class)).thenReturn(cartItemDto1);
         when(modelMapper.map(cartItem2, CartItemDto.class)).thenReturn(cartItemDto2);
@@ -339,7 +342,7 @@ public class CartServiceUnitTest {
                 () -> assertThat(actualResponse.getCartItems().get(1).getId()).isEqualTo(cartItemDto2.getId()),
 
                 () -> verify(cartRepository, times(1)).findById(cartId),
-                () -> verify(cartItemRepository, times(1)).findByCartId(cartId, pageable),
+                () -> verify(cartItemRepository, times(1)).findPageByCartId(cartId, pageable),
                 () -> verify(modelMapper, times(1)).map(cart, CartResponseDto.class),
                 () -> verify(modelMapper, times(2)).map(any(CartItem.class), eq(CartItemDto.class))
         );

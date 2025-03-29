@@ -65,6 +65,7 @@ public class SecurityConfig {
                         .requestMatchers("/**", "/users/**").permitAll() // DISABLING SECURITY
 
                         .requestMatchers("/home/**", "/rooms/**", "/carts/**", "/products/**", "/users/**", "/api/database/**", "/api/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll() // ODBLOKOWANIE SWAGGERA
 
                         .anyRequest().authenticated()
                 )

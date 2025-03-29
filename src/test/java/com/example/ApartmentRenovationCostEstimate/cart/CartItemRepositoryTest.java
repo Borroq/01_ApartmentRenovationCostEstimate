@@ -75,7 +75,7 @@ public class CartItemRepositoryTest {
         Pageable pageable = PageRequest.of(page, size);
 
         //When
-        Page<CartItem> testCartItems = cartItemRepository.findByCartId(cartId, pageable);
+        Page<CartItem> testCartItems = cartItemRepository.findPageByCartId(cartId, pageable);
 
         //Then
         assertAll(
