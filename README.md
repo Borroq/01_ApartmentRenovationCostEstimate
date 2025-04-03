@@ -19,8 +19,7 @@
 - Kontrola dostępu na poziomie metod, w tym szczegółowa autoryzacja przy wywołaniach kontrolerów.
 
 **Obsługa błędów związanych z autoryzacją**:
-- Niestandardowa obsługa błędów dla żądań niezautoryzowanych i zabronionych.
-- Obsługa żądań API z odpowiedziami JSON dla niezautoryzowanych i zabronionych żądań oraz osobne strony błędu dla żądań przeglądarkowych.
+- Obsługa błędów dla żądań niezautoryzowanych i zabronionych.
 
 **Hashowanie haseł**:
   - Hasła użytkowników są hashowane przy użyciu algorytmu **BCrypt** przed zapisaniem w bazie danych.
@@ -29,16 +28,30 @@
 - **Backend**: Java v17, Spring Boot v3.3.0, Spring Data JPA v3.3.0, Spring Security v6.3.0, Hibernate
 - **Frontend**: HTML, CSS, JavaScript, Bootstrap (wersja 5.2.3), Thymeleaf v3.1.1
 - **Baza danych**: MySQL
+- **Testowanie**: Spring Test, JUnit 5, Mockito, AssertJ
+- **Dokumentacja**: Springdoc OpenAPI (Swagger)
 - **Narzędzia**: Lombok 1.18.32, Postman v11.17.1, phpMyAdmin
 
 ## Jak zacząć?
 Aby uruchomić projekt lokalnie, wykonaj następujące kroki:
 1. Sklonuj repozytorium na swoją maszynę.
 2. Zainstaluj wymagane zależności opisane w `pom.xml`.
-3. Ustaw lokalne połączenie z bazą danych MySQL, korzystając z `application.properties`.
+3. Ustaw lokalne połączenie z bazą danych MySQL, korzystając z `application.yml`.
 4. Uruchom aplikację poprzez Spring Boot.
 
 ## Wymagania wstępne
 - **JDK 17+**: Aplikacja jest zbudowana z użyciem wersji 17 JDK lub nowszej.
-- **MySQL**: Konfiguracja bazy danych w `application.properties` powinna być dostosowana do lokalnej instalacji MySQL.
+- **MySQL**: Konfiguracja bazy danych w `application.yml` powinna być dostosowana do lokalnej instalacji MySQL.
 - **Maven**: Używany jako narzędzie do zarządzania zależnościami i budowania projektu.
+
+## Dokumentacja API
+### **Sawgger:**
+``` http request
+GET http://localhost:8080/swagger-ui/index.html
+```
+![Swagger_Doc_01.png](..%2F..%2FSwagger_Doc_01.png)
+
+
+## Pokrycie testami
+![Zrzut ekranu 2025-03-11 184147.png](..%2F..%2FZrzut%20ekranu%202025-03-11%20184147.png)
+
