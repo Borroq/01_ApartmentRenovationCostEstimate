@@ -49,9 +49,9 @@ Aby uruchomić projekt lokalnie, wykonaj następujące kroki:
 ``` http request
 GET http://localhost:8080/swagger-ui/index.html
 ```
-![Swagger_Doc_01.png](..%2F..%2FSwagger_Doc_01.png)
+![Swagger_Doc_01](https://github.com/user-attachments/assets/85c02f03-2818-4808-8835-b0d3dd48664e)
 
 
 ## Pokrycie testami
-![Zrzut ekranu 2025-03-11 184147.png](..%2F..%2FZrzut%20ekranu%202025-03-11%20184147.png)
+![Zrzut ekranu 2025-03-11 184147](https://github.com/user-attachments/assets/b544166b-b8e7-4b96-b673-d5989b76f2c0)
 
